@@ -28,6 +28,7 @@ link_one() {
 
 link_one "$repo/bash/.bashrc" "$HOME/.bashrc"
 link_one "$repo/bash/.bash_aliases" "$HOME/.bash_aliases"
+link_one "$repo/bash/.bash_functions" "$HOME/.bash_functions"
 link_one "$repo/bash/.profile" "$HOME/.profile"
 link_one "$repo/git/.gitconfig" "$HOME/.gitconfig"
 link_one "$repo/config/btop/btop.conf" "$HOME/.config/btop/btop.conf"
