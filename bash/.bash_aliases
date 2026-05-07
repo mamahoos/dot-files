@@ -32,7 +32,6 @@ alias cls='clear'          # Windows-style clear
 # TERMINAL / UX
 # ==============================================================================
 
-alias c='clear'
 alias blank='sleep 1; xset dpms force off'
 
 # Persian keyboard mistakes
