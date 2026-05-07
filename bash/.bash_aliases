@@ -99,6 +99,7 @@ alias disk='df -h'
 
 alias pers='cd ~/dev/personal'
 alias wrk='cd ~/dev/work'
+alias dots='cd ~/dev/personal/dot-files'
 
 # ==============================================================================
 # END
