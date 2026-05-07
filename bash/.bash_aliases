@@ -14,7 +14,6 @@ alias ...='cd ../..'
 alias ....='cd ../../..'
 
 # color support
-alias ls='ls --color=auto'
 alias dir='dir --color=auto'
 alias vdir='vdir --color=auto'
 
