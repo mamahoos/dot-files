@@ -8,18 +8,9 @@ alias ll='ls -lh'          # long + human-readable sizes
 alias la='ls -A'           # include hidden (except . ..)
 alias l='ls -CF'           # column view + type indicators
 
-# navigation
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
-
 # color support
 alias dir='dir --color=auto'
 alias vdir='vdir --color=auto'
-
-alias grep='grep --color=auto'
-alias fgrep='fgrep --color=auto'
-alias egrep='egrep --color=auto'
 
 
 # ==============================================================================
@@ -56,7 +47,7 @@ alias codehere='code -a .'
 alias dockill='docker kill $(docker ps -q)'
 
 # cleanup stopped containers
-alias dclean='docker container prune -f'
+alias docker-clean='docker container prune -f'
 
 # ==============================================================================
 # NETWORK / DEBUG
@@ -67,9 +58,20 @@ alias ports='ss -tulpen'
 alias pingg='ping google.com'
 
 # ==============================================================================
-# FILE MANAGEMENT
+# NAVIGATION & FILE MANAGEMENT
 # ==============================================================================
 
+# navigate up
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+
+# quick navigation to dev subdirs (English Keys)
+alias pers='cd ~/dev/personal'
+alias wrk='cd ~/dev/work'
+alias dots='cd ~/dev/personal/dot-files'
+
+# file management
 alias rmf='rm -rf'
 alias mkdirp='mkdir -p'
 
@@ -82,6 +84,8 @@ alias mv='mv -i'
 # ==============================================================================
 
 alias grep='grep --color=auto -n'
+alias fgrep='fgrep --color=auto -n'
+alias egrep='egrep --color=auto -n'
 alias f='find . -name'
 
 # ==============================================================================
@@ -90,14 +94,6 @@ alias f='find . -name'
 
 alias mem='free -h'
 alias disk='df -h'
-
-# ==============================================================================
-# QUICK NAVIGATION TO DEV SUBDIRS (English Keys)
-# ==============================================================================
-
-alias pers='cd ~/dev/personal'
-alias wrk='cd ~/dev/work'
-alias dots='cd ~/dev/personal/dot-files'
 
 # ==============================================================================
 # END
