@@ -2,8 +2,14 @@
 # DIRECTORY HELPERS
 # ==============================================================================
 
+# make and cd to a directory
 mkcd() {
-    mkdir -p "$1" && cd "$1"
+    local dir="$1"
+    if [ -z "$dir" ]; then
+        echo "Usage: mkcd <directory>"
+        return 1
+    fi
+    mkdir -p "$dir" && cd "$dir"
 }
 
 # ==============================================================================

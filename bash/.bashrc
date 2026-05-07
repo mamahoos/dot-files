@@ -106,10 +106,12 @@ export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quo
 # 8. User aliases (external file)
 # ======================================================================
 
+# Aliases
 if [ -f ~/.bash_aliases ]; then
     source ~/.bash_aliases
 fi
 
+# Functions
 if [ -f ~/.bash_functions ]; then
     source ~/.bash_functions
 fi
