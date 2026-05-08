@@ -46,8 +46,8 @@ alias codehere='code -a .'
 # kill all containers ⚠️
 alias dockill='docker kill $(docker ps -q)'
 
-# cleanup stopped containers
-alias docker-clean='docker container prune -f'
+# cleanup docker orphans
+alias docker-clean='sh -c '"'"'echo "Removing stopped containers..."; docker container prune -f; echo "Removing dangling images..."; docker image prune -f; echo "Removing unused networks..."; docker network prune -f; echo "Docker cleanup complete."'"'"''
 
 # ==============================================================================
 # NETWORK / DEBUG
