@@ -140,7 +140,7 @@ export PATH="$HOME/.local/bin:$PATH" 	# Added poetry & posting & etc (by pipx)
 # ======================================================================
 
 # Adds ~/.cargo/bin to PATH
-. "$HOME/.cargo/env"	# Added tokei & etc (by cargo)
+source "$HOME/.cargo/env"	# Added tokei & etc (by cargo)
 
 # ======================================================================
 # 12. Python version management (pyenv)
@@ -159,14 +159,14 @@ fi
 
 export PATH="$PATH:/usr/sbin"
 
-[[ "$TERM_PROGRAM" == "kiro" ]] && . "$(kiro --locate-shell-integration-path bash)"
+[[ "$TERM_PROGRAM" == "kiro" ]] && source "$(kiro --locate-shell-integration-path bash)"
 
 # ======================================================================
 # 14. Local-only overrides (never commit secrets)
 # ======================================================================
 
 if [ -f "$HOME/.bashrc.local" ]; then
-    . "$HOME/.bashrc.local"
+    source "$HOME/.bashrc.local"
 fi
 
 # ======================================================================
