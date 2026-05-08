@@ -8,6 +8,7 @@ backup_dir="$HOME/.dotfiles-backup/$stamp"
 mkdir -p "$backup_dir"
 mkdir -p "$HOME/.config/btop"
 mkdir -p "$HOME/.config/htop"
+mkdir -p "$HOME/.cursor"
 
 link_one() {
   local src="$1"
@@ -33,3 +34,4 @@ link_one "$repo/bash/.profile" "$HOME/.profile"
 link_one "$repo/git/.gitconfig" "$HOME/.gitconfig"
 link_one "$repo/config/btop/btop.conf" "$HOME/.config/btop/btop.conf"
 link_one "$repo/config/htop/htoprc" "$HOME/.config/htop/htoprc"
+link_one "$repo/.cursor/agents" "$HOME/.cursor/agents"
