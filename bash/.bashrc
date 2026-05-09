@@ -44,9 +44,6 @@ shopt -s globstar
 # Enable extended globbing (optional)
 shopt -s extglob
 
-# Enable brace expansion (optional)
-shopt -s braceexpand
-
 # Enable programmable completion (optional)
 shopt -s progcomp
 
