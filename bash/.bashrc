@@ -39,7 +39,37 @@ HISTFILESIZE=10000
 shopt -s checkwinsize
 
 # Enable ** globbing (optional)
-# shopt -s globstar
+shopt -s globstar
+
+# Enable extended globbing (optional)
+shopt -s extglob
+
+# Enable brace expansion (optional)
+shopt -s braceexpand
+
+# Enable programmable completion (optional)
+shopt -s progcomp
+
+# Enable history expansion (optional)
+# shopt -s histexpand
+
+# Enable command history (optional)
+shopt -s cmdhist
+
+# Append to history instead of overwriting
+shopt -s histappend
+
+# Enable failglob to prevent globbing from matching no files
+shopt -s failglob
+
+# Enable dotglob to include hidden files in globbing
+shopt -s dotglob
+
+# Enable nullglob to match no files
+shopt -s nullglob
+
+# Enable complete_fullquote to complete quoted arguments
+shopt -s complete_fullquote
 
 # ======================================================================
 # 4. Debian chroot indicator (used in prompt)
