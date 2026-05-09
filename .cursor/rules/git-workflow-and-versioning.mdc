@@ -1,0 +1,46 @@
+---
+description: Git workflow guardrails for frequent small commits, safe branching, and clean merge flow.
+alwaysApply: true
+---
+
+# Git Workflow and Versioning
+
+Apply this workflow for any coding change in this repository.
+
+## Default Behavior
+
+- Keep changes small and incremental.
+- After each completed and verified slice, create a commit.
+- Prefer many small atomic commits over one large commit.
+- Keep `main` stable; do not keep long-running feature branches.
+
+## Commit Rules
+
+- One logical change per commit.
+- Use descriptive commit messages with a type prefix: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`.
+- Do not mix refactor + feature + formatting in one commit.
+- Before commit: review staged diff, run relevant tests/lint, and avoid committing secrets.
+
+## Branch Rules
+
+- For tiny and isolated fixes, commit directly on the active working branch.
+- For non-trivial tasks (multi-file changes, risky refactors, experiments, parallel work), create a dedicated branch first.
+- Branch naming:
+  - `feature/<short-description>`
+  - `fix/<short-description>`
+  - `refactor/<short-description>`
+  - `chore/<short-description>`
+- Keep branches short-lived and merge back quickly.
+
+## Merge and Safety
+
+- Rebase or sync frequently with the base branch to reduce drift.
+- Resolve conflicts carefully and re-run verification before merge.
+- Never force-push shared branches unless explicitly requested.
+- Never commit `.env`, secrets, build artifacts, or unrelated generated files.
+
+## Scope Discipline
+
+- Commit only files related to the current task.
+- If unrelated local changes exist, avoid mixing them into the same commit.
+- In change summaries, clearly state what changed and what was intentionally left untouched.
