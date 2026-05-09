@@ -78,15 +78,14 @@ else
     PS1="${prompt_prefix}\u:\w\$ "
 fi
 
-unset color_prompt force_color_prompt
-
 # Set terminal title for xterm-like terminals
 case "$TERM" in
     xterm*|rxvt*)
-        PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u: \w\a\]$PS1"
+        PS1="\[\e]0;${prompt_prefix}\u: \w\a\]$PS1"
         ;;
 esac
 
+unset prompt_prefix color_prompt force_color_prompt
 
 # ======================================================================
 # 6. Color support
