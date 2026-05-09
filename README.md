@@ -1,15 +1,15 @@
 # dot-files
 
-Minimal, versioned dotfiles for my Linux setup with organized configurations and development skills.
+Minimal, versioned dotfiles for a Linux development setup, including shell and tool configuration, SSH templates, and Cursor skills.
 
-## Overview
+## What This Repo Contains
 
-This repository contains:
-- **Configuration files** for bash, git, and system tools (htop, btop)
-- **SSH templates** for structured host configuration
-- **Development skills** - a curated collection of best practices and techniques
+- Bash configuration files (`.bashrc`, aliases, profile, local override template)
+- Git and CLI tool configs (`.gitconfig`, `htop`, `btop`)
+- SSH configuration templates with an organized `config.d/` layout
+- Cursor skills and agent guidance under `.cursor/`
 
-## Structure
+## Repository Structure
 
 ```text
 .
@@ -30,48 +30,54 @@ This repository contains:
 │   ├── config.example
 │   └── config.d/
 │       └── organization.example
-├── .cursor/                       # Development skills and agents
-│   ├── skills/                    # Curated skills and frameworks
+├── .cursor/                       # Cursor skills and agents
+│   ├── skills/
 │   └── agents/
-└── link-dotfiles.sh               # Setup script
+└── link-dotfiles.sh               # Symlink setup script
 ```
 
-## Installation
+## Quick Start
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/mamahoos/dot-files.git ~/dot-files
    cd ~/dot-files
    ```
 
-2. Run the symlink script:
+2. Link dotfiles into your home directory:
+
    ```bash
    ./link-dotfiles.sh
    ```
 
-   This script creates symlinks from configuration files to their expected locations in `$HOME`.
+3. Apply local customizations:
 
-3. Customize as needed:
-   - Copy `.bashrc.local.example` to `.bashrc.local` and add your local configs
-   - Customize SSH configuration in `ssh/config.d/` for your infrastructure
+   - Copy `bash/.bashrc.local.example` to `bash/.bashrc.local`
+   - Add machine-specific settings in `bash/.bashrc.local`
+   - Customize SSH hosts under `ssh/config.d/`
 
-## SSH Configuration
+## SSH Notes
 
-The `ssh/` templates are sanitized examples for structure only:
-- They do not contain real infrastructure details
-- No private keys or sensitive host data included
-- Use `config.d/` subdirectory for organizing host configurations by organization or role
+Files in `ssh/` are templates and examples only:
 
-## Skills
+- No private keys are included
+- No real hostnames or infrastructure secrets are included
+- Use `config.d/` to split host definitions by team, environment, or purpose
 
-This repository includes development skills and best practices sourced from [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills.git). The `.cursor/skills/` directory contains structured guidance on:
-- API and Interface Design
-- Testing and Quality
-- CI/CD and Automation
-- Code Review and Documentation
-- Performance and Security
-- And more...
+## Cursor Skills
+
+The `.cursor/skills/` directory contains reusable guidance and workflows for development tasks such as:
+
+- Planning and implementation
+- Testing and quality checks
+- Code review and debugging
+- Automation and delivery practices
+
+## Skills Attribution
+
+Core skill content in this repository is sourced from [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills.git), then adapted for personal workflow and local usage.
 
 ## License
 
-These are personal dotfiles and skills. Feel free to reference or adapt for your own setup.
+Personal dotfiles and workflow assets. You can reference and adapt them for your own setup.
