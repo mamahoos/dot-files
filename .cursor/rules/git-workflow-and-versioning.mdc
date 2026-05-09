@@ -6,6 +6,7 @@ alwaysApply: true
 # Git Workflow and Versioning
 
 Apply this workflow for any coding change in this repository.
+Use `.cursor/skills/git-workflow-and-versioning/SKILL.md` for detailed procedures and examples.
 
 ## Default Behavior
 

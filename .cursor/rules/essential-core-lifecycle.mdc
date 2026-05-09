@@ -1,0 +1,25 @@
+---
+description: Always-on core lifecycle for non-trivial changes: define, plan, build, verify, review, and ship.
+alwaysApply: true
+---
+
+# Essential Core Lifecycle
+
+This rule is always active for non-trivial software work.
+
+## Required Flow
+
+1. Define with `spec-driven-development`.
+2. Plan with `planning-and-task-breakdown`.
+3. Build in small slices with `incremental-implementation`.
+4. Verify behavior with `test-driven-development`.
+5. If anything breaks, diagnose with `debugging-and-error-recovery`.
+6. Review quality with `code-review-and-quality`.
+7. Ship safely with `git-workflow-and-versioning`.
+
+## Enforcement
+
+- Do not skip Define/Plan for ambiguous or multi-step tasks.
+- Do not ship behavior changes without verification evidence.
+- Keep Git history clean with small atomic commits and short-lived branches.
+- For deep guidance, load the corresponding `SKILL.md` files under `.cursor/skills/`.

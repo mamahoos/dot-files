@@ -1,0 +1,28 @@
+---
+description: Agent-decide activation for context-dependent skills; load only when task signals match.
+alwaysApply: false
+---
+
+# Conditional Skills (Agent Decide)
+
+Activate these only when context indicates they are needed:
+
+- `idea-refine`
+- `context-engineering`
+- `source-driven-development`
+- `frontend-ui-engineering`
+- `api-and-interface-design`
+- `browser-testing-with-devtools`
+- `security-and-hardening`
+- `performance-optimization`
+- `ci-cd-and-automation`
+- `deprecation-and-migration`
+- `documentation-and-adrs`
+- `shipping-and-launch`
+- `code-simplification`
+
+## Decision Policy
+
+- Choose by explicit task signals, constraints, or risk.
+- Mention which conditional skill is activated and why.
+- Keep details in each skill's `SKILL.md`; this rule only controls activation policy.
