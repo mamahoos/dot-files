@@ -88,6 +88,20 @@ extract() {
         return 1
     }
 
+    # Supported archive formats:
+    # - .tar.gz, .tgz
+    # - .tar.bz2, .tbz2
+    # - .tar.xz
+    # - .tar.zst, .tzst
+    # - .tar
+    # - .zip
+    # - .rar
+    # - .7z
+    # - .gz
+    # - .bz2
+    # - .xz
+    # - .zst
+
     case "$archive_path" in
         *.tar.gz|*.tgz)
             _require tar || return 1
