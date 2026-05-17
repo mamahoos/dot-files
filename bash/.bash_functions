@@ -227,6 +227,68 @@ extract() {
 # DOCKER HELPERS
 # ==============================================================================
 
+# stream a local image to a remote host over ssh (gzip-compressed)
+docker-push-host() {
+    local image="${1:-}"
+    local host="${2:-}"
+    local compress_cmd
+    local status
+
+    # --------------------------------------------------------------------------
+    # Error logger
+    # --------------------------------------------------------------------------
+    _docker_push_host_error() {
+        printf '[docker-push-host] %s\n' "$*" >&2
+    }
+
+    # --------------------------------------------------------------------------
+    # Dependency checker
+    # --------------------------------------------------------------------------
+    _require() {
+        command -v "$1" >/dev/null 2>&1 || {
+            _docker_push_host_error "missing dependency: $1"
+            return 1
+        }
+    }
+
+    # --------------------------------------------------------------------------
+    # Validation
+    # --------------------------------------------------------------------------
+    if [[ -z "$image" || -z "$host" ]]; then
+        _docker_push_host_error "usage: docker-push-host <image> <host>"
+        return 1
+    fi
+
+    _require docker || return 1
+    _require ssh || return 1
+
+    compress_cmd="$(command -v gzip 2>/dev/null || command -v gz 2>/dev/null)" || {
+        _docker_push_host_error "missing dependency: gzip or gz"
+        return 1
+    }
+
+    if ! docker image inspect -- "$image" >/dev/null 2>&1; then
+        _docker_push_host_error "image not found locally: $image"
+        return 1
+    fi
+
+    # --------------------------------------------------------------------------
+    # Push pipeline: save | compress | ssh | decompress | load
+    # --------------------------------------------------------------------------
+    if ! (
+        set -o pipefail
+        docker save -- "$image" \
+            | "$compress_cmd" -c \
+            | ssh -Ct "$host" 'gzip -dc | docker load'
+    ); then
+        status=$?
+        _docker_push_host_error "failed to push image: $image -> $host"
+        return "$status"
+    fi
+
+    return 0
+}
+
 # remove common Docker orphaned resources
 docker-clean() {
     echo "Removing stopped containers..."
