@@ -12,6 +12,38 @@ mkcd() {
     mkdir -p "$dir" && cd "$dir"
 }
 
+# ==============================================================================
+# COMMON HELPERS
+# ==============================================================================
+
+# require a command to be available in PATH
+_require_cmd() {
+    local error_prefix="$1"
+    local command_name="$2"
+
+    command -v "$command_name" >/dev/null 2>&1 || {
+        printf '%s missing dependency: %s\n' "$error_prefix" "$command_name" >&2
+        return 1
+    }
+}
+
+# return first available command from list
+_require_any_cmd() {
+    local error_prefix="$1"
+    local command_name
+    shift
+
+    for command_name in "$@"; do
+        if command -v "$command_name" >/dev/null 2>&1; then
+            printf '%s\n' "$command_name"
+            return 0
+        fi
+    done
+
+    printf '%s missing dependency: %s\n' "$error_prefix" "$*" >&2
+    return 1
+}
+
 # extract an archive
 extract() {
     local archive_path="${1:-}"
@@ -71,16 +103,6 @@ extract() {
     mime_type="$(file --brief --mime-type -- "$archive_path" 2>/dev/null)"
 
     # --------------------------------------------------------------------------
-    # Dependency checker
-    # --------------------------------------------------------------------------
-    _require() {
-        command -v "$1" >/dev/null 2>&1 || {
-            _extract_error "missing dependency: $1"
-            return 1
-        }
-    }
-
-    # --------------------------------------------------------------------------
     # Extract inside target dir
     # --------------------------------------------------------------------------
     pushd "$output_dir" >/dev/null || {
@@ -104,37 +126,37 @@ extract() {
 
     case "$archive_path" in
         *.tar.gz|*.tgz)
-            _require tar || return 1
+            _require_cmd "[extract]" tar || return 1
             tar -xzf "../$archive_path"
             status=$?
             ;;
 
         *.tar.bz2|*.tbz2)
-            _require tar || return 1
+            _require_cmd "[extract]" tar || return 1
             tar -xjf "../$archive_path"
             status=$?
             ;;
 
         *.tar.xz)
-            _require tar || return 1
+            _require_cmd "[extract]" tar || return 1
             tar -xJf "../$archive_path"
             status=$?
             ;;
 
         *.tar.zst|*.tzst)
-            _require tar || return 1
+            _require_cmd "[extract]" tar || return 1
             tar --zstd -xf "../$archive_path"
             status=$?
             ;;
 
         *.tar)
-            _require tar || return 1
+            _require_cmd "[extract]" tar || return 1
             tar -xf "../$archive_path"
             status=$?
             ;;
 
         *.zip)
-            _require unzip || return 1
+            _require_cmd "[extract]" unzip || return 1
             unzip -qq -o "../$archive_path"
             status=$?
             ;;
@@ -154,31 +176,31 @@ extract() {
             ;;
 
         *.7z)
-            _require 7z || return 1
+            _require_cmd "[extract]" 7z || return 1
             7z x -bd -y "../$archive_path" >/dev/null
             status=$?
             ;;
 
         *.gz)
-            _require gunzip || return 1
+            _require_cmd "[extract]" gunzip || return 1
             gunzip -k "../$archive_path"
             status=$?
             ;;
 
         *.bz2)
-            _require bunzip2 || return 1
+            _require_cmd "[extract]" bunzip2 || return 1
             bunzip2 -k "../$archive_path"
             status=$?
             ;;
 
         *.xz)
-            _require unxz || return 1
+            _require_cmd "[extract]" unxz || return 1
             unxz -k "../$archive_path"
             status=$?
             ;;
 
         *.zst)
-            _require unzstd || return 1
+            _require_cmd "[extract]" unzstd || return 1
             unzstd -k "../$archive_path"
             status=$?
             ;;
@@ -186,13 +208,13 @@ extract() {
         *)
             case "$mime_type" in
                 application/zip)
-                    _require unzip || return 1
+                    _require_cmd "[extract]" unzip || return 1
                     unzip -qq -o "../$archive_path"
                     status=$?
                     ;;
 
                 application/x-tar)
-                    _require tar || return 1
+                    _require_cmd "[extract]" tar || return 1
                     tar -xf "../$archive_path"
                     status=$?
                     ;;
@@ -235,54 +257,53 @@ docker-push-host() {
     local status
 
     # --------------------------------------------------------------------------
-    # Error logger
+    # Optional progress stream (uses pv when available)
     # --------------------------------------------------------------------------
-    _docker_push_host_error() {
-        printf '[docker-push-host] %s\n' "$*" >&2
-    }
+    _progress_pipe() {
+        local image_size
 
-    # --------------------------------------------------------------------------
-    # Dependency checker
-    # --------------------------------------------------------------------------
-    _require() {
-        command -v "$1" >/dev/null 2>&1 || {
-            _docker_push_host_error "missing dependency: $1"
-            return 1
-        }
+        if ! command -v pv >/dev/null 2>&1; then
+            cat
+            return 0
+        fi
+
+        image_size="$(docker image inspect -f '{{.Size}}' -- "$image" 2>/dev/null)"
+        if [[ "$image_size" =~ ^[0-9]+$ && "$image_size" -gt 0 ]]; then
+            pv -p -f -s "$image_size" -N "push $image"
+        else
+            pv -p -f -N "push $image"
+        fi
     }
 
     # --------------------------------------------------------------------------
     # Validation
     # --------------------------------------------------------------------------
     if [[ -z "$image" || -z "$host" ]]; then
-        _docker_push_host_error "usage: docker-push-host <image> <host>"
+        echo "[docker-push-host] usage: docker-push-host <image> <host>" >&2
         return 1
     fi
 
-    _require docker || return 1
-    _require ssh || return 1
-
-    compress_cmd="$(command -v gzip 2>/dev/null || command -v gz 2>/dev/null)" || {
-        _docker_push_host_error "missing dependency: gzip or gz"
-        return 1
-    }
+    _require_cmd "[docker-push-host]" docker || return 1
+    _require_cmd "[docker-push-host]" ssh || return 1
+    compress_cmd="$(_require_any_cmd "[docker-push-host]" gzip gz)" || return 1
 
     if ! docker image inspect -- "$image" >/dev/null 2>&1; then
-        _docker_push_host_error "image not found locally: $image"
+        echo "[docker-push-host] image not found locally: $image" >&2
         return 1
     fi
 
     # --------------------------------------------------------------------------
-    # Push pipeline: save | compress | ssh | decompress | load
+    # Push pipeline: save | [pv] | compress | ssh | decompress | load
     # --------------------------------------------------------------------------
     if ! (
         set -o pipefail
         docker save -- "$image" \
+            | _progress_pipe \
             | "$compress_cmd" -c \
             | ssh -Ct "$host" 'gzip -dc | docker load'
     ); then
         status=$?
-        _docker_push_host_error "failed to push image: $image -> $host"
+        echo "[docker-push-host] failed to push image: $image -> $host" >&2
         return "$status"
     fi
 
