@@ -300,7 +300,7 @@ docker-push-host() {
         docker save -- "$image" \
             | _progress_pipe \
             | "$compress_cmd" -c \
-            | ssh -Ct "$host" 'gzip -dc | docker load'
+            | ssh -C "$host" 'gzip -dc | docker load'
     ); then
         status=$?
         echo "[docker-push-host] failed to push image: $image -> $host" >&2
