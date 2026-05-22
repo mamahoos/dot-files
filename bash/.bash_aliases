@@ -96,7 +96,20 @@ alias disk='df -h'
 # MATRIX SYNAPSE ADMIN
 # ==============================================================================
 
+# User Management
 alias mx-create-user='ssh hotdog "~/matrix-deploy/scripts/create_user.sh"'
+alias mx-delete-user='ssh hotdog "~/matrix-deploy/scripts/delete_user.sh"'
+alias mx-list-users='ssh hotdog "~/matrix-deploy/scripts/list_users.sh"'
+alias mx-modify-user='ssh hotdog "~/matrix-deploy/scripts/modify_user.sh"'
+alias mx-user-info='ssh hotdog "~/matrix-deploy/scripts/user_info.sh"'
+alias mx-wipe-sessions='ssh hotdog "~/matrix-deploy/scripts/wipe_user_sessions.sh"'
+
+# Monitoring & Stats
+alias mx-health='ssh hotdog "~/matrix-deploy/scripts/matrix_healthcheck.sh"'
+alias mx-logs='ssh hotdog "~/matrix-deploy/scripts/matrix_logs.sh"'
+alias mx-stats='ssh hotdog "~/matrix-deploy/scripts/matrix_stats.sh"'
+alias mx-status='ssh hotdog "~/matrix-deploy/scripts/matrix_status.sh"'
+alias mx-msg-count='ssh hotdog "~/matrix-deploy/scripts/user_message_count.sh"'
 
 # ==============================================================================
 # END
