@@ -21,8 +21,10 @@ Minimal, versioned dotfiles for a Linux development setup, including shell and t
 ├── config/                        # System tool configurations
 │   ├── btop/
 │   │   └── btop.conf
-│   └── htop/
-│       └── htoprc
+│   ├── htop/
+│   │   └── htoprc
+│   └── tmux/
+│       └── .gitkeep
 ├── git/                           # Git configuration
 │   └── .gitconfig
 ├── ssh/                           # SSH configuration templates
