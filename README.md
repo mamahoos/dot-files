@@ -80,6 +80,12 @@ The `.cursor/skills/` directory contains reusable guidance and workflows for dev
 
 Core skill content in this repository is sourced from [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills.git), then adapted for personal workflow and local usage.
 
+## TODO
+
+- [ ] Add tmux configuration (`config/tmux/tmux.conf`)
+- [ ] Add Poetry global configuration (`config/poetry/config.toml`)
+- [ ] Add VS Code user settings (`config/vscode/settings.json`)
+
 ## License
 
 Personal dotfiles and workflow assets. You can reference and adapt them for your own setup.
