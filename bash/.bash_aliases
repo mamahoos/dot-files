@@ -27,6 +27,7 @@ alias blank='sleep 1; xset dpms force off'
 
 # Funny aliases
 alias cmatrix='cmatrix -C black'
+alias sl='sl -lae'
 
 # Persian keyboard mistakes
 alias زمس='clear'
