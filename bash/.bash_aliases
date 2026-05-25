@@ -25,6 +25,9 @@ alias cls='clear'          # Windows-style clear
 
 alias blank='sleep 1; xset dpms force off'
 
+# Funny aliases
+alias cmatrix='cmatrix -C black'
+
 # Persian keyboard mistakes
 alias زمس='clear'
 alias زمثشق='clear'
