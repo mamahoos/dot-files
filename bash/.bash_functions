@@ -260,16 +260,19 @@ docker-push-host() {
     # Optional progress stream (uses pv when available)
     # --------------------------------------------------------------------------
     _progress_pipe() {
-        local image_size
-
+        local tar_size
+    
         if ! command -v pv >/dev/null 2>&1; then
             cat
             return 0
         fi
-
-        image_size="$(docker image inspect -f '{{.Size}}' -- "$image" 2>/dev/null)"
-        if [[ "$image_size" =~ ^[0-9]+$ && "$image_size" -gt 0 ]]; then
-            pv -p -f -s "$image_size" -N "push $image"
+    
+        # docker save produces a tar archive that is larger than the raw image
+        # size reported by inspect; measure the actual stream size up front so
+        # that the progress bar never exceeds 100 %.
+        tar_size="$(docker save -- "$image" 2>/dev/null | wc -c)"
+        if [[ "$tar_size" =~ ^[0-9]+$ && "$tar_size" -gt 0 ]]; then
+            pv -p -f -s "$tar_size" -N "push $image"
         else
             pv -p -f -N "push $image"
         fi
