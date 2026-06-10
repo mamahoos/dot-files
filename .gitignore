@@ -1,3 +1,4 @@
 bash/.bashrc.local
 *.local
 .DS_Store
+ssh/
