@@ -246,7 +246,7 @@ extract() {
 }
 
 # render a mermaid diagram (.mmd) to svg/png via docker
-docker-mermaid() {
+render-mermaid() {
     local input_file="${1:-}"
     local input_dir
     local status
