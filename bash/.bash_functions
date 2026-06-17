@@ -245,6 +245,51 @@ extract() {
     return 0
 }
 
+# render a mermaid diagram (.mmd) to svg/png via docker
+docker-mermaid() {
+    local input_file="${1:-}"
+    local input_dir
+    local status
+
+    # --------------------------------------------------------------------------
+    # Validation
+    # --------------------------------------------------------------------------
+    if [[ -z "$input_file" ]]; then
+        echo "[docker-mermaid] usage: docker-mermaid <file.mmd> [mermaid-cli-args...]" >&2
+        return 1
+    fi
+
+    if [[ ! -f "$input_file" ]]; then
+        echo "[docker-mermaid] file does not exist: $input_file" >&2
+        return 1
+    fi
+
+    _require_cmd "[docker-mermaid]" docker || return 1
+
+    input_dir="$(dirname -- "$input_file")"
+    shift
+
+    pushd "$input_dir" >/dev/null || {
+        echo "[docker-mermaid] failed to enter directory: $input_dir" >&2
+        return 1
+    }
+
+    # --------------------------------------------------------------------------
+    # Render via felixlohmeier/mermaid (mounts the file's directory as /data)
+    # --------------------------------------------------------------------------
+    docker run --rm -v "$PWD":/data:z felixlohmeier/mermaid -s -p "$@" "$(basename -- "$input_file")"
+    status=$?
+
+    popd >/dev/null || true
+
+    if [[ $status -ne 0 ]]; then
+        echo "[docker-mermaid] render failed: $input_file" >&2
+        return "$status"
+    fi
+
+    return 0
+}
+
 # ==============================================================================
 # DOCKER HELPERS
 # ==============================================================================
