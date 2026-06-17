@@ -245,21 +245,19 @@ extract() {
     return 0
 }
 
-# render a mermaid diagram (.mmd, or stdin via "-") to svg/png via docker
+# render a mermaid diagram (.mmd, or stdin via "-") via docker (mmdc)
 render-mermaid() {
     local input_file="${1:-}"
-    local image="felixlohmeier/mermaid"
+    local image="minlag/mermaid-cli"
     local input_dir
     local input_name
-    local tmp_dir=""
-    local caller_dir="$PWD"
     local status
 
     # --------------------------------------------------------------------------
     # Validation
     # --------------------------------------------------------------------------
     if [[ -z "$input_file" ]]; then
-        echo "[render-mermaid] usage: render-mermaid <file.mmd|-> [mermaid-cli-args...]" >&2
+        echo "[render-mermaid] usage: render-mermaid <file.mmd|-> [mmdc-args...]" >&2
         return 1
     fi
 
@@ -271,62 +269,30 @@ render-mermaid() {
     _require_cmd "[render-mermaid]" docker || return 1
 
     # --------------------------------------------------------------------------
-    # Pull image if missing locally (commented out to avoid unnecessary network calls)
+    # Pull image if missing locally
     # --------------------------------------------------------------------------
-    # if ! docker image inspect -- "$image" >/dev/null 2>&1; then
-    #     echo "[render-mermaid] image not found locally, pulling $image..." >&2
-    #     if ! docker pull -- "$image"; then
-    #         echo "[render-mermaid] failed to pull image: $image" >&2
-    #         return 1
-    #     fi
-    # fi
-
-    # --------------------------------------------------------------------------
-    # Resolve input: "-" reads stdin into a temp dir, otherwise use the file as-is
-    # --------------------------------------------------------------------------
-    if [[ "$input_file" == "-" ]]; then
-        tmp_dir="$(mktemp -d)" || {
-            echo "[render-mermaid] failed to create temp directory" >&2
-            return 1
-        }
-        input_dir="$tmp_dir"
-        input_name="stdin.mmd"
-        if ! cat > "$input_dir/$input_name"; then
-            echo "[render-mermaid] failed to read stdin" >&2
-            rm -rf "$tmp_dir"
+    if ! docker image inspect -- "$image" >/dev/null 2>&1; then
+        echo "[render-mermaid] image not found locally, pulling $image..." >&2
+        if ! docker pull -- "$image"; then
+            echo "[render-mermaid] failed to pull image: $image" >&2
             return 1
         fi
-    else
-        input_dir="$(dirname -- "$input_file")"
-        input_name="$(basename -- "$input_file")"
     fi
 
     shift
 
-    pushd "$input_dir" >/dev/null || {
-        echo "[render-mermaid] failed to enter directory: $input_dir" >&2
-        [[ -n "$tmp_dir" ]] && rm -rf "$tmp_dir"
-        return 1
-    }
-
     # --------------------------------------------------------------------------
-    # Render (mounts the input's directory as /data)
+    # Render: mounts the input's directory (or cwd, for stdin) as /data,
+    # running as the host uid/gid so output files aren't owned by root.
     # --------------------------------------------------------------------------
-    docker run --rm -v "$PWD":/data:z "$image" -s -p "$@" "$input_name"
-    status=$?
-
-    popd >/dev/null || true
-
-    # --------------------------------------------------------------------------
-    # When using stdin, move rendered output back to the caller's directory
-    # --------------------------------------------------------------------------
-    if [[ -n "$tmp_dir" ]]; then
-        local base="${input_name%.*}"
-        local f
-        for f in "$tmp_dir/$base".*; do
-            [[ -f "$f" && "$f" != "$tmp_dir/$input_name" ]] && mv -- "$f" "$caller_dir/"
-        done
-        rm -rf "$tmp_dir"
+    if [[ "$input_file" == "-" ]]; then
+        docker run --rm -i -u "$(id -u):$(id -g)" -v "$PWD":/data:z "$image" --input - "$@"
+        status=$?
+    else
+        input_dir="$(cd "$(dirname -- "$input_file")" && pwd)"
+        input_name="$(basename -- "$input_file")"
+        docker run --rm -u "$(id -u):$(id -g)" -v "$input_dir":/data:z "$image" -i "$input_name" "$@"
+        status=$?
     fi
 
     if [[ $status -ne 0 ]]; then
