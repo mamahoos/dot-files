@@ -248,6 +248,7 @@ extract() {
 # render a mermaid diagram (.mmd) to svg/png via docker
 render-mermaid() {
     local input_file="${1:-}"
+    local image="felixlohmeier/mermaid"
     local input_dir
     local status
 
@@ -255,35 +256,46 @@ render-mermaid() {
     # Validation
     # --------------------------------------------------------------------------
     if [[ -z "$input_file" ]]; then
-        echo "[docker-mermaid] usage: docker-mermaid <file.mmd> [mermaid-cli-args...]" >&2
+        echo "[render-mermaid] usage: render-mermaid <file.mmd> [mermaid-cli-args...]" >&2
         return 1
     fi
 
     if [[ ! -f "$input_file" ]]; then
-        echo "[docker-mermaid] file does not exist: $input_file" >&2
+        echo "[render-mermaid] file does not exist: $input_file" >&2
         return 1
     fi
 
-    _require_cmd "[docker-mermaid]" docker || return 1
+    _require_cmd "[render-mermaid]" docker || return 1
+
+    # --------------------------------------------------------------------------
+    # Pull image if missing locally
+    # --------------------------------------------------------------------------
+    if ! docker image inspect -- "$image" >/dev/null 2>&1; then
+        echo "[render-mermaid] image not found locally, pulling $image..." >&2
+        if ! docker pull -- "$image"; then
+            echo "[render-mermaid] failed to pull image: $image" >&2
+            return 1
+        fi
+    fi
 
     input_dir="$(dirname -- "$input_file")"
     shift
 
     pushd "$input_dir" >/dev/null || {
-        echo "[docker-mermaid] failed to enter directory: $input_dir" >&2
+        echo "[render-mermaid] failed to enter directory: $input_dir" >&2
         return 1
     }
 
     # --------------------------------------------------------------------------
-    # Render via felixlohmeier/mermaid (mounts the file's directory as /data)
+    # Render (mounts the file's directory as /data)
     # --------------------------------------------------------------------------
-    docker run --rm -v "$PWD":/data:z felixlohmeier/mermaid -s -p "$@" "$(basename -- "$input_file")"
+    docker run --rm -v "$PWD":/data:z "$image" -s -p "$@" "$(basename -- "$input_file")"
     status=$?
 
     popd >/dev/null || true
 
     if [[ $status -ne 0 ]]; then
-        echo "[docker-mermaid] render failed: $input_file" >&2
+        echo "[render-mermaid] render failed: $input_file" >&2
         return "$status"
     fi
 
