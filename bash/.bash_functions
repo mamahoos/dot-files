@@ -245,58 +245,32 @@ extract() {
     return 0
 }
 
-# render a mermaid diagram (.mmd, or stdin via "-") via docker (mmdc)
-render-mermaid() {
-    local input_file="${1:-}"
+# thin wrapper around mmdc (minlag/mermaid-cli) via docker: forwards all args as-is
+mmdc() {
     local image="minlag/mermaid-cli"
-    local input_dir
-    local input_name
     local status
 
-    # --------------------------------------------------------------------------
-    # Validation
-    # --------------------------------------------------------------------------
-    if [[ -z "$input_file" ]]; then
-        echo "[render-mermaid] usage: render-mermaid <file.mmd|-> [mmdc-args...]" >&2
-        return 1
-    fi
-
-    if [[ "$input_file" != "-" && ! -f "$input_file" ]]; then
-        echo "[render-mermaid] file does not exist: $input_file" >&2
-        return 1
-    fi
-
-    _require_cmd "[render-mermaid]" docker || return 1
+    _require_cmd "[mmdc]" docker || return 1
 
     # --------------------------------------------------------------------------
     # Pull image if missing locally
     # --------------------------------------------------------------------------
     if ! docker image inspect -- "$image" >/dev/null 2>&1; then
-        echo "[render-mermaid] image not found locally, pulling $image..." >&2
+        echo "[mmdc] image not found locally, pulling $image..." >&2
         if ! docker pull -- "$image"; then
-            echo "[render-mermaid] failed to pull image: $image" >&2
+            echo "[mmdc] failed to pull image: $image" >&2
             return 1
         fi
     fi
 
-    shift
-
     # --------------------------------------------------------------------------
-    # Render: mounts the input's directory (or cwd, for stdin) as /data,
-    # running as the host uid/gid so output files aren't owned by root.
+    # Run: mounts cwd as /data, runs as host uid/gid, forwards all args to mmdc
     # --------------------------------------------------------------------------
-    if [[ "$input_file" == "-" ]]; then
-        docker run --rm -i -u "$(id -u):$(id -g)" -v "$PWD":/data:z "$image" --input - "$@"
-        status=$?
-    else
-        input_dir="$(cd "$(dirname -- "$input_file")" && pwd)"
-        input_name="$(basename -- "$input_file")"
-        docker run --rm -u "$(id -u):$(id -g)" -v "$input_dir":/data:z "$image" -i "$input_name" "$@"
-        status=$?
-    fi
+    docker run --rm -i -u "$(id -u):$(id -g)" -v "$PWD":/data:z "$image" "$@"
+    status=$?
 
     if [[ $status -ne 0 ]]; then
-        echo "[render-mermaid] render failed: $input_file" >&2
+        echo "[mmdc] failed (exit $status)" >&2
         return "$status"
     fi
 
