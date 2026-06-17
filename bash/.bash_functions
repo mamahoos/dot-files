@@ -268,15 +268,15 @@ render-mermaid() {
     _require_cmd "[render-mermaid]" docker || return 1
 
     # --------------------------------------------------------------------------
-    # Pull image if missing locally
+    # Pull image if missing locally (commented out for now)
     # --------------------------------------------------------------------------
-    if ! docker image inspect -- "$image" >/dev/null 2>&1; then
-        echo "[render-mermaid] image not found locally, pulling $image..." >&2
-        if ! docker pull -- "$image"; then
-            echo "[render-mermaid] failed to pull image: $image" >&2
-            return 1
-        fi
-    fi
+    # if ! docker image inspect -- "$image" >/dev/null 2>&1; then
+    #     echo "[render-mermaid] image not found locally, pulling $image..." >&2
+    #     if ! docker pull -- "$image"; then
+    #         echo "[render-mermaid] failed to pull image: $image" >&2
+    #         return 1
+    #     fi
+    # fi
 
     input_dir="$(dirname -- "$input_file")"
     shift
