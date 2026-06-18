@@ -245,38 +245,6 @@ extract() {
     return 0
 }
 
-# thin wrapper around mmdc (minlag/mermaid-cli) via docker: forwards all args as-is
-mmdc() {
-    local image="minlag/mermaid-cli"
-    local status
-
-    _require_cmd "[mmdc]" docker || return 1
-
-    # --------------------------------------------------------------------------
-    # Pull image if missing locally
-    # --------------------------------------------------------------------------
-    if ! docker image inspect -- "$image" >/dev/null 2>&1; then
-        echo "[mmdc] image not found locally, pulling $image..." >&2
-        if ! docker pull -- "$image"; then
-            echo "[mmdc] failed to pull image: $image" >&2
-            return 1
-        fi
-    fi
-
-    # --------------------------------------------------------------------------
-    # Run: mounts cwd as /data, runs as host uid/gid, forwards all args to mmdc
-    # --------------------------------------------------------------------------
-    docker run --rm -i -u "$(id -u):$(id -g)" -v "$PWD":/data:z "$image" "$@"
-    status=$?
-
-    if [[ $status -ne 0 ]]; then
-        echo "[mmdc] failed (exit $status)" >&2
-        return "$status"
-    fi
-
-    return 0
-}
-
 # ==============================================================================
 # DOCKER HELPERS
 # ==============================================================================
