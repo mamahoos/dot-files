@@ -47,9 +47,6 @@ shopt -s extglob
 # Enable programmable completion (optional)
 shopt -s progcomp
 
-# Enable history expansion (optional)
-# shopt -s histexpand
-
 # Enable command history (optional)
 shopt -s cmdhist
 
@@ -182,7 +179,15 @@ if command -v pyenv >/dev/null 2>&1; then
 fi
 
 # ======================================================================
-# 13. Kiro env
+# 13. Node version management (nvm)
+# ======================================================================
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# ======================================================================
+# 14. Kiro env
 # ======================================================================
 
 export PATH="$PATH:/usr/sbin"
@@ -190,7 +195,7 @@ export PATH="$PATH:/usr/sbin"
 [[ "$TERM_PROGRAM" == "kiro" ]] && source "$(kiro --locate-shell-integration-path bash)"
 
 # ======================================================================
-# 14. Local-only overrides (never commit secrets)
+# 15. Local-only overrides (never commit secrets)
 # ======================================================================
 
 if [ -f "$HOME/.bashrc.local" ]; then
