@@ -1,28 +1,35 @@
 ---
-description: Agent-decide activation for context-dependent skills; load only when task signals match.
+description: Agent-decide guidance for context-dependent skills; apply when task signals match.
 alwaysApply: false
 ---
 
 # Conditional Skills (Agent Decide)
 
-Activate these only when context indicates they are needed:
+Use these skills when the task context clearly requires them.
 
-- `idea-refine`
-- `context-engineering`
-- `source-driven-development`
-- `frontend-ui-engineering`
-- `api-and-interface-design`
-- `browser-testing-with-devtools`
-- `security-and-hardening`
-- `performance-optimization`
-- `ci-cd-and-automation`
-- `deprecation-and-migration`
-- `documentation-and-adrs`
-- `shipping-and-launch`
-- `code-simplification`
+## Define / Discovery
 
-## Decision Policy
+- `interview-me`: Use when requirements are unclear and you need to extract intent before planning.
+- `idea-refine`: Use when the problem statement is vague or direction is unclear.
+- `context-engineering`: Use at session start, quality drops, or task switching.
 
-- Choose by explicit task signals, constraints, or risk.
-- Mention which conditional skill is activated and why.
-- Keep details in each skill's `SKILL.md`; this rule only controls activation policy.
+## Build / Validation
+
+- `source-driven-development`: Use when framework/library correctness must be aligned with official docs.
+- `doubt-driven-development`: Use for high-stakes or unfamiliar code where decisions need adversarial review.
+- `frontend-ui-engineering`: Use for user-facing UI/UX and accessibility work.
+- `api-and-interface-design`: Use for API contracts, module boundaries, and interface design.
+- `browser-testing-with-devtools`: Use for browser runtime behavior and interactive debugging.
+- `security-and-hardening`: Use for untrusted input, auth, secrets, or external integrations.
+- `performance-optimization`: Use for SLO/CWV targets or suspected performance regressions.
+- `ci-cd-and-automation`: Use for pipeline, checks, hooks, and automation changes.
+- `deprecation-and-migration`: Use for legacy removal and user/data migration paths.
+- `documentation-and-adrs`: Use when architecture/API decisions need explicit rationale.
+- `observability-and-instrumentation`: Use when adding logs, metrics, traces, or alerts.
+- `shipping-and-launch`: Use for rollout, release readiness, and rollback planning.
+- `code-simplification`: Use after correctness is established and maintainability is the goal.
+
+## Policy
+
+- Agent should choose these based on explicit task signals, not by default.
+- If a conditional skill is activated, mention which one and why in a short note.

@@ -1,25 +1,35 @@
 ---
-description: Always-on core lifecycle for non-trivial changes: define, plan, build, verify, review, and ship.
+description: Always-on core execution lifecycle across Define, Plan, Build, Verify, Review, and Ship.
 alwaysApply: true
 ---
 
 # Essential Core Lifecycle
 
-This rule is always active for non-trivial software work.
+This rule is always active and defines the minimum required workflow for non-trivial software changes.
 
-## Required Flow
+## Mandatory Core Skills
 
-1. Define with `spec-driven-development`.
-2. Plan with `planning-and-task-breakdown`.
-3. Build in small slices with `incremental-implementation`.
-4. Verify behavior with `test-driven-development`.
-5. If anything breaks, diagnose with `debugging-and-error-recovery`.
-6. Review quality with `code-review-and-quality`.
-7. Ship safely with `git-workflow-and-versioning`.
+Apply these as the default lifecycle:
 
-## Enforcement
+1. **Define**: `spec-driven-development`
+2. **Plan**: `planning-and-task-breakdown`
+3. **Build**: `incremental-implementation`
+4. **Verify**: `test-driven-development`
+5. **Verify (when broken)**: `debugging-and-error-recovery`
+6. **Review**: `code-review-and-quality`
+7. **Ship**: `git-workflow-and-versioning`
 
-- Do not skip Define/Plan for ambiguous or multi-step tasks.
-- Do not ship behavior changes without verification evidence.
-- Keep Git history clean with small atomic commits and short-lived branches.
+## Enforcement Policy
+
+- For any non-simple change, start with Define and Plan before implementation.
+- For any multi-file or risky change, build in small slices and verify each slice.
+- For any behavior change or bug fix, provide test evidence.
+- If tests/build fail or behavior is unexpected, use systematic debugging before continuing.
+- Before merge or final delivery, run quality review.
+- Keep Git history clean: atomic commits, short-lived branches, and safe merge flow.
 - For deep guidance, load the corresponding `SKILL.md` files under `.cursor/skills/`.
+
+## Exception Policy
+
+- Tiny, obvious, low-risk edits may skip full lifecycle steps, but still require safe Git discipline.
+- If a step is intentionally skipped, briefly state why.
