@@ -1,15 +1,38 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-upstream="${AGENT_SKILLS_DIR:-$HOME/dev/vendor/agent-skills}"
-dest="$repo_root/.cursor/skills"
+# ==============================================================================
+# CONFIG
+# ==============================================================================
 
-usage() {
-  cat <<EOF
-Usage: $(basename "$0") [--pull] [--dry-run] [--check]
+readonly SCRIPT_NAME="${0##*/}"
+readonly REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+readonly SKILLS_DEST="$REPO_ROOT/.cursor/skills"
+readonly UPSTREAM_ROOT="${AGENT_SKILLS_DIR:-$HOME/dev/vendor/agent-skills}"
+readonly UPSTREAM_SKILLS="$UPSTREAM_ROOT/skills"
+readonly IDEA_REFINE_SCRIPT='bash .cursor/skills/idea-refine/scripts/idea-refine.sh'
 
-Sync .cursor/skills from addyosmani/agent-skills (local vendor checkout).
+PULL=false
+DRY_RUN=false
+CHECK=false
+
+# ==============================================================================
+# LOGGING
+# ==============================================================================
+
+_skills_sync_error() {
+    printf '[%s] %s\n' "$SCRIPT_NAME" "$*" >&2
+}
+
+# ==============================================================================
+# USAGE
+# ==============================================================================
+
+_skills_sync_usage() {
+    cat <<EOF
+Usage: $SCRIPT_NAME [--pull] [--dry-run] [--check]
+
+Sync .cursor/skills from addyosmani/agent-skills.
 
 Environment:
   AGENT_SKILLS_DIR  Upstream repo path (default: ~/dev/vendor/agent-skills)
@@ -21,97 +44,185 @@ Options:
 EOF
 }
 
-pull=false
-dry_run=false
-check=false
-while [ $# -gt 0 ]; do
-  case "$1" in
-    --pull) pull=true ;;
-    --dry-run) dry_run=true ;;
-    --check) check=true ;;
-    -h | --help)
-      usage
-      exit 0
-      ;;
-    *)
-      echo "Unknown option: $1" >&2
-      usage >&2
-      exit 1
-      ;;
-  esac
-  shift
-done
+# ==============================================================================
+# ARGUMENT PARSING
+# ==============================================================================
 
-if [ "$check" = true ] && [ "$dry_run" = true ]; then
-  echo "Use either --check or --dry-run, not both." >&2
-  exit 1
-fi
+_skills_sync_parse_args() {
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --pull) PULL=true ;;
+            --dry-run) DRY_RUN=true ;;
+            --check) CHECK=true ;;
+            -h | --help)
+                _skills_sync_usage
+                exit 0
+                ;;
+            *)
+                _skills_sync_error "unknown option: $1"
+                _skills_sync_usage >&2
+                exit 1
+                ;;
+        esac
+        shift
+    done
 
-if [ ! -d "$upstream/skills" ]; then
-  echo "Upstream skills not found: $upstream/skills" >&2
-  exit 1
-fi
-
-if [ "$pull" = true ]; then
-  echo "Pulling $upstream ..."
-  git -C "$upstream" pull --ff-only
-fi
-
-apply_local_overlay() {
-  local overlay_dest="$1"
-  local skill_file script_path
-  while IFS= read -r -d '' skill_file; do
-    if ! grep -q '^disable-model-invocation:' "$skill_file"; then
-      awk '
-        /^description:/ && !added {
-          print
-          print "disable-model-invocation: true"
-          added = 1
-          next
-        }
-        { print }
-      ' "$skill_file" >"${skill_file}.tmp"
-      mv "${skill_file}.tmp" "$skill_file"
+    if [[ "$CHECK" == true && "$DRY_RUN" == true ]]; then
+        _skills_sync_error "use either --check or --dry-run, not both"
+        exit 1
     fi
-  done < <(find "$overlay_dest" -name SKILL.md -print0)
-
-  script_path="$overlay_dest/idea-refine/SKILL.md"
-  if [ -f "$script_path" ]; then
-    sed -i 's|bash skills/idea-refine/scripts/idea-refine.sh|bash .cursor/skills/idea-refine/scripts/idea-refine.sh|g' "$script_path"
-    sed -i 's|bash /mnt/skills/user/idea-refine/scripts/idea-refine.sh|bash .cursor/skills/idea-refine/scripts/idea-refine.sh|g' "$script_path"
-  fi
 }
 
-if [ "$check" = true ]; then
-  tmp_dest="$(mktemp -d)"
-  trap 'rm -rf "$tmp_dest"' EXIT
+# ==============================================================================
+# VALIDATION
+# ==============================================================================
 
-  rsync -a "$upstream/skills/" "$tmp_dest/"
-  apply_local_overlay "$tmp_dest"
+_skills_sync_validate() {
+    if [[ ! -d "$UPSTREAM_SKILLS" ]]; then
+        _skills_sync_error "upstream skills not found: $UPSTREAM_SKILLS"
+        exit 1
+    fi
 
-  if diff -rq "$dest" "$tmp_dest" >/tmp/skills-drift.diff; then
-    echo "Skills are in sync with upstream."
-    exit 0
-  fi
+    command -v rsync >/dev/null 2>&1 || {
+        _skills_sync_error "missing dependency: rsync"
+        exit 1
+    }
 
-  echo "Skills drift detected against upstream ($upstream)." >&2
-  echo "Run locally: ./scripts/sync-agent-skills.sh --pull" >&2
-  echo >&2
-  cat /tmp/skills-drift.diff >&2
-  exit 1
-fi
+    command -v diff >/dev/null 2>&1 || {
+        _skills_sync_error "missing dependency: diff"
+        exit 1
+    }
+}
 
-rsync_args=(-a --delete --itemize-changes)
-if [ "$dry_run" = true ]; then
-  rsync_args+=(--dry-run)
-fi
+# ==============================================================================
+# UPSTREAM
+# ==============================================================================
 
-echo "Syncing skills from $upstream/skills -> $dest"
-rsync "${rsync_args[@]}" "$upstream/skills/" "$dest/"
+_skills_sync_pull_upstream() {
+    if [[ "$PULL" != true ]]; then
+        return 0
+    fi
 
-if [ "$dry_run" = false ]; then
-  apply_local_overlay "$dest"
-  echo "Applied local overlay (disable-model-invocation, idea-refine path)."
-fi
+    printf 'pulling %s\n' "$UPSTREAM_ROOT"
+    git -C "$UPSTREAM_ROOT" pull --ff-only
+}
 
-echo "Done. Review with: git diff --stat .cursor/skills"
+# ==============================================================================
+# LOCAL OVERLAY
+# ==============================================================================
+
+_skills_sync_add_disable_invocation() {
+    local skill_file="$1"
+    local tmp_file
+
+    if grep -q '^disable-model-invocation:' "$skill_file"; then
+        return 0
+    fi
+
+    tmp_file="${skill_file}.tmp"
+    awk '
+        /^description:/ && !added {
+            print
+            print "disable-model-invocation: true"
+            added = 1
+            next
+        }
+        { print }
+    ' "$skill_file" >"$tmp_file"
+    mv "$tmp_file" "$skill_file"
+}
+
+_skills_sync_fix_idea_refine_path() {
+    local idea_refine_skill="$1"
+
+    [[ -f "$idea_refine_skill" ]] || return 0
+
+    sed -i \
+        -e 's|bash skills/idea-refine/scripts/idea-refine.sh|'"$IDEA_REFINE_SCRIPT"'|g' \
+        -e 's|bash /mnt/skills/user/idea-refine/scripts/idea-refine.sh|'"$IDEA_REFINE_SCRIPT"'|g' \
+        "$idea_refine_skill"
+}
+
+_skills_sync_apply_overlay() {
+    local overlay_dest="$1"
+    local skill_file
+
+    while IFS= read -r -d '' skill_file; do
+        _skills_sync_add_disable_invocation "$skill_file"
+    done < <(find "$overlay_dest" -name SKILL.md -print0)
+
+    _skills_sync_fix_idea_refine_path "$overlay_dest/idea-refine/SKILL.md"
+}
+
+# ==============================================================================
+# BUILD EXPECTED TREE
+# ==============================================================================
+
+_skills_sync_build_expected() {
+    local expected_dir="$1"
+
+    rsync -a "$UPSTREAM_SKILLS/" "$expected_dir/"
+    _skills_sync_apply_overlay "$expected_dir"
+}
+
+# ==============================================================================
+# MODES
+# ==============================================================================
+
+_skills_sync_check_drift() {
+    local expected_dir drift_report
+
+    expected_dir="$(mktemp -d)"
+    drift_report="$(mktemp)"
+    trap 'rm -rf "$expected_dir" "$drift_report"' RETURN
+
+    _skills_sync_build_expected "$expected_dir"
+
+    if diff -rq "$SKILLS_DEST" "$expected_dir" >"$drift_report"; then
+        printf 'skills are in sync with upstream\n'
+        return 0
+    fi
+
+    _skills_sync_error "skills drift detected against upstream ($UPSTREAM_ROOT)"
+    _skills_sync_error "run: ./scripts/sync-agent-skills.sh --pull"
+    cat "$drift_report" >&2
+    return 1
+}
+
+_skills_sync_run() {
+    local -a rsync_args=(-a --delete --itemize-changes)
+
+    if [[ "$DRY_RUN" == true ]]; then
+        rsync_args+=(--dry-run)
+    fi
+
+    printf 'syncing %s -> %s\n' "$UPSTREAM_SKILLS" "$SKILLS_DEST"
+    rsync "${rsync_args[@]}" "$UPSTREAM_SKILLS/" "$SKILLS_DEST/"
+
+    if [[ "$DRY_RUN" == true ]]; then
+        return 0
+    fi
+
+    _skills_sync_apply_overlay "$SKILLS_DEST"
+    printf 'applied local overlay\n'
+    printf 'review with: git diff --stat .cursor/skills\n'
+}
+
+# ==============================================================================
+# MAIN
+# ==============================================================================
+
+main() {
+    _skills_sync_parse_args "$@"
+    _skills_sync_validate
+    _skills_sync_pull_upstream
+
+    if [[ "$CHECK" == true ]]; then
+        _skills_sync_check_drift
+        exit $?
+    fi
+
+    _skills_sync_run
+}
+
+main "$@"
