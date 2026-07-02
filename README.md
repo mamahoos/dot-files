@@ -1,69 +1,71 @@
 # dot-files
 
-Minimal, versioned dotfiles for a Linux development setup, including shell and tool configuration, SSH templates, and Cursor skills.
+Minimal, versioned dotfiles for a Linux development setup. Layout mirrors the filesystem: `home/` → `$HOME`, `config/` → `$XDG_CONFIG_HOME`.
 
 ## What This Repo Contains
 
-- Bash configuration files (`.bashrc`, aliases, profile, local override template)
-- Git and CLI tool configs (`.gitconfig`, `htop`, `btop`, `tmux`, `vscode`)
-- Cursor skills and agent guidance under `.cursor/`
+- Shell and git config under `home/`
+- XDG tool configs under `config/` (btop, htop, tmux)
+- Cursor rules, skills, and agents under `home/.cursor/`
 
 ## Repository Structure
 
 ```text
 .
-├── bash/                          # Bash shell configuration
-│   ├── .bash_aliases
+├── home/                          # mirrors $HOME
 │   ├── .bashrc
+│   ├── .bash_aliases
+│   ├── .bash_functions
 │   ├── .bashrc.local.example
-│   └── .profile
-├── config/                        # System tool configurations
+│   ├── .profile
+│   ├── .gitconfig
+│   └── .cursor/
+│       ├── agents/
+│       ├── rules/                 # Cursor rules (.mdc)
+│       └── skills/                # synced from addyosmani/agent-skills
+├── config/                        # mirrors ~/.config
 │   ├── btop/
-│   │   └── btop.conf
 │   ├── htop/
-│   │   └── htoprc
 │   └── tmux/
-│       └── .gitkeep
-├── git/                           # Git configuration
-│   └── .gitconfig
-├── .cursor/                       # Cursor skills, rules, and agents
-│   ├── rules/                     # Always-on / conditional Cursor rules (.mdc)
-│   ├── skills/                    # Synced from addyosmani/agent-skills
-│   └── agents/
 ├── scripts/
-│   └── sync-agent-skills.sh       # Pull upstream skills into .cursor/skills
-└── link-dotfiles.sh               # Symlink setup script
+│   ├── link-dotfiles.sh           # symlink home/ and config/ into place
+│   └── sync-agent-skills.sh       # pull upstream skills
+├── .github/workflows/
+│   ├── lint.yml
+│   └── skills-drift.yml
+└── README.md
 ```
+
+## Setup
+
+```bash
+./scripts/link-dotfiles.sh
+```
+
+`home/*` links to `$HOME`, `config/*` links to `$XDG_CONFIG_HOME` (default `~/.config`). Existing targets are backed up under `~/.dotfiles-backup/`.
+
+`.cursor` children (`agents`, `rules`, `skills`) link individually into `~/.cursor/` so Cursor-managed paths are not replaced.
 
 ## Cursor Skills
 
-The `.cursor/skills/` directory contains reusable guidance and workflows for development tasks such as:
+Skills live in `home/.cursor/skills/` and cover planning, testing, review, debugging, and delivery workflows.
 
-- Planning and implementation
-- Testing and quality checks
-- Code review and debugging
-- Automation and delivery practices
+### Attribution
 
-## Skills Attribution
+Core skill content is sourced from [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills.git), then adapted locally.
 
-Core skill content in `.cursor/skills/` is sourced from [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills.git), then adapted for personal workflow and local usage.
-
-Project-specific Cursor rules live in `.cursor/rules/` (`.mdc` files). These are **not** part of upstream agent-skills; they point agents at the synced skills.
+Rules in `home/.cursor/rules/` are project-specific and not part of upstream.
 
 ### Sync upstream skills
 
 Vendor checkout (default): `~/dev/vendor/agent-skills`
 
 ```bash
-./scripts/sync-agent-skills.sh --pull   # pull upstream, sync, apply local overlay
-git diff .cursor/skills                 # review before commit
+./scripts/sync-agent-skills.sh --pull
+git diff home/.cursor/skills
 ```
 
-The sync script copies upstream `skills/`, then applies local overlay:
-- `disable-model-invocation: true` on each skill
-- fix `idea-refine` script path for this repo layout
-
-CI runs `skills-drift` on changes under `.cursor/skills/**` (plus a weekly schedule) and fails when local skills drift from upstream. Fix with `./scripts/sync-agent-skills.sh --pull`, review, commit.
+CI runs `skills-drift` on `home/.cursor/skills/**` changes (plus a weekly schedule).
 
 ## TODO
 

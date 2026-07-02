@@ -15,7 +15,7 @@ jobs:
       - name: Run ShellCheck
         uses: ludeeus/action-shellcheck@2.0.0
         with:
-          scandir: bash
+          scandir: home
           severity: error
 
       - name: Install shfmt
@@ -25,4 +25,4 @@ jobs:
 
       - name: Check formatting
         run: |
-          shfmt -d -i 2 bash
+          shfmt -d -i 2 home scripts

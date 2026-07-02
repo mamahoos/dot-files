@@ -1,4 +1,4 @@
-bash/.bashrc.local
+home/.bashrc.local
 *.local
 .DS_Store
 ssh/
