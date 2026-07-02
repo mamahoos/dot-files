@@ -1,6 +1,8 @@
 # Local-only Bash overrides.
-# Copy this file to ~/.bashrc.local and keep secrets there.
+# Copy this file to home/.bashrc.local (gitignored), then run:
+#   ./scripts/link-dotfiles.sh
 
 # Example:
 # export PRIVATE_TOKEN="replace-me"
 # export PATH="$HOME/bin:$PATH"
+# export AGENT_SKILLS_DIR="$HOME/src/agent-skills"
