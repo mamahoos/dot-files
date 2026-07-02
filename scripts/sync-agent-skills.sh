@@ -8,7 +8,8 @@ set -euo pipefail
 readonly SCRIPT_NAME="${0##*/}"
 readonly REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 readonly SKILLS_DEST="$REPO_ROOT/home/.cursor/skills"
-readonly UPSTREAM_ROOT="${AGENT_SKILLS_DIR:-$HOME/dev/vendor/agent-skills}"
+readonly UPSTREAM_REPO_URL='https://github.com/addyosmani/agent-skills.git'
+readonly UPSTREAM_ROOT="${AGENT_SKILLS_DIR:-$REPO_ROOT/.cache/agent-skills}"
 readonly UPSTREAM_SKILLS="$UPSTREAM_ROOT/skills"
 readonly IDEA_REFINE_SCRIPT='bash ~/.cursor/skills/idea-refine/scripts/idea-refine.sh'
 
@@ -34,11 +35,14 @@ Usage: $SCRIPT_NAME [--pull] [--dry-run] [--check]
 
 Sync home/.cursor/skills from addyosmani/agent-skills.
 
+On first run, clones upstream into .cache/agent-skills (gitignored) unless
+AGENT_SKILLS_DIR points at an existing checkout.
+
 Environment:
-  AGENT_SKILLS_DIR  Upstream repo path (default: ~/dev/vendor/agent-skills)
+  AGENT_SKILLS_DIR  Optional path to an existing agent-skills clone
 
 Options:
-  --pull     Run 'git pull --ff-only' in the upstream repo first
+  --pull     Update the upstream clone before syncing (recommended)
   --dry-run  Show what would change without writing files
   --check    Exit 1 if local skills differ from upstream after overlay
 EOF
@@ -78,10 +82,10 @@ _skills_sync_parse_args() {
 # ==============================================================================
 
 _skills_sync_validate() {
-  if [[ ! -d "$UPSTREAM_SKILLS" ]]; then
-    _skills_sync_error "upstream skills not found: $UPSTREAM_SKILLS"
+  command -v git >/dev/null 2>&1 || {
+    _skills_sync_error "missing dependency: git"
     exit 1
-  fi
+  }
 
   command -v rsync >/dev/null 2>&1 || {
     _skills_sync_error "missing dependency: rsync"
@@ -98,13 +102,27 @@ _skills_sync_validate() {
 # UPSTREAM
 # ==============================================================================
 
-_skills_sync_pull_upstream() {
+_skills_sync_ensure_upstream() {
+  if [[ ! -d "$UPSTREAM_ROOT/.git" ]]; then
+    mkdir -p "$(dirname "$UPSTREAM_ROOT")"
+    printf 'cloning %s -> %s\n' "$UPSTREAM_REPO_URL" "$UPSTREAM_ROOT"
+    git clone --depth 1 "$UPSTREAM_REPO_URL" "$UPSTREAM_ROOT"
+    return 0
+  fi
+
   if [[ "$PULL" != true ]]; then
     return 0
   fi
 
   printf 'pulling %s\n' "$UPSTREAM_ROOT"
   git -C "$UPSTREAM_ROOT" pull --ff-only
+}
+
+_skills_sync_validate_upstream() {
+  if [[ ! -d "$UPSTREAM_SKILLS" ]]; then
+    _skills_sync_error "upstream skills not found: $UPSTREAM_SKILLS"
+    exit 1
+  fi
 }
 
 # ==============================================================================
@@ -216,7 +234,8 @@ _skills_sync_run() {
 main() {
   _skills_sync_parse_args "$@"
   _skills_sync_validate
-  _skills_sync_pull_upstream
+  _skills_sync_ensure_upstream
+  _skills_sync_validate_upstream
 
   if [[ "$CHECK" == true ]]; then
     _skills_sync_check_drift
