@@ -60,14 +60,17 @@ Rules in `home/.cursor/rules/` are project-specific and not part of upstream.
 
 ### Sync upstream skills
 
-Vendor checkout (default): `~/dev/vendor/agent-skills`
-
 ```bash
-./scripts/sync-agent-skills.sh --pull
+./scripts/sync-agent-skills.sh --pull   # clones upstream on first run
 git diff home/.cursor/skills
 ```
 
-CI runs `skills-drift` on `home/.cursor/skills/**` changes (plus a weekly schedule).
+First run creates `.cache/agent-skills` (gitignored). `--pull` updates it before syncing.
+
+> **Optional:** Already have a clone? `AGENT_SKILLS_DIR=/path/to/agent-skills ./scripts/sync-agent-skills.sh --pull`  
+> **Read-only?** Skip sync — copy from `home/.cursor/skills/` directly.
+
+CI clones upstream on each run; locally the script handles clone/pull for you.
 
 ## TODO
 
