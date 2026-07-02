@@ -63,6 +63,8 @@ The sync script copies upstream `skills/`, then applies local overlay:
 - `disable-model-invocation: true` on each skill
 - fix `idea-refine` script path for this repo layout
 
+CI runs `skills-drift` on changes under `.cursor/skills/**` (plus a weekly schedule) and fails when local skills drift from upstream. Fix with `./scripts/sync-agent-skills.sh --pull`, review, commit.
+
 ## TODO
 
 - [ ] Add tmux configuration (`config/tmux/tmux.conf`)

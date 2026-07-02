@@ -1,0 +1,33 @@
+name: Skills drift
+
+on:
+  pull_request:
+    paths:
+      - .cursor/skills/**
+      - scripts/sync-agent-skills.sh
+      - .github/workflows/skills-drift.yml
+  push:
+    branches: [main]
+    paths:
+      - .cursor/skills/**
+      - scripts/sync-agent-skills.sh
+      - .github/workflows/skills-drift.yml
+  schedule:
+    # Weekly drift alert when upstream moves ahead without a local sync commit
+    - cron: "0 9 * * 1"
+  workflow_dispatch:
+
+jobs:
+  check-skills-drift:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch upstream agent-skills
+        run: git clone --depth 1 https://github.com/addyosmani/agent-skills.git /tmp/agent-skills
+
+      - name: Check .cursor/skills drift
+        env:
+          AGENT_SKILLS_DIR: /tmp/agent-skills
+        run: ./scripts/sync-agent-skills.sh --check
