@@ -38,8 +38,10 @@ Minimal, versioned dotfiles for a Linux development setup. Layout mirrors the fi
 
 ## Setup
 
+> **Note:** This repo is mainly a reference. Prefer copying the configs you want into your own paths and adapting them. `link-dotfiles.sh` is provided for convenience only — symlinks can interact badly with tools that rewrite config files, and a bad link pass can leave your live setup in a messy state.
+
 ```bash
-./scripts/link-dotfiles.sh
+./scripts/link-dotfiles.sh   # optional; use at your own risk
 ```
 
 `home/*` links to `$HOME`, `config/*` links to `$XDG_CONFIG_HOME` (default `~/.config`). Existing targets are backed up under `~/.dotfiles-backup/`.
