@@ -1,6 +1,6 @@
 ---
 description: Agent-decide guidance for context-dependent skills; apply when task signals match.
-alwaysApply: false
+alwaysApply: true
 ---
 
 # Conditional Skills (Agent Decide)
