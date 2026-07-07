@@ -7,7 +7,7 @@ on:
       - scripts/sync-agent-skills.sh
       - .github/workflows/skills-drift.yml
   push:
-    branches: [main]
+    branches: [ main ]
     paths:
       - home/.cursor/skills/**
       - scripts/sync-agent-skills.sh
