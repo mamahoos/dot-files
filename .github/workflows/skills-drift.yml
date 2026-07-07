@@ -12,10 +12,10 @@ on:
       - home/.cursor/skills/**
       - scripts/sync-agent-skills.sh
       - .github/workflows/skills-drift.yml
-  schedule:
-    # Weekly drift alert when upstream moves ahead without a local sync commit
-    - cron: "0 9 * * 1"
   workflow_dispatch:
+  # Scheduled drift detection lives in skills-sync-pr.yml, which opens a PR
+  # when upstream moves ahead. This workflow keeps guarding against manual
+  # local drift on PR/push.
 
 concurrency:
   group: skills-drift-${{ github.workflow }}-${{ github.ref }}

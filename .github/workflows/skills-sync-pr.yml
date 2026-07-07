@@ -1,0 +1,43 @@
+name: Skills sync PR
+
+on:
+  schedule:
+    # Weekly: open a PR when upstream agent-skills moves ahead
+    - cron: "0 9 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: skills-sync-pr-${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch upstream agent-skills
+        run: git clone --depth 1 https://github.com/addyosmani/agent-skills.git /tmp/agent-skills
+
+      - name: Sync skills into working tree
+        env:
+          AGENT_SKILLS_DIR: /tmp/agent-skills
+        run: ./scripts/sync-agent-skills.sh
+
+      - name: Open PR if changed
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: chore/sync-agent-skills
+          commit-message: "chore(cursor): sync agent-skills from upstream"
+          title: "chore(cursor): sync agent-skills from upstream"
+          body: |
+            Automated sync from [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills).
+
+            Triggered by the weekly `skills-sync-pr` workflow. Review the diff and merge if it looks good. The `skills-drift` check on PR/push will continue to guard against manual drift.
+          labels: chore, automated
+          delete-branch: true
