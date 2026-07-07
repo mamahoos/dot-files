@@ -39,6 +39,8 @@ jobs:
           body: |
             Automated sync from [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills).
 
-            Triggered by the weekly `skills-sync-pr` workflow. Review the diff and merge if it looks good. The `skills-drift` check on PR/push will continue to guard against manual drift.
+            Triggered by the weekly `skills-sync-pr` workflow. Review the diff and merge if it looks good.
+
+            Note: this PR is opened with the default `GITHUB_TOKEN`, so the `skills-drift` and `lint` workflows do **not** re-run on it (GitHub does not trigger workflows from `GITHUB_TOKEN` events). They will run on `push` to `main` after merge as a post-merge confirmation. If drift reappears, the next weekly run opens a fresh PR.
           labels: chore, automated
           delete-branch: true
