@@ -16,6 +16,7 @@ concurrency:
 
 jobs:
   sync:
+    if: github.repository == 'mamahoos/dot-files'
     runs-on: ubuntu-latest
 
     steps:
