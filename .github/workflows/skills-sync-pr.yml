@@ -2,8 +2,8 @@ name: Skills sync PR
 
 on:
   schedule:
-    # Weekly: open a PR when upstream agent-skills moves ahead
-    - cron: "0 9 * * 1"
+    # Daily: open a PR when upstream agent-skills moves ahead
+    - cron: "0 9 * * *" # 09:00 UTC every day
   workflow_dispatch:
 
 permissions:
@@ -39,8 +39,8 @@ jobs:
           body: |
             Automated sync from [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills).
 
-            Triggered by the weekly `skills-sync-pr` workflow. Review the diff and merge if it looks good.
+            Triggered by the daily `skills-sync-pr` workflow. Review the diff and merge if it looks good.
 
-            Note: this PR is opened with the default `GITHUB_TOKEN`, so the `skills-drift` and `lint` workflows do **not** re-run on it (GitHub does not trigger workflows from `GITHUB_TOKEN` events). They will run on `push` to `main` after merge as a post-merge confirmation. If drift reappears, the next weekly run opens a fresh PR.
+            Note: this PR is opened with the default `GITHUB_TOKEN`, so the `skills-drift` and `lint` workflows do **not** re-run on it (GitHub does not trigger workflows from `GITHUB_TOKEN` events). They will run on `push` to `main` after merge as a post-merge confirmation. If drift reappears, the next daily run opens a fresh PR.
           labels: chore, automated
           delete-branch: true
