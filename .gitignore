@@ -1,9 +1,20 @@
+# Local overrides (machine-specific; never commit)
 home/.bashrc.local
 *.local
+
+# OS / editor junk
 .DS_Store
+
+# Tool caches
 .cache/
+
+# Secrets
 ssh/
+
+# Cursor project dir (repo root only; home/.cursor/ stays versioned)
 .cursor/
+
+# Graphify — generated output and local-only tooling
 graphify-out/
 raw/
 .graphifyignore
