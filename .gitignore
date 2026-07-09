@@ -5,3 +5,6 @@ home/.bashrc.local
 ssh/
 .cursor/
 graphify-out/
+raw/
+.graphifyignore
+scripts/export-github-corpus.sh
