@@ -3,7 +3,21 @@ name: Lint
 on:
   push:
     branches: [ main ]
+    paths:
+      - home/**
+      - scripts/**
+      - .shellcheckrc
+      - .github/workflows/lint.yml
   pull_request:
+    paths:
+      - home/**
+      - scripts/**
+      - .shellcheckrc
+      - .github/workflows/lint.yml
+
+concurrency:
+  group: lint-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   lint:
@@ -19,10 +33,9 @@ jobs:
           severity: error
 
       - name: Install shfmt
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y shfmt
+        uses: mfinelli/setup-shfmt@v4
+        with:
+          shfmt-version: 3.8.0
 
       - name: Check formatting
-        run: |
-          shfmt -d -i 2 home scripts
+        run: shfmt -d -i 2 home scripts
