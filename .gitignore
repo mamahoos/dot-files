@@ -3,3 +3,5 @@ home/.bashrc.local
 .DS_Store
 .cache/
 ssh/
+.cursor/
+graphify-out/
