@@ -9,7 +9,7 @@ home/.bashrc.local
 .cache/
 
 # Secrets
-ssh/
+home/.ssh/
 
 # Cursor project dir (repo root only; home/.cursor/ stays versioned)
 .cursor/
