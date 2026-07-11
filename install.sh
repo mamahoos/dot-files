@@ -6,7 +6,7 @@ set -euo pipefail
 # ==============================================================================
 
 readonly SCRIPT_NAME="${0##*/}"
-readonly REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+readonly REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly HOME_SRC="$REPO_ROOT/home"
 readonly CONFIG_SRC="$REPO_ROOT/config"
 readonly TARGET_HOME="${DOTFILES_HOME:-$HOME}"
