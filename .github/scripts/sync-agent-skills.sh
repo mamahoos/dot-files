@@ -6,7 +6,7 @@ set -euo pipefail
 # ==============================================================================
 
 readonly SCRIPT_NAME="${0##*/}"
-readonly REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+readonly REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 readonly SKILLS_DEST="$REPO_ROOT/home/.cursor/skills"
 readonly UPSTREAM_REPO_URL='https://github.com/addyosmani/agent-skills.git'
 readonly UPSTREAM_ROOT="${AGENT_SKILLS_DIR:-$REPO_ROOT/.cache/agent-skills}"
@@ -203,7 +203,7 @@ _skills_sync_check_drift() {
   fi
 
   _skills_sync_error "skills drift detected against upstream ($UPSTREAM_ROOT)"
-  _skills_sync_error "run: ./scripts/sync-agent-skills.sh --pull"
+  _skills_sync_error "run: ./.github/scripts/sync-agent-skills.sh --pull"
   cat "$drift_report" >&2
   return 1
 }

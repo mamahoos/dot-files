@@ -1,6 +1,6 @@
 # Local-only Bash overrides.
 # Copy this file to home/.bashrc.local (gitignored), then run:
-#   ./scripts/link-dotfiles.sh
+#   ./install.sh
 
 # Example:
 # export PRIVATE_TOKEN="replace-me"
