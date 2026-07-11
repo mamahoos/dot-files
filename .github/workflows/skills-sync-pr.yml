@@ -1,46 +1,21 @@
 name: Skills sync PR
 
+# Safety-net remediate when upstream moves but main stays quiet (no path-filtered push).
+# Primary auto-fix lives in skills-drift.yml (open-sync-pr after check failure).
+
 on:
   schedule:
-    # Daily: open a PR when upstream agent-skills moves ahead
     - cron: "0 9 * * *" # 09:00 UTC every day
   workflow_dispatch:
-
-permissions:
-  contents: write
-  pull-requests: write
-
-concurrency:
-  group: skills-sync-pr-${{ github.workflow }}
-  cancel-in-progress: false
 
 jobs:
   sync:
     if: github.repository == 'mamahoos/dot-files'
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v7
-
-      - name: Fetch upstream agent-skills
-        run: git clone --depth 1 https://github.com/addyosmani/agent-skills.git /tmp/agent-skills
-
-      - name: Sync skills into working tree
-        env:
-          AGENT_SKILLS_DIR: /tmp/agent-skills
-        run: ./scripts/sync-agent-skills.sh
-
-      - name: Open PR if changed
-        uses: peter-evans/create-pull-request@v8
-        with:
-          branch: chore/sync-agent-skills
-          commit-message: "chore(cursor): sync agent-skills from upstream"
-          title: "chore(cursor): sync agent-skills from upstream"
-          body: |
-            Automated sync from [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills).
-
-            Triggered by the daily `skills-sync-pr` workflow. Review the diff and merge if it looks good.
-
-            Note: this PR is opened with the default `GITHUB_TOKEN`, so the `skills-drift` and `lint` workflows do **not** re-run on it (GitHub does not trigger workflows from `GITHUB_TOKEN` events). They will run on `push` to `main` after merge as a post-merge confirmation. If drift reappears, the next daily run opens a fresh PR.
-          labels: chore, automated
-          delete-branch: true
+    uses: ./.github/workflows/skills-sync-reusable.yml
+    with:
+      trigger_label: ${{ github.event_name == 'schedule' && 'daily schedule (09:00 UTC)' || 'manual workflow_dispatch' }}
+    secrets:
+      sync_token: ${{ secrets.SKILLS_SYNC_TOKEN }}
+    permissions:
+      contents: write
+      pull-requests: write
