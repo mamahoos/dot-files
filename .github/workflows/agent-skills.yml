@@ -1,0 +1,104 @@
+name: Agent skills
+
+# Upstream mirror pipeline: check → sync PR (on drift) → verify after merge.
+#
+# Requires secret SKILLS_SYNC_TOKEN (PAT with Contents + Pull requests write)
+# so lint and check-skills-drift run on automated sync PRs.
+
+on:
+  pull_request:
+    paths:
+      - home/.cursor/skills/**
+      - scripts/sync-agent-skills.sh
+      - .github/workflows/agent-skills.yml
+  push:
+    branches: [main]
+    paths:
+      - home/.cursor/skills/**
+      - scripts/sync-agent-skills.sh
+      - .github/workflows/agent-skills.yml
+  schedule:
+    - cron: "0 9 * * *" # 09:00 UTC — safety net when main is quiet
+  workflow_dispatch:
+
+concurrency:
+  group: agent-skills-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check-skills-drift:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Fetch upstream agent-skills
+        run: git clone --depth 1 https://github.com/addyosmani/agent-skills.git /tmp/agent-skills
+
+      - name: Check home/.cursor/skills drift
+        env:
+          AGENT_SKILLS_DIR: /tmp/agent-skills
+        run: ./scripts/sync-agent-skills.sh --check
+
+  sync-pr:
+    needs: check-skills-drift
+    if: >-
+      failure() &&
+      github.repository == 'mamahoos/dot-files' &&
+      github.ref == 'refs/heads/main' &&
+      (github.event_name == 'push' ||
+       github.event_name == 'schedule' ||
+       github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          token: ${{ secrets.SKILLS_SYNC_TOKEN }}
+
+      - name: Remove stale sync branch
+        run: git push origin --delete chore/sync-agent-skills || true
+
+      - name: Fetch upstream agent-skills
+        id: upstream
+        run: |
+          git clone --depth 1 https://github.com/addyosmani/agent-skills.git /tmp/agent-skills
+          echo "sha=$(git -C /tmp/agent-skills rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Sync skills into working tree
+        env:
+          AGENT_SKILLS_DIR: /tmp/agent-skills
+        run: ./scripts/sync-agent-skills.sh
+
+      - name: Resolve trigger label
+        id: trigger
+        run: |
+          case "${{ github.event_name }}" in
+            push) echo "label=drift on push to main (run ${{ github.run_id }})" >> "$GITHUB_OUTPUT" ;;
+            schedule) echo "label=daily schedule (09:00 UTC)" >> "$GITHUB_OUTPUT" ;;
+            *) echo "label=manual dispatch (run ${{ github.run_id }})" >> "$GITHUB_OUTPUT" ;;
+          esac
+
+      - name: Open PR if changed
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ secrets.SKILLS_SYNC_TOKEN }}
+          branch: chore/sync-agent-skills
+          commit-message: "chore(cursor): sync agent-skills from upstream"
+          title: "chore(cursor): sync agent-skills from upstream"
+          body: |
+            Automated sync from [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) at `${{ steps.upstream.outputs.sha }}`.
+
+            Triggered by: ${{ steps.trigger.outputs.label }}
+
+            Review the diff and merge if it looks good.
+
+            CI runs on this PR via `SKILLS_SYNC_TOKEN` (`lint`, `check-skills-drift`, `Gitleaks`).
+          labels: chore, automated
+          delete-branch: true
