@@ -32,7 +32,7 @@ Minimal, versioned dotfiles for a Linux development setup. Layout mirrors the fi
 │   └── sync-agent-skills.sh       # pull upstream skills
 ├── .github/workflows/
 │   ├── lint.yml
-│   └── skills-drift.yml
+│   └── agent-skills.yml
 └── README.md
 ```
 
