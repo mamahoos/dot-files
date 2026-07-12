@@ -98,8 +98,8 @@ _link_home_tree() {
     for entry in "$HOME_SRC/.ssh"/*; do
       name="$(basename "$entry")"
       case "$name" in
-        config|config.example|.gitignore|config.d) ;;
-        *) continue ;;
+      config | config.example | .gitignore | config.d) ;;
+      *) continue ;;
       esac
       _link_one "$entry" "$TARGET_HOME/.ssh/$name"
     done
