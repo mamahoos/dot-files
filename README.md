@@ -44,4 +44,4 @@ Versioned Linux configs I use day to day. The repo mirrors the filesystem: `home
 
 ## Cursor skills
 
-Some skills under `home/.cursor/skills/` are adapted from [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) ([MIT](https://github.com/addyosmani/agent-skills/blob/main/LICENSE)). Rules and the rest are mine.
+Some skills under `home/.cursor/skills/` are adapted from [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) ([MIT](https://github.com/addyosmani/agent-skills/blob/main/LICENSE)), [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) ([MIT](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill/blob/main/LICENSE)). Rules and the rest are mine.
