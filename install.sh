@@ -78,7 +78,7 @@ _link_home_tree() {
   for entry in "$HOME_SRC"/*; do
     name="$(basename "$entry")"
 
-    if [[ "$name" == ".cursor" ]]; then
+    if [[ "$name" == ".cursor" || "$name" == ".ssh" ]]; then
       continue
     fi
 
@@ -89,6 +89,21 @@ _link_home_tree() {
   if [[ -d "$HOME_SRC/.cursor" ]]; then
     mkdir -p "$TARGET_HOME/.cursor"
     _link_children "$HOME_SRC/.cursor" "$TARGET_HOME/.cursor"
+  fi
+
+  if [[ -d "$HOME_SRC/.ssh" ]]; then
+    mkdir -p "$TARGET_HOME/.ssh"
+    chmod 700 "$TARGET_HOME/.ssh"
+    shopt -s nullglob dotglob
+    for entry in "$HOME_SRC/.ssh"/*; do
+      name="$(basename "$entry")"
+      case "$name" in
+        config|config.example|.gitignore|config.d) ;;
+        *) continue ;;
+      esac
+      _link_one "$entry" "$TARGET_HOME/.ssh/$name"
+    done
+    shopt -u nullglob dotglob
   fi
 }
 
