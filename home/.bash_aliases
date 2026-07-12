@@ -54,6 +54,9 @@ alias dockill='docker kill $(docker ps -q)'
 # NETWORK / DEBUG
 # ==============================================================================
 
+# download w/ file name
+alias wget='wget --content-disposition'
+
 alias myip='curl -s ifconfig.me'
 alias ports='ss -tulpen'
 alias pingg='ping google.com'
