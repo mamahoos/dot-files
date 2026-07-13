@@ -313,6 +313,21 @@ docker-push-host() {
     return 0
 }
 
+# kill all running containers ⚠️
+dockill() {
+    local -a containers=()
+
+    _require_cmd "[dockill]" docker || return 1
+
+    mapfile -t containers < <(docker ps -q)
+    if ((${#containers[@]} == 0)); then
+        echo "[dockill] no running containers"
+        return 0
+    fi
+
+    docker kill "${containers[@]}"
+}
+
 # remove common Docker orphaned resources
 docker-clean() {
     echo "Removing stopped containers..."
