@@ -142,19 +142,20 @@ _sync_yaml_get() {
   return 1
 }
 
-# Print overlay names listed under an "overlays:" key (lines "  - name").
-_sync_yaml_overlays() {
+# Print list items under a top-level key (lines "  - value").
+_sync_yaml_list() {
   local file="$1"
-  local in_overlays=false
+  local key="$2"
+  local in_list=false
   local line item
 
   while IFS= read -r line || [[ -n "$line" ]]; do
     [[ "$line" =~ ^[[:space:]]*# ]] && continue
-    if [[ "$line" =~ ^overlays:[[:space:]]*$ ]]; then
-      in_overlays=true
+    if [[ "$line" =~ ^${key}:[[:space:]]*$ ]]; then
+      in_list=true
       continue
     fi
-    if [[ "$in_overlays" == true ]]; then
+    if [[ "$in_list" == true ]]; then
       if [[ "$line" =~ ^[[:space:]]+-[[:space:]]+(.+)$ ]]; then
         item="${BASH_REMATCH[1]}"
         item="${item#\"}"
@@ -162,7 +163,6 @@ _sync_yaml_overlays() {
         printf '%s\n' "$item"
         continue
       fi
-      # next top-level key ends the list
       if [[ "$line" =~ ^[a-zA-Z_] ]]; then
         break
       fi
@@ -320,7 +320,18 @@ _sync_claim() {
 _sync_rsync_dir() {
   local src="$1"
   local dst="$2"
+  shift 2
+  local -a excludes=("$@")
   local -a rsync_args=(-a --delete --itemize-changes)
+  local pattern
+
+  for pattern in "${excludes[@]}"; do
+    rsync_args+=(--exclude="$pattern")
+  done
+  # Drop excluded leftovers already present on the destination
+  if [[ ${#excludes[@]} -gt 0 ]]; then
+    rsync_args+=(--delete-excluded)
+  fi
 
   if [[ "$DRY_RUN" == true ]]; then
     rsync_args+=(--dry-run)
@@ -339,10 +350,30 @@ _sync_build_expected_skill() {
   local src_dir="$1"
   local expected_dir="$2"
   shift 2
-  local -a overlays=("$@")
+  local -a overlays=()
+  local -a excludes=()
+  local arg in_excludes=false
+  local -a rsync_args=(-a)
+  local pattern
+
+  for arg in "$@"; do
+    if [[ "$arg" == "--" ]]; then
+      in_excludes=true
+      continue
+    fi
+    if [[ "$in_excludes" == true ]]; then
+      excludes+=("$arg")
+    else
+      overlays+=("$arg")
+    fi
+  done
+
+  for pattern in "${excludes[@]}"; do
+    rsync_args+=(--exclude="$pattern")
+  done
 
   mkdir -p "$expected_dir"
-  rsync -a "$src_dir/" "$expected_dir/"
+  rsync "${rsync_args[@]}" "$src_dir/" "$expected_dir/"
   _sync_apply_overlays_tree "$expected_dir" "${overlays[@]}"
 }
 
@@ -356,6 +387,7 @@ _sync_process_source() {
   local clone_root src_path dest_abs
   local skill_dir skill_name
   local -a overlays=()
+  local -a excludes=()
   local expected_root drift_report expected_skill local_skill
   local drifted=false
 
@@ -378,7 +410,8 @@ _sync_process_source() {
     exit 1
   }
 
-  mapfile -t overlays < <(_sync_yaml_overlays "$config_file")
+  mapfile -t overlays < <(_sync_yaml_list "$config_file" overlays)
+  mapfile -t excludes < <(_sync_yaml_list "$config_file" exclude)
 
   if [[ -n "$SOURCE_FILTER" && "$name" != "$SOURCE_FILTER" ]]; then
     return 0
@@ -400,7 +433,6 @@ _sync_process_source() {
   fi
 
   if _sync_is_skills_root "$destination"; then
-    # Multi-skill root: claim each top-level dir under upstream source/
     while IFS= read -r -d '' skill_dir; do
       skill_name="$(basename "$skill_dir")"
       if ! _sync_claim "$skill_name" "$name"; then
@@ -410,7 +442,7 @@ _sync_process_source() {
       if [[ "$CHECK" == true ]]; then
         expected_skill="$expected_root/$skill_name"
         local_skill="$dest_abs/$skill_name"
-        _sync_build_expected_skill "$skill_dir" "$expected_skill" "${overlays[@]}"
+        _sync_build_expected_skill "$skill_dir" "$expected_skill" "${overlays[@]}" -- "${excludes[@]}"
         if [[ ! -d "$local_skill" ]]; then
           _sync_error "missing managed skill: $destination/$skill_name (source: $name)"
           drifted=true
@@ -420,14 +452,13 @@ _sync_process_source() {
           drifted=true
         fi
       else
-        _sync_rsync_dir "$skill_dir" "$dest_abs/$skill_name"
+        _sync_rsync_dir "$skill_dir" "$dest_abs/$skill_name" "${excludes[@]}"
         if [[ "$DRY_RUN" != true ]]; then
           _sync_apply_overlays_tree "$dest_abs/$skill_name" "${overlays[@]}"
         fi
       fi
     done < <(find "$src_path" -mindepth 1 -maxdepth 1 -type d -print0 | sort -z)
   else
-    # Single skill destination
     skill_name="$(basename "$destination")"
     if ! _sync_claim "$skill_name" "$name"; then
       [[ "$CHECK" == true ]] && rm -rf "$expected_root" "$drift_report"
@@ -436,7 +467,7 @@ _sync_process_source() {
 
     if [[ "$CHECK" == true ]]; then
       expected_skill="$expected_root/$skill_name"
-      _sync_build_expected_skill "$src_path" "$expected_skill" "${overlays[@]}"
+      _sync_build_expected_skill "$src_path" "$expected_skill" "${overlays[@]}" -- "${excludes[@]}"
       if [[ ! -d "$dest_abs" ]]; then
         _sync_error "missing managed skill: $destination (source: $name)"
         drifted=true
@@ -444,7 +475,7 @@ _sync_process_source() {
         drifted=true
       fi
     else
-      _sync_rsync_dir "$src_path" "$dest_abs"
+      _sync_rsync_dir "$src_path" "$dest_abs" "${excludes[@]}"
       if [[ "$DRY_RUN" != true ]]; then
         _sync_apply_overlays_tree "$dest_abs" "${overlays[@]}"
       fi
