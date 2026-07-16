@@ -44,4 +44,11 @@ Versioned Linux configs I use day to day. The repo mirrors the filesystem: `home
 
 ## Cursor skills
 
-Some skills under `home/.cursor/skills/` are adapted from [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) ([MIT](https://github.com/addyosmani/agent-skills/blob/main/LICENSE)), [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) ([MIT](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill/blob/main/LICENSE)). Rules and the rest are mine.
+Skills under `home/.cursor/skills/` come from versioned upstreams (see `.github/upstreams/`) plus any local-only dirs you add by hand. Sync with `./.github/scripts/sync-upstreams.sh --pull`.
+
+| Skill dirs | Upstream | Path in upstream | Local overlay |
+| --- | --- | --- | --- |
+| `home/.cursor/skills/*` (default set) | [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) ([MIT](https://github.com/addyosmani/agent-skills/blob/main/LICENSE)) | `skills/` | `disable-model-invocation: true`, idea-refine path fix |
+| `home/.cursor/skills/ui-ux-pro-max/` | [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) ([MIT](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill/blob/main/LICENSE)) | `.claude/skills/ui-ux-pro-max/` | none |
+
+Rules and any skill dirs not listed above are mine (unmanaged by sync).
