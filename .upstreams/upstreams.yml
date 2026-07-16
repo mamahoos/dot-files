@@ -1,0 +1,6 @@
+# Ordered index of skill upstreams. First enabled source wins on skill-name collision.
+sources:
+  - file: agent-skills.yml
+    enabled: true
+  - file: ui-ux-pro-max.yml
+    enabled: true

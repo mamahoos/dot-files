@@ -1,0 +1,5 @@
+name: ui-ux-pro-max
+repo: https://github.com/nextlevelbuilder/ui-ux-pro-max-skill.git
+branch: main
+source: .claude/skills/ui-ux-pro-max
+destination: home/.cursor/skills/ui-ux-pro-max

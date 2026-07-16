@@ -1,0 +1,8 @@
+name: agent-skills
+repo: https://github.com/addyosmani/agent-skills.git
+branch: main
+source: skills
+destination: home/.cursor/skills
+overlays:
+  - disable-model-invocation
+  - idea-refine-path
