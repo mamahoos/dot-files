@@ -4,6 +4,5 @@ branch: main
 source: .claude/skills/ui-ux-pro-max
 destination: home/.cursor/skills/ui-ux-pro-max
 exclude:
-  - "*.py"
-  - "__pycache__/"
-  - "scripts/tests/"
+  # Python search helpers + tests — not versioned (keeps GitHub linguist clean)
+  - "scripts/"
