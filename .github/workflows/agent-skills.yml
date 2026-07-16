@@ -1,6 +1,6 @@
 name: Agent skills
 
-# Upstream mirror pipeline: check → sync PR (on drift) → verify after merge.
+# Multi-source upstream mirror: check → sync PR per source (on drift) → verify after merge.
 #
 # Requires secret SKILLS_SYNC_TOKEN (PAT with Contents + Pull requests write)
 # so lint and check-skills-drift run on automated sync PRs.
@@ -9,13 +9,15 @@ on:
   pull_request:
     paths:
       - home/.cursor/skills/**
-      - .github/scripts/sync-agent-skills.sh
+      - .upstreams/**
+      - .github/scripts/sync-upstreams.sh
       - .github/workflows/agent-skills.yml
   push:
     branches: [main]
     paths:
       - home/.cursor/skills/**
-      - .github/scripts/sync-agent-skills.sh
+      - .upstreams/**
+      - .github/scripts/sync-upstreams.sh
       - .github/workflows/agent-skills.yml
   schedule:
     - cron: "0 9 * * *" # 09:00 UTC — safety net when main is quiet
@@ -35,15 +37,10 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: Fetch upstream agent-skills
-        run: git clone --depth 1 https://github.com/addyosmani/agent-skills.git /tmp/agent-skills
+      - name: Check skills drift against upstreams
+        run: ./.github/scripts/sync-upstreams.sh --check --pull
 
-      - name: Check home/.cursor/skills drift
-        env:
-          AGENT_SKILLS_DIR: /tmp/agent-skills
-        run: ./.github/scripts/sync-agent-skills.sh --check
-
-  sync-pr:
+  sync-matrix:
     needs: check-skills-drift
     if: >-
       failure() &&
@@ -53,6 +50,24 @@ jobs:
        github.event_name == 'schedule' ||
        github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
+    outputs:
+      sources: ${{ steps.list.outputs.sources }}
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: List enabled sources
+        id: list
+        run: echo "sources=$(./.github/scripts/sync-upstreams.sh --list-sources)" >> "$GITHUB_OUTPUT"
+
+  sync-pr:
+    needs: sync-matrix
+    if: needs.sync-matrix.outputs.sources != ''
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        source: ${{ fromJson(needs.sync-matrix.outputs.sources) }}
     permissions:
       contents: write
       pull-requests: write
@@ -63,18 +78,14 @@ jobs:
           token: ${{ secrets.SKILLS_SYNC_TOKEN }}
 
       - name: Remove stale sync branch
-        run: git push origin --delete chore/sync-agent-skills || true
+        run: git push origin --delete "chore/sync-${{ matrix.source }}" || true
 
-      - name: Fetch upstream agent-skills
-        id: upstream
+      - name: Sync source into working tree
+        id: sync
         run: |
-          git clone --depth 1 https://github.com/addyosmani/agent-skills.git /tmp/agent-skills
-          echo "sha=$(git -C /tmp/agent-skills rev-parse HEAD)" >> "$GITHUB_OUTPUT"
-
-      - name: Sync skills into working tree
-        env:
-          AGENT_SKILLS_DIR: /tmp/agent-skills
-        run: ./.github/scripts/sync-agent-skills.sh
+          ./.github/scripts/sync-upstreams.sh --pull --source "${{ matrix.source }}"
+          sha="$(git -C ".cache/upstreams/${{ matrix.source }}" rev-parse HEAD)"
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
 
       - name: Resolve trigger label
         id: trigger
@@ -89,11 +100,11 @@ jobs:
         uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.SKILLS_SYNC_TOKEN }}
-          branch: chore/sync-agent-skills
-          commit-message: "chore(cursor): sync agent-skills from upstream"
-          title: "chore(cursor): sync agent-skills from upstream"
+          branch: chore/sync-${{ matrix.source }}
+          commit-message: "chore(cursor): sync ${{ matrix.source }} from upstream"
+          title: "chore(cursor): sync ${{ matrix.source }} from upstream"
           body: |
-            Automated sync from [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) at `${{ steps.upstream.outputs.sha }}`.
+            Automated sync of `${{ matrix.source }}` at `${{ steps.sync.outputs.sha }}`.
 
             Triggered by: ${{ steps.trigger.outputs.label }}
 
