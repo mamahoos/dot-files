@@ -7,7 +7,7 @@ set -euo pipefail
 
 readonly SCRIPT_NAME="${0##*/}"
 readonly REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-readonly UPSTREAMS_DIR="$REPO_ROOT/.upstreams"
+readonly UPSTREAMS_DIR="$REPO_ROOT/.github/upstreams"
 readonly INDEX_FILE="$UPSTREAMS_DIR/upstreams.yml"
 readonly CACHE_ROOT="$REPO_ROOT/.cache/upstreams"
 readonly IDEA_REFINE_SCRIPT='bash ~/.cursor/skills/idea-refine/scripts/idea-refine.sh'
@@ -41,7 +41,7 @@ _sync_usage() {
   cat <<EOF
 Usage: $SCRIPT_NAME [--pull] [--dry-run] [--check] [--source NAME] [--list-sources]
 
-Sync home/.cursor/skills from sources listed in .upstreams/upstreams.yml.
+Sync home/.cursor/skills from sources listed in .github/upstreams/upstreams.yml.
 
 Only managed skill dirs (claimed by an enabled upstream) are written or
 compared. Unmanaged dirs under the skills root are left alone.

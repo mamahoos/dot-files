@@ -44,7 +44,7 @@ Versioned Linux configs I use day to day. The repo mirrors the filesystem: `home
 
 ## Cursor skills
 
-Skills under `home/.cursor/skills/` come from versioned upstreams (see `.upstreams/`) plus any local-only dirs you add by hand. Sync with `./.github/scripts/sync-upstreams.sh --pull`.
+Skills under `home/.cursor/skills/` come from versioned upstreams (see `.github/upstreams/`) plus any local-only dirs you add by hand. Sync with `./.github/scripts/sync-upstreams.sh --pull`.
 
 | Skill dirs | Upstream | Path in upstream | Local overlay |
 | --- | --- | --- | --- |

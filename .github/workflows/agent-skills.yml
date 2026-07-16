@@ -9,14 +9,14 @@ on:
   pull_request:
     paths:
       - home/.cursor/skills/**
-      - .upstreams/**
+      - .github/upstreams/**
       - .github/scripts/sync-upstreams.sh
       - .github/workflows/agent-skills.yml
   push:
     branches: [main]
     paths:
       - home/.cursor/skills/**
-      - .upstreams/**
+      - .github/upstreams/**
       - .github/scripts/sync-upstreams.sh
       - .github/workflows/agent-skills.yml
   schedule:
