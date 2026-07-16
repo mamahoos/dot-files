@@ -12,7 +12,7 @@ home/.bashrc.local
 home/.ssh/
 
 # Cursor project dir (repo root only; home/.cursor/ stays versioned)
-.cursor/
+/.cursor/
 
 # Graphify — generated output and local-only tooling
 graphify-out/
