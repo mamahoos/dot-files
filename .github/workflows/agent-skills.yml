@@ -58,11 +58,22 @@ jobs:
 
       - name: List enabled sources
         id: list
-        run: echo "sources=$(./.github/scripts/sync-upstreams.sh --list-sources)" >> "$GITHUB_OUTPUT"
+        run: |
+          {
+            echo 'sources<<EOF'
+            ./.github/scripts/sync-upstreams.sh --list-sources
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
 
   sync-pr:
     needs: sync-matrix
-    if: needs.sync-matrix.outputs.sources != ''
+    # always() is required: without it GHA skips this job when check-skills-drift
+    # failed earlier in the workflow, even though sync-matrix succeeded.
+    if: >-
+      always() &&
+      needs.sync-matrix.result == 'success' &&
+      needs.sync-matrix.outputs.sources != '' &&
+      needs.sync-matrix.outputs.sources != '[]'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
