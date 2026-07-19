@@ -35,7 +35,9 @@ jobs:
           severity: error
 
       - name: Run ShellCheck on repo scripts
-        run: shellcheck -S error install.sh .github/scripts/*.sh
+        run: |
+          shellcheck -S error install.sh .github/scripts/*.sh \
+            .github/scripts/lib/sync-upstreams/*.sh
 
       - name: Install shfmt
         uses: mfinelli/setup-shfmt@v4

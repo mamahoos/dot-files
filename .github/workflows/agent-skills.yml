@@ -10,14 +10,14 @@ on:
     paths:
       - home/.cursor/skills/**
       - .github/upstreams/**
-      - .github/scripts/sync-upstreams.sh
+      - .github/scripts/**
       - .github/workflows/agent-skills.yml
   push:
     branches: [main]
     paths:
       - home/.cursor/skills/**
       - .github/upstreams/**
-      - .github/scripts/sync-upstreams.sh
+      - .github/scripts/**
       - .github/workflows/agent-skills.yml
   schedule:
     - cron: "0 9 * * *" # 09:00 UTC — safety net when main is quiet
