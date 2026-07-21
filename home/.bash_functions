@@ -44,6 +44,11 @@ _require_any_cmd() {
     return 1
 }
 
+# repeat previous command with sudo
+please() {
+    sudo "$(history -p !!)"
+}
+
 # extract an archive
 extract() {
     local archive_path="${1:-}"
