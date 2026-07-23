@@ -1,0 +1,6 @@
+name: i-have-adhd
+repo: https://github.com/ayghri/i-have-adhd.git
+branch: main
+# Cursor copy kept in sync with skills/i-have-adhd via upstream's cursor-skill-sync.yml
+source: .cursor/skills/i-have-adhd
+destination: home/.cursor/skills/i-have-adhd

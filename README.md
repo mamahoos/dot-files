@@ -50,5 +50,6 @@ Skills under `home/.cursor/skills/` come from versioned upstreams (see `.github/
 | --- | --- | --- | --- |
 | `home/.cursor/skills/*` (default set) | [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) ([MIT](https://github.com/addyosmani/agent-skills/blob/main/LICENSE)) | `skills/` | `disable-model-invocation: true`, idea-refine path fix |
 | `home/.cursor/skills/ui-ux-pro-max/` | [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) ([MIT](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill/blob/main/LICENSE)) | `.claude/skills/ui-ux-pro-max/` | `scripts/` (Python helpers) excluded from the repo |
+| `home/.cursor/skills/i-have-adhd/` | [ayghri/i-have-adhd](https://github.com/ayghri/i-have-adhd) ([MIT](https://github.com/ayghri/i-have-adhd/blob/main/LICENSE)) | `.cursor/skills/i-have-adhd/` | none (`disable-model-invocation` already in upstream) |
 
 Rules and any skill dirs not listed above are mine (unmanaged by sync).
