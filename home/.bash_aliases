@@ -25,6 +25,10 @@ alias cls='clear'          # Windows-style clear
 
 alias blank='sleep 1; xset dpms force off'
 
+# clipboard (xclip → Ctrl+C/V selection)
+alias clipcopy='xclip -selection clipboard'
+alias clippaste='xclip -selection clipboard -o'
+
 # Funny aliases
 alias cmatrix='cmatrix -C black'
 alias sl='sl -lae'
