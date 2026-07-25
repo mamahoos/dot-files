@@ -30,3 +30,12 @@ jobs:
 
       - name: Install smoke
         run: ./.github/scripts/test-install-smoke.sh
+
+  idempotent:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install idempotent
+        run: ./.github/scripts/test-install-idempotent.sh
