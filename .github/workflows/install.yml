@@ -1,0 +1,32 @@
+name: Install
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - install.sh
+      - home/**
+      - config/**
+      - .github/scripts/test-install-*.sh
+      - .github/workflows/install.yml
+  pull_request:
+    paths:
+      - install.sh
+      - home/**
+      - config/**
+      - .github/scripts/test-install-*.sh
+      - .github/workflows/install.yml
+
+concurrency:
+  group: install-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install smoke
+        run: ./.github/scripts/test-install-smoke.sh
