@@ -19,6 +19,9 @@ home/.cursor/skills/ui-ux-pro-max/scripts/
 home/.cursor/skills/ui-ux-pro-max/**/*.py
 home/.cursor/skills/ui-ux-pro-max/**/__pycache__/
 
+# Logs
+*.log
+
 # Graphify — generated output and local-only tooling
 graphify-out/
 raw/
