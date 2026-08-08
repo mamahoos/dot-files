@@ -33,7 +33,7 @@
 
 [color]
     ui = auto
-	branch = auto
+    branch = auto
     diff = auto
     status = auto
 
@@ -50,6 +50,7 @@
     required = true
 
 [alias]
+    aliases = config --get-regexp '^alias.'
     lg      = log --graph --decorate --oneline --all
     last    = log -1 HEAD
     unstage = restore --staged
