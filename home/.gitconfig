@@ -32,9 +32,9 @@
     autocrlf = input
 
 [color]
-    ui = auto
+    ui     = auto
     branch = auto
-    diff = auto
+    diff   = auto
     status = auto
 
 [help]
