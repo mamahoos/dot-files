@@ -50,9 +50,11 @@
     required = true
 
 [alias]
-    aliases = config --get-regexp '^alias.'
-    lg      = log --graph --decorate --oneline --all
-    last    = log -1 HEAD
-    unstage = restore --staged
-    root    = rev-parse --show-toplevel
-    head    = rev-parse HEAD
+    aliases  = config --get-regexp '^alias.'
+    lg       = log --graph --decorate --oneline --all
+    last     = log -1 HEAD
+    unstage  = restore --staged
+    root     = rev-parse --show-toplevel
+    head     = rev-parse HEAD
+    unpushed = log @{u}..HEAD --oneline
+    unpulled = log HEAD..@{u} --oneline
