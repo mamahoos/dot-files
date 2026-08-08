@@ -50,6 +50,6 @@
     required = true
 
 [alias]
-    lg   = log --graph --decorate --oneline --all
-    last = log -1 HEAD
-	
+    lg      = log --graph --decorate --oneline --all
+    last    = log -1 HEAD
+    unstage = restore --staged	
