@@ -55,6 +55,6 @@
     last     = log -1 HEAD
     unstage  = restore --staged
     root     = rev-parse --show-toplevel
-    head     = rev-parse HEAD
+    head     = "!f() { git rev-parse \"$@\" HEAD; }; f"	
     unpushed = log @{u}..HEAD --oneline
     unpulled = log HEAD..@{u} --oneline
