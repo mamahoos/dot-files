@@ -55,4 +55,4 @@
     last    = log -1 HEAD
     unstage = restore --staged
     root    = rev-parse --show-toplevel
-
+    head    = rev-parse HEAD
