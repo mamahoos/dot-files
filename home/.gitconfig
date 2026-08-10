@@ -58,3 +58,4 @@
     head     = "!f() { git rev-parse \"$@\" HEAD; }; f"	
     unpushed = log @{u}..HEAD --oneline
     unpulled = log HEAD..@{u} --oneline
+    staged   = diff --cached
