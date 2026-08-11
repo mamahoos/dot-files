@@ -1,0 +1,56 @@
+# ======================================================================
+# ~/.bashrc.tools
+# ----------------------------------------------------------------------
+# Optional toolchains (cargo, pyenv, nvm, …). Safe on fresh machines:
+# missing installs are skipped. No secrets — use ~/.bashrc.local for those.
+# ======================================================================
+
+
+# ======================================================================
+# User-level binaries (pipx, local installs)
+# ======================================================================
+
+if [ -d "$HOME/.local/bin" ]; then
+    export PATH="$HOME/.local/bin:$PATH"
+fi
+
+# ======================================================================
+# Rust (cargo)
+# ======================================================================
+
+if [ -f "$HOME/.cargo/env" ]; then
+    source "$HOME/.cargo/env"
+fi
+
+# ======================================================================
+# Python version management (pyenv)
+# ======================================================================
+
+export PYENV_ROOT="$HOME/.pyenv"
+
+if [ -d "$PYENV_ROOT/bin" ]; then
+    export PATH="$PYENV_ROOT/bin:$PATH"
+fi
+
+if command -v pyenv >/dev/null 2>&1; then
+    eval "$(pyenv init -)"
+fi
+
+# ======================================================================
+# Node version management (nvm)
+# ======================================================================
+
+export NVM_DIR="$HOME/.nvm"
+
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
+# ======================================================================
+# Kiro env
+# ======================================================================
+
+export PATH="$PATH:/usr/sbin"
+
+if [[ "${TERM_PROGRAM:-}" == "kiro" ]] && command -v kiro >/dev/null 2>&1; then
+    source "$(kiro --locate-shell-integration-path bash)"
+fi
