@@ -154,48 +154,15 @@ if ! shopt -oq posix; then
 fi
 
 # ======================================================================
-# 10. User-level binaries (pipx, local installs)
+# 10. Optional toolchains (cargo, pyenv, nvm, …)
 # ======================================================================
 
-# Created by `pipx`
-export PATH="$HOME/.local/bin:$PATH" 	# Added poetry & posting & etc (by pipx)
-
-# ======================================================================
-# 11. Rust (cargo)
-# ======================================================================
-
-# Adds ~/.cargo/bin to PATH
-source "$HOME/.cargo/env"	# Added tokei & etc (by cargo)
-
-# ======================================================================
-# 12. Python version management (pyenv)
-# ======================================================================
-
-export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
-
-if command -v pyenv >/dev/null 2>&1; then
-    eval "$(pyenv init -)"
+if [ -f "$HOME/.bashrc.tools" ]; then
+    source "$HOME/.bashrc.tools"
 fi
 
 # ======================================================================
-# 13. Node version management (nvm)
-# ======================================================================
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-# ======================================================================
-# 14. Kiro env
-# ======================================================================
-
-export PATH="$PATH:/usr/sbin"
-
-[[ "$TERM_PROGRAM" == "kiro" ]] && source "$(kiro --locate-shell-integration-path bash)"
-
-# ======================================================================
-# 15. Local-only overrides (never commit secrets)
+# 11. Local-only overrides (never commit secrets)
 # ======================================================================
 
 if [ -f "$HOME/.bashrc.local" ]; then
