@@ -13,6 +13,14 @@ readonly TARGET_HOME="${DOTFILES_HOME:-$HOME}"
 readonly TARGET_CONFIG="${XDG_CONFIG_HOME:-$TARGET_HOME/.config}"
 readonly STAMP="$(date +%Y%m%d-%H%M%S)"
 readonly BACKUP_DIR="$TARGET_HOME/.dotfiles-backup/$STAMP"
+readonly SHELL_ONLY_FILES=(
+  .gitconfig
+  .bashrc
+  .bash_aliases
+  .bash_functions
+)
+
+SHELL_ONLY=0
 
 # ==============================================================================
 # LOGGING
@@ -116,15 +124,52 @@ _link_config_tree() {
   _link_children "$CONFIG_SRC" "$TARGET_CONFIG"
 }
 
+_link_shell_only() {
+  local name
+
+  for name in "${SHELL_ONLY_FILES[@]}"; do
+    if [[ ! -e "$HOME_SRC/$name" ]]; then
+      _link_error "source missing: $HOME_SRC/$name"
+      return 1
+    fi
+    _link_one "$HOME_SRC/$name" "$TARGET_HOME/$name"
+  done
+}
+
+_parse_args() {
+  while (($#)); do
+    case "$1" in
+    --shell-only)
+      SHELL_ONLY=1
+      shift
+      ;;
+    *)
+      _link_error "unknown option: $1 (try --shell-only)"
+      return 1
+      ;;
+    esac
+  done
+}
+
 # ==============================================================================
 # MAIN
 # ==============================================================================
 
 main() {
-  mkdir -p "$BACKUP_DIR" "$TARGET_CONFIG"
-  _link_home_tree
-  _link_config_tree
-  printf 'linked dotfiles from %s\n' "$REPO_ROOT"
+  _parse_args "$@" || return 1
+
+  mkdir -p "$BACKUP_DIR"
+
+  if ((SHELL_ONLY)); then
+    _link_shell_only
+    printf 'linked shell dotfiles from %s\n' "$REPO_ROOT"
+  else
+    mkdir -p "$TARGET_CONFIG"
+    _link_home_tree
+    _link_config_tree
+    printf 'linked dotfiles from %s\n' "$REPO_ROOT"
+  fi
+
   printf 'backup: %s\n' "$BACKUP_DIR"
 }
 
