@@ -11,6 +11,7 @@ readonly UPSTREAMS_DIR="$REPO_ROOT/.github/upstreams"
 readonly INDEX_FILE="$UPSTREAMS_DIR/upstreams.yml"
 readonly CACHE_ROOT="$REPO_ROOT/.cache/upstreams"
 readonly IDEA_REFINE_SCRIPT='bash ~/.cursor/skills/idea-refine/scripts/idea-refine.sh'
+readonly UI_UX_SEARCH='$HOME/.cursor/skills/ui-ux-pro-max/scripts/search.py'
 
 PULL=false
 DRY_RUN=false
@@ -265,6 +266,16 @@ _sync_overlay_idea_refine_path() {
     "$idea_refine_skill"
 }
 
+_sync_overlay_ui_ux_pro_max_search_path() {
+  local skill_file="$1"
+
+  [[ -f "$skill_file" ]] || return 0
+
+  sed -i \
+    -e 's|${CLAUDE_PLUGIN_ROOT}/.claude/skills/ui-ux-pro-max/scripts/search.py|'"$UI_UX_SEARCH"'|g' \
+    "$skill_file"
+}
+
 # Apply overlays to a skill tree rooted at dest (skills root or single skill dir).
 _sync_apply_overlays_tree() {
   local dest="$1"
@@ -286,6 +297,13 @@ _sync_apply_overlays_tree() {
         _sync_overlay_idea_refine_path "$dest/idea-refine/SKILL.md"
       elif [[ -f "$dest/SKILL.md" && "$(basename "$dest")" == "idea-refine" ]]; then
         _sync_overlay_idea_refine_path "$dest/SKILL.md"
+      fi
+      ;;
+    ui-ux-pro-max-search-path)
+      if [[ -f "$dest/SKILL.md" && "$(basename "$dest")" == "ui-ux-pro-max" ]]; then
+        _sync_overlay_ui_ux_pro_max_search_path "$dest/SKILL.md"
+      elif [[ -f "$dest/ui-ux-pro-max/SKILL.md" ]]; then
+        _sync_overlay_ui_ux_pro_max_search_path "$dest/ui-ux-pro-max/SKILL.md"
       fi
       ;;
     *)

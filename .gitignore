@@ -14,9 +14,7 @@ home/.ssh/
 # Cursor project dir (repo root only; home/.cursor/ stays versioned)
 /.cursor/
 
-# ui-ux-pro-max search helpers — keep out of the repo (language stats + noise)
-home/.cursor/skills/ui-ux-pro-max/scripts/
-home/.cursor/skills/ui-ux-pro-max/**/*.py
+# ui-ux-pro-max bytecode (search scripts are versioned)
 home/.cursor/skills/ui-ux-pro-max/**/__pycache__/
 
 # Logs
