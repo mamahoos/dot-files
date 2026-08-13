@@ -4,7 +4,7 @@
     signkey = 36ECB76080BA15C0BF93CC93B083DC8105E593AE # gitleaks:allow
 
 [commit]
-    gpgSign = true
+    gpgSign  = true
     template = ~/.gitmessage
 [tag]
     gpgSign = true
