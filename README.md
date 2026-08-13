@@ -18,7 +18,7 @@ Versioned Linux configs I use day to day. The repo mirrors the filesystem: `home
 .
 ├── home/
 │   ├── .bashrc, .bash_aliases, .bash_functions
-│   ├── .gitconfig
+│   ├── .gitconfig, .gitmessage
 │   └── .cursor/
 │       ├── agents/
 │       ├── rules/
