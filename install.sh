@@ -15,6 +15,7 @@ readonly STAMP="$(date +%Y%m%d-%H%M%S)"
 readonly BACKUP_DIR="$TARGET_HOME/.dotfiles-backup/$STAMP"
 readonly SHELL_ONLY_FILES=(
   .gitconfig
+  .gitmessage
   .bashrc
   .bash_aliases
   .bash_functions

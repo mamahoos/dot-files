@@ -1,0 +1,21 @@
+<type>(<scope>): <subject>
+
+# Types:
+# feat     — new feature
+# fix      — bug fix
+# refactor — neither a bug fix nor a feature
+# test     — adding or updating tests
+# docs     — documentation only
+# chore    — tooling, dependencies, config
+#
+# Scope is optional. When omitted:
+#   <type>: <subject>
+#
+# Subject: imperative, ~50 characters. One logical change.
+# Do not mix feat + refactor + formatting in one commit.
+
+# Body (optional):
+# Explain WHY this change is needed, not what the diff already shows.
+
+# Breaking changes:
+# None

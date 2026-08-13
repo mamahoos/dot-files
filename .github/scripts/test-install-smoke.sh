@@ -51,7 +51,7 @@ _smoke_assert_link() {
 # ==============================================================================
 
 main() {
-  local dest_home dest_config cursor_child config_child
+  local dest_home dest_config dest_shell cursor_child config_child
   local cursor_entries=() config_entries=()
 
   if [[ ! -x "$INSTALL_SH" ]]; then
@@ -72,6 +72,18 @@ main() {
   "$INSTALL_SH"
 
   _smoke_assert_link "$dest_home/.bashrc" "$REPO_ROOT/home/.bashrc"
+  _smoke_assert_link "$dest_home/.gitconfig" "$REPO_ROOT/home/.gitconfig"
+  _smoke_assert_link "$dest_home/.gitmessage" "$REPO_ROOT/home/.gitmessage"
+
+  dest_shell="$FAKE_ROOT/shell-home"
+  mkdir -p "$dest_shell"
+  DOTFILES_HOME="$dest_shell" XDG_CONFIG_HOME="$dest_shell/.config" "$INSTALL_SH" --shell-only >/dev/null
+  _smoke_assert_link "$dest_shell/.gitconfig" "$REPO_ROOT/home/.gitconfig"
+  _smoke_assert_link "$dest_shell/.gitmessage" "$REPO_ROOT/home/.gitmessage"
+  if [[ -e "$dest_shell/.cursor" ]]; then
+    _smoke_error "--shell-only linked .cursor"
+    return 1
+  fi
 
   shopt -s nullglob
   cursor_entries=("$REPO_ROOT/home/.cursor"/*)
