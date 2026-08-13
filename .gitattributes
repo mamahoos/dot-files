@@ -1,2 +1,5 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Third-party search helpers — keep GitHub language stats on our own files
+home/.cursor/skills/ui-ux-pro-max/scripts/** linguist-vendored
