@@ -1,0 +1,7 @@
+name: resume-builder
+repo: https://github.com/dabydat/resume-builder-skill.git
+branch: master
+source: skill
+destination: home/.cursor/skills/resume-builder
+overlays:
+  - disable-model-invocation
