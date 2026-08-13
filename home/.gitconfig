@@ -48,7 +48,7 @@
 
 [help]
     autocorrect = prompt
-    pager = batcat --paging=always
+    pager       = batcat --paging=always
 
 [credential]
     helper = /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
