@@ -6,3 +6,5 @@ sources:
     enabled: true
   - file: i-have-adhd.yml
     enabled: true
+  - file: resume-builder.yml
+    enabled: true
