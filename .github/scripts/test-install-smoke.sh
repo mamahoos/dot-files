@@ -74,6 +74,7 @@ main() {
   _smoke_assert_link "$dest_home/.bashrc" "$REPO_ROOT/home/.bashrc"
   _smoke_assert_link "$dest_home/.gitconfig" "$REPO_ROOT/home/.gitconfig"
   _smoke_assert_link "$dest_home/.gitmessage" "$REPO_ROOT/home/.gitmessage"
+  _smoke_assert_link "$dest_home/gpg-public-key.asc" "$REPO_ROOT/home/gpg-public-key.asc"
 
   dest_shell="$FAKE_ROOT/shell-home"
   mkdir -p "$dest_shell"
@@ -82,6 +83,10 @@ main() {
   _smoke_assert_link "$dest_shell/.gitmessage" "$REPO_ROOT/home/.gitmessage"
   if [[ -e "$dest_shell/.cursor" ]]; then
     _smoke_error "--shell-only linked .cursor"
+    return 1
+  fi
+  if [[ -e "$dest_shell/gpg-public-key.asc" ]]; then
+    _smoke_error "--shell-only linked gpg-public-key.asc"
     return 1
   fi
 
