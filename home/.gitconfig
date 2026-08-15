@@ -6,6 +6,10 @@
 [commit]
     gpgSign  = true
     template = ~/.gitmessage
+
+[log]
+    date = relative
+
 [tag]
     gpgSign = true
 
