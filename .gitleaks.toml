@@ -1,0 +1,10 @@
+title = "dot-files"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Public GPG fingerprints and recipient aliases"
+paths = [
+  '''(^|/)home/\.gnupg/gpg\.conf$''',
+]
