@@ -19,6 +19,7 @@
 
 [tag]
     gpgSign = true
+    sort    = version:refname
 
 [gpg]
     program = /usr/bin/gpg
