@@ -11,6 +11,12 @@
 [log]
     date = relative
 
+[column]
+    ui = auto
+    
+[branch]
+    sort = -committerdate
+
 [tag]
     gpgSign = true
 
