@@ -47,8 +47,10 @@
     autoUpdate = true
 
 [diff]
-    algorithm  = histogram
-    colorMoved = default
+    algorithm      = histogram
+    colorMoved     = default
+    mnemonicPrefix = true
+    renames        = copies
 
 [core]
     editor   = nvim
