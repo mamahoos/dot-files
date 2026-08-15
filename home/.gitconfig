@@ -34,6 +34,9 @@
     conflictStyle = zdiff3
     tool = nvimdiff
 
+[mergetool]
+    prompt = false
+
 [rebase]
     autoStash   = true
     autoSquash  = true
