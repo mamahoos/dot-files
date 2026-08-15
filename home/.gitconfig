@@ -33,9 +33,15 @@
 [merge]
     conflictStyle = zdiff3
 
-[rerere]
-    enabled = true
+[rebase]
+    autoStash   = true
+    autoSquash  = true
+    updateRefs  = true
 
+[rerere]
+    enabled    = true
+    autoUpdate = true
+    
 [diff]
     algorithm  = histogram
     colorMoved = default
