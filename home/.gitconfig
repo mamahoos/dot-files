@@ -41,7 +41,7 @@
 [rerere]
     enabled    = true
     autoUpdate = true
-    
+
 [diff]
     algorithm  = histogram
     colorMoved = default
@@ -80,3 +80,4 @@
     unpushed = log @{u}..HEAD --oneline
     unpulled = log HEAD..@{u} --oneline
     staged   = diff --cached
+    amend    = commit --amend --no-edit
