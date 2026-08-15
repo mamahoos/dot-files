@@ -54,3 +54,7 @@ Skills under `home/.cursor/skills/` come from versioned upstreams (see `.github/
 | `home/.cursor/skills/resume-builder/` | [dabydat/resume-builder-skill](https://github.com/dabydat/resume-builder-skill) ([MIT](https://github.com/dabydat/resume-builder-skill/blob/master/LICENSE)) | `skill/` | `disable-model-invocation: true` |
 
 Rules and any skill dirs not listed above are mine (unmanaged by sync).
+
+## License
+
+This repository is [MIT licensed](LICENSE). Synced Cursor skills remain under their upstream licenses (see table above).
