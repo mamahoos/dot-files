@@ -87,7 +87,7 @@ _link_home_tree() {
   for entry in "$HOME_SRC"/*; do
     name="$(basename "$entry")"
 
-    if [[ "$name" == ".cursor" || "$name" == ".ssh" ]]; then
+    if [[ "$name" == ".cursor" || "$name" == ".ssh" || "$name" == ".gnupg" ]]; then
       continue
     fi
 
@@ -98,6 +98,14 @@ _link_home_tree() {
   if [[ -d "$HOME_SRC/.cursor" ]]; then
     mkdir -p "$TARGET_HOME/.cursor"
     _link_children "$HOME_SRC/.cursor" "$TARGET_HOME/.cursor"
+  fi
+
+  if [[ -d "$HOME_SRC/.gnupg" ]]; then
+    mkdir -p "$TARGET_HOME/.gnupg"
+    chmod 700 "$TARGET_HOME/.gnupg"
+    if [[ -e "$HOME_SRC/.gnupg/gpg.conf" ]]; then
+      _link_one "$HOME_SRC/.gnupg/gpg.conf" "$TARGET_HOME/.gnupg/gpg.conf"
+    fi
   fi
 
   if [[ -d "$HOME_SRC/.ssh" ]]; then
