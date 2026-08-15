@@ -103,7 +103,7 @@ jobs:
         run: |
           case "${{ github.event_name }}" in
             push) echo "label=drift on push to main (run ${{ github.run_id }})" >> "$GITHUB_OUTPUT" ;;
-            schedule) echo "label=daily schedule (09:00 UTC)" >> "$GITHUB_OUTPUT" ;;
+            schedule) echo "label=daily schedule (09:00 +3:30 UTC)" >> "$GITHUB_OUTPUT" ;;
             *) echo "label=manual dispatch (run ${{ github.run_id }})" >> "$GITHUB_OUTPUT" ;;
           esac
 
