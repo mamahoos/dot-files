@@ -41,8 +41,9 @@ alias زمثشق='clear'
 # GPG
 # ==============================================================================
 
-# fingerprint as a value, not a command alias (aliases do not expand as args)
-export GPG_KEY=36ECB76080BA15C0BF93CC93B083DC8105E593AE # gitleaks:allow
+# Matches gpg.conf group `me`. Fingerprint: ~/.gnupg/gpg.conf default-key
+export GPG_KEY=me
+export GPG_KEY_FILE=$HOME/gpg-public-key.asc
 
 # ==============================================================================
 # DEVELOPMENT
