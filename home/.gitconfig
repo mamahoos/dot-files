@@ -104,3 +104,4 @@
     unpulled = log HEAD..@{u} --oneline
     staged   = diff --cached
     amend    = commit --amend --no-edit
+    zip      = archive --format=zip --output
