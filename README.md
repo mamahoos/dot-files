@@ -2,7 +2,7 @@
 
 **My dotfiles & environment setup**
 
-Versioned Linux configs I use day to day. The repo mirrors the filesystem: `home/` → `$HOME`, `config/` → `~/.config`.
+Versioned Linux configs I use day to day.
 
 ## What's in here
 
