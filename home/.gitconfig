@@ -105,3 +105,4 @@
     staged   = diff --cached
     amend    = commit --amend --no-edit
     zip      = archive --format=zip --output	# Usage: git zip <filename.zip> <ref>
+    purge    = !git restore --source=HEAD --staged --worktree :/ && git clean -fd
