@@ -9,13 +9,8 @@ on:
       - .github/scripts/**
       - .shellcheckrc
       - .github/workflows/lint.yml
+  # Required check: do not path-filter PRs or GitHub waits forever for this status.
   pull_request:
-    paths:
-      - home/**
-      - install.sh
-      - .github/scripts/**
-      - .shellcheckrc
-      - .github/workflows/lint.yml
 
 concurrency:
   group: lint-${{ github.workflow }}-${{ github.ref }}
