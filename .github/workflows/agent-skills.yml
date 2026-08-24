@@ -6,12 +6,8 @@ name: Agent skills
 # so lint and check-skills-drift run on automated sync PRs.
 
 on:
+  # Required check: do not path-filter PRs or GitHub waits forever for this status.
   pull_request:
-    paths:
-      - home/.cursor/skills/**
-      - .github/upstreams/**
-      - .github/scripts/sync-upstreams.sh
-      - .github/workflows/agent-skills.yml
   push:
     branches: [main]
     paths:

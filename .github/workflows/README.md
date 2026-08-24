@@ -31,5 +31,6 @@ shfmt -d -i 2 home install.sh .github/scripts
 
 ## Notes
 
+- **Lint** and **check-skills-drift** are required status checks, so their workflows always run on pull requests (path filters stay on `push` to `main` only).
 - **Agent skills** needs secret `SKILLS_SYNC_TOKEN` (Contents + Pull requests) for automated sync PRs.
 - Dependabot config is in [`../dependabot.yml`](../dependabot.yml) (Actions + Docker).

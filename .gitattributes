@@ -3,3 +3,7 @@
 
 # Third-party search helpers — keep GitHub language stats on our own files
 home/.cursor/skills/ui-ux-pro-max/scripts/** linguist-vendored
+
+# YAML is linguist type:data, so GitHub omits it from language stats unless marked detectable
+*.yml linguist-detectable
+*.yaml linguist-detectable
