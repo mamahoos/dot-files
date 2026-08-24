@@ -97,12 +97,16 @@
     aliases  = config --get-regexp '^alias.'
     lg       = log --graph --decorate --oneline --all
     last     = log -1 HEAD
-    unstage  = restore --staged
+
     root     = rev-parse --show-toplevel
-    head     = "!f() { git rev-parse \"$@\" HEAD; }; f"	
-    unpushed = log @{u}..HEAD --oneline
-    unpulled = log HEAD..@{u} --oneline
+    head     = "!f() { git rev-parse \"$@\" HEAD; }; f"
+
+    unstage  = restore --staged
     staged   = diff --cached
     amend    = commit --amend --no-edit
-    zip      = archive --format=zip --output	# Usage: git zip <filename.zip> <ref>
     purge    = !git restore --source=HEAD --staged --worktree :/ && git clean -fd
+
+    unpushed = log @{u}..HEAD --oneline
+    unpulled = log HEAD..@{u} --oneline
+
+    zip      = archive --format=zip --output
