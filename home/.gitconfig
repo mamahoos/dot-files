@@ -3,6 +3,15 @@
     email   = m4m4hoos@gmail.com
     # signing key: ~/.gnupg/gpg.conf default-key
 
+[sendemail]
+    smtpServer     = smtp.gmail.com
+    smtpServerPort = 587
+    smtpEncryption = tls
+    smtpUser       = m4m4hoos@gmail.com
+    from           = mamahoos <m4m4hoos@gmail.com>
+    confirm        = auto
+    # password: Gmail App Password via git credential / libsecret (do not store here)
+
 [commit]
     gpgSign  = true
     template = ~/.gitmessage
