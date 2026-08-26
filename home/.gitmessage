@@ -8,6 +8,13 @@
 # docs     — documentation only
 # chore    — tooling, dependencies, config
 #
+# Scopes:
+#   - home
+#   - cursor
+#   - config
+#   - git
+#   - other
+#
 # Scope is optional. When omitted:
 #   <type>: <subject>
 #
