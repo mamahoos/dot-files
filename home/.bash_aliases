@@ -23,6 +23,7 @@ alias cls='clear'          # Windows-style clear
 # TERMINAL / UX
 # ==============================================================================
 
+# blank the screen (no suspend)
 alias blank='sleep 1; xset dpms force off'
 
 # reload readline (~/.inputrc) in the current shell
