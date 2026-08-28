@@ -17,7 +17,7 @@ set convert-meta off
 # Editing
 # ======================================================================
 # /etc/inputrc emacs Home/End bindings do not apply in vi mode.
-set editing-mode       vi
+set editing-mode        vi
 set show-mode-in-prompt on
 
 $if mode=vi
