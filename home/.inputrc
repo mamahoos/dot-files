@@ -14,6 +14,19 @@ set output-meta  on
 set convert-meta off
 
 # ======================================================================
+# Editing
+# ======================================================================
+$if mode=emacs
+"\C-a": beginning-of-line
+"\C-e": end-of-line
+"\C-b": backward-char
+"\C-f": forward-char
+"\M-b": backward-word
+"\M-f": forward-word
+"\C-w": backward-kill-word
+$endif
+
+# ======================================================================
 # History
 # ======================================================================
 # history-size matches ~/.bashrc HISTSIZE (overrides HISTSIZE when set).
@@ -29,6 +42,7 @@ $endif
 # ======================================================================
 # Complements shopt: progcomp, complete_fullquote, dotglob.
 # Colors follow dircolors / color_prompt in ~/.bashrc.
+set completion-ignore-case     on
 set match-hidden-files         on
 set skip-completed-text        on
 set colored-stats              on
@@ -36,5 +50,8 @@ set colored-completion-prefix  on
 set visible-stats              on
 set mark-symlinked-directories on
 set show-all-if-ambiguous      on
-set enable-bracketed-paste     on
-set show-all-if-ambiguous      on
+
+# ======================================================================
+# Paste
+# ======================================================================
+set enable-bracketed-paste on
