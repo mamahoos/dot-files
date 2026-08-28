@@ -37,3 +37,4 @@ set visible-stats              on
 set mark-symlinked-directories on
 set show-all-if-ambiguous      on
 set enable-bracketed-paste     on
+set show-all-if-ambiguous      on
