@@ -2,6 +2,7 @@
     name    = mamahoos
     email   = m4m4hoos@gmail.com
     # signing key: ~/.gnupg/gpg.conf default-key
+    signingkey = 36ECB76080BA15C0BF93CC93B083DC8105E593AE   # gitleaks:allow
 
 [sendemail]
     smtpServer     = smtp.gmail.com

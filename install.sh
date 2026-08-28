@@ -19,6 +19,7 @@ readonly SHELL_ONLY_FILES=(
   .bashrc
   .bash_aliases
   .bash_functions
+  .inputrc
 )
 
 SHELL_ONLY=0

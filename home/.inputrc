@@ -1,0 +1,39 @@
+# Readline for bash(1). Complements ~/.bashrc; keep Debian keybindings.
+
+# ======================================================================
+# Debian base
+# ======================================================================
+$include /etc/inputrc
+
+# ======================================================================
+# UTF-8
+# ======================================================================
+# Persian aliases in ~/.bash_aliases need 8-bit characters intact.
+set input-meta   on
+set output-meta  on
+set convert-meta off
+
+# ======================================================================
+# History
+# ======================================================================
+# history-size matches ~/.bashrc HISTSIZE (overrides HISTSIZE when set).
+set history-size 5000
+
+$if mode=emacs
+"\e[A": history-search-backward
+"\e[B": history-search-forward
+$endif
+
+# ======================================================================
+# Completion
+# ======================================================================
+# Complements shopt: progcomp, complete_fullquote, dotglob.
+# Colors follow dircolors / color_prompt in ~/.bashrc.
+set match-hidden-files         on
+set skip-completed-text        on
+set colored-stats              on
+set colored-completion-prefix  on
+set visible-stats              on
+set mark-symlinked-directories on
+set show-all-if-ambiguous      on
+set enable-bracketed-paste     on
