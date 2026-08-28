@@ -65,6 +65,9 @@ shopt -s nullglob
 # Enable complete_fullquote to complete quoted arguments
 shopt -s complete_fullquote
 
+# Vi editing (matches ~/.inputrc editing-mode)
+set -o vi
+
 # ======================================================================
 # 4. Debian chroot indicator (used in prompt)
 # ======================================================================
