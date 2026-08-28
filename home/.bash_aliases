@@ -25,6 +25,9 @@ alias cls='clear'          # Windows-style clear
 
 alias blank='sleep 1; xset dpms force off'
 
+# reload readline (~/.inputrc) in the current shell
+alias reinput='bind -f ~/.inputrc'
+
 # clipboard (xclip → Ctrl+C/V selection)
 alias clipcopy='xclip -selection clipboard'
 alias clippaste='xclip -selection clipboard -o'
