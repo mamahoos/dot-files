@@ -32,7 +32,7 @@ If a template exists, use it. Reuse an issue that already covers the work. Do no
 
 Chores may skip an issue. These use cases **must not**:
 
-| Use case | Why the full flow |
+| Use case | Why |
 |---|---|
 | User asked for an issue, a PR, or "GitHub flow" | Explicit |
 | Bug with repro that should outlive the branch | Durable record |
