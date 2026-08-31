@@ -47,13 +47,7 @@ gh label list
 gh api "repos/$(gh repo view --json nameWithOwner -q .nameWithOwner)/collaborators" --jq '.[].login'
 ```
 
-Never create labels. Never assign or request-review a login that is not in that collaborators list. Never request review from the PR author.
-
-## Before opening a PR
-
-- **Non-trivial** (multi-file, behavior/API/CI change, new rule/skill, anything that needs discussion): an issue must exist or be created. PR body must contain `Closes #N`.
-- **One-file chore** with no behavior change: issue optional. Do not invent `Closes`.
-- **Automated sync PRs**: add `automated` if that label exists. No issue required.
+Never create labels. Never assign or request-review a login that is not in that list. Never request review from the PR author.
 
 ## Labels
 
