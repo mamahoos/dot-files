@@ -356,6 +356,7 @@ Write the entry in the same change that makes the change, while the impact is fr
 For every commit:
 
 - [ ] Commit does one logical thing
+- [ ] Uncommitted lines were not rewritten in the same blob; a rewrite is a second commit
 - [ ] Message explains the why, follows type conventions
 - [ ] Tests pass before committing
 - [ ] No secrets in the diff
