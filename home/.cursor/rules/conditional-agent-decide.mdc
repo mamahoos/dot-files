@@ -29,6 +29,10 @@ Use these skills when the task context clearly requires them.
 - `shipping-and-launch`: Use for rollout, release readiness, and rollback planning.
 - `code-simplification`: Use after correctness is established and maintainability is the goal.
 
+## Ship / GitHub
+
+- `github-workflow`: Use when creating or editing GitHub issues or PRs, assigning, labeling, requesting review, linking `Closes #N`, or merging. Discover labels and collaborators from `gh`; never invent them.
+
 ## Policy
 
 - Agent should choose these based on explicit task signals, not by default.

@@ -1,0 +1,45 @@
+---
+description: GitHub issue/PR invariants — discover labels and collaborators, never invent; issue-first for non-trivial work.
+alwaysApply: true
+---
+
+# GitHub Workflow
+
+Git commits/branches: `git-workflow-and-versioning`. Issues/PRs/labels/assignees: this rule.
+
+When creating or editing GitHub issues or PRs, load `.cursor/skills/github-workflow/SKILL.md` and run its commands. Do not improvise `gh` flags.
+
+## Discover, don't invent
+
+Before any GitHub write:
+
+```bash
+gh repo view --json nameWithOwner,defaultBranchRef
+gh label list
+gh api "repos/$(gh repo view --json nameWithOwner -q .nameWithOwner)/collaborators" --jq '.[].login'
+```
+
+Never create labels. Never assign or request-review a login that is not in that collaborators list. Never request review from the PR author.
+
+## Before opening a PR
+
+- **Non-trivial** (multi-file, behavior/API/CI change, new rule/skill, anything that needs discussion): an issue must exist or be created. PR body must contain `Closes #N`.
+- **One-file chore** with no behavior change: issue optional. Do not invent `Closes`.
+- **Automated sync PRs**: add `automated` if that label exists. No issue required.
+
+## Labels
+
+Exactly one type label, and only if it exists in `gh label list`:
+
+- `bug` — broken behavior
+- `enhancement` — new capability
+- `chore` — maintenance, config, deps
+- `documentation` — docs-only
+
+Add `automated` only on bot/sync PRs, in addition to the type. If the needed type is missing, ask. Do not apply triage labels (`wontfix`, `duplicate`, `invalid`, `question`, `good first issue`, `help wanted`) on new work.
+
+## Assign and review
+
+- Assignee: `--assignee "@me"` when the authenticated user is a collaborator. If other humans have push, ask who owns it.
+- Reviewer: request only other collaborators (or CODEOWNERS). Solo repo: `gh pr review --comment` — never `--approve` your own PR.
+- Merge only after `gh pr checks` is green.
