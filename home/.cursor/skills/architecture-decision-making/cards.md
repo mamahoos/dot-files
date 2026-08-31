@@ -8,7 +8,7 @@ A Decision that plays cards we do not hold is fiction. Build the hand from evide
 2. Else derive, in this order:
    - repo artifacts: `compose.yml` / `Dockerfile` / `pyproject.toml` / `go.mod` / `.github/workflows`
    - `graphify query` / existing modules
-   - user-level `00-user-context` (confident vs learning vs conceptual)
+   - user-level `~/.cursor/rules/00-user-context.mdc` (confident vs learning vs conceptual)
    - `gh` collaborators and hosting you can see (not hypothetical teams)
 
 If sources conflict, stop and name the conflict. Do not silently pick the fancier stack.
