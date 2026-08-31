@@ -340,6 +340,7 @@ Write the entry in the same change that makes the change, while the impact is fr
 ## Red Flags
 
 - Large uncommitted changes accumulating
+- Rewriting uncommitted lines without committing the first version (two changes, one blob)
 - Commit messages like "fix", "update", "misc"
 - Formatting changes mixed with behavior changes
 - No `.gitignore` in the project
