@@ -10,3 +10,7 @@ sources:
     enabled: true
   - file: find-skills.yml
     enabled: true
+  - file: mattpocock-engineering.yml
+    enabled: true
+  - file: mattpocock-productivity.yml
+    enabled: true
