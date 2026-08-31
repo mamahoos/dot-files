@@ -48,7 +48,18 @@ Commits are save points. If the next change breaks something, you can revert to 
 
 ### 2. Atomic Commits
 
-Each commit does one logical thing:
+Each commit does one logical thing. **Mandatory in every workspace**, not a preference. After you write a hunk, commit it before you edit it again.
+
+If you already wrote a line (or hunk) and have **not** committed it, and you now want to change it: that is **two changes**. Commit the current tree first, then edit, then commit the edit. Do not fold the rewrite into the dirty working tree.
+
+```
+# Required: two commits
+git add path && git commit -m "feat: add the first version of the hunk"
+# then edit the same lines
+git add path && git commit -m "fix: correct the hunk"
+
+# Forbidden: write, rewrite, one commit
+```
 
 ```
 # Good: Each commit is self-contained
