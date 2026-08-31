@@ -16,3 +16,5 @@ sources:
     enabled: true
   - file: anthropics-skills.yml
     enabled: true
+  - file: grafana-k6.yml
+    enabled: true

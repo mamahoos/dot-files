@@ -64,6 +64,7 @@ Skills under `home/.cursor/skills/` come from versioned upstreams (see `.github/
 | `home/.cursor/skills/find-skills/` | [vercel-labs/skills](https://github.com/vercel-labs/skills) ([MIT](https://github.com/vercel-labs/skills/blob/main/LICENSE)) | `skills/find-skills/` | `disable-model-invocation: true` |
 | `home/.cursor/skills/*` (mattpocock set) | [mattpocock/skills](https://github.com/mattpocock/skills) ([MIT](https://github.com/mattpocock/skills/blob/main/LICENSE)) | `skills/engineering/`, `skills/productivity/` | `disable-model-invocation: true` |
 | `home/.cursor/skills/*` (anthropics example set) | [anthropics/skills](https://github.com/anthropics/skills) ([Apache 2.0](https://github.com/anthropics/skills/blob/main/skills/frontend-design/LICENSE.txt)) | `skills/` | `disable-model-invocation: true`; skip `docx`/`pdf`/`pptx`/`xlsx` (source-available, not OSS) |
+| `home/.cursor/skills/k6*` | [grafana/skills](https://github.com/grafana/skills) ([Apache 2.0](https://github.com/grafana/skills/blob/main/LICENSE)) | `skills/grafana-k6/` | `disable-model-invocation: true` |
 
 Rules and any skill dirs not listed above are mine (unmanaged by sync).
 
