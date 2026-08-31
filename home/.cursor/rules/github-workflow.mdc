@@ -1,5 +1,5 @@
 ---
-description: GitHub issue/PR invariants — discover labels and collaborators, never invent; issue-first for non-trivial work.
+description: GitHub invariants — full standard flow on best-practice use cases; no issue spam on chores; honor open checklists.
 alwaysApply: true
 ---
 
@@ -7,7 +7,35 @@ alwaysApply: true
 
 Git commits/branches: `git-workflow-and-versioning`. Issues/PRs/labels/assignees: this rule.
 
-When creating or editing GitHub issues or PRs, load `.cursor/skills/github-workflow/SKILL.md` and run its commands. Do not improvise `gh` flags.
+When creating or editing GitHub issues or PRs, load `.cursor/skills/github-workflow/SKILL.md`. Do not improvise `gh` flags.
+
+## Open bodies are work
+
+Before you start, and again before you claim done, read the body (and comments) of every **open** issue and PR this work touches:
+
+```bash
+gh issue view N --json title,body,comments
+gh pr view N --json title,body,comments
+```
+
+Unchecked `- [ ]` items are tasks. Do them. Flip to `- [x]` on the same body. Do not merge, close, or say "done" while required boxes are still open.
+
+## Standard GitHub flow (mandatory on these use cases)
+
+When a use case below matches, follow the full flow. Do not skip it to "avoid spam":
+
+`issue (reuse or create) → branch → PR with Closes #N → label + assignee → tick body checklists → review → green checks → merge`
+
+**Use it for:**
+- the user asked for GitHub flow / an issue / a PR
+- a bug that needs a durable repro and acceptance
+- a feature that needs acceptance criteria
+- work that spans (or will span) more than one PR
+- other collaborators will review, or the change is breaking / security-sensitive / public behavior
+- CI, install, or shared automation
+- an **open** issue already covers this work (join it; `Closes #N`)
+
+**Do not** open an issue for a one-file chore, typo, comment, or "so the PR has a number." If none of the use cases match, a labeled PR is enough. Never invent `Closes`.
 
 ## Discover, don't invent
 
@@ -19,27 +47,15 @@ gh label list
 gh api "repos/$(gh repo view --json nameWithOwner -q .nameWithOwner)/collaborators" --jq '.[].login'
 ```
 
-Never create labels. Never assign or request-review a login that is not in that collaborators list. Never request review from the PR author.
-
-## Before opening a PR
-
-- **Non-trivial** (multi-file, behavior/API/CI change, new rule/skill, anything that needs discussion): an issue must exist or be created. PR body must contain `Closes #N`.
-- **One-file chore** with no behavior change: issue optional. Do not invent `Closes`.
-- **Automated sync PRs**: add `automated` if that label exists. No issue required.
+Never create labels. Never assign or request-review a login that is not in that list. Never request review from the PR author.
 
 ## Labels
 
-Exactly one type label, and only if it exists in `gh label list`:
-
-- `bug` — broken behavior
-- `enhancement` — new capability
-- `chore` — maintenance, config, deps
-- `documentation` — docs-only
-
-Add `automated` only on bot/sync PRs, in addition to the type. If the needed type is missing, ask. Do not apply triage labels (`wontfix`, `duplicate`, `invalid`, `question`, `good first issue`, `help wanted`) on new work.
+Exactly one type label if it exists in `gh label list`: `bug` | `enhancement` | `chore` | `documentation`. Add `automated` only on bot/sync PRs. If the type is missing, ask.
 
 ## Assign and review
 
 - Assignee: `--assignee "@me"` when the authenticated user is a collaborator. If other humans have push, ask who owns it.
-- Reviewer: request only other collaborators (or CODEOWNERS). Solo repo: `gh pr review --comment` — never `--approve` your own PR.
-- Merge only after `gh pr checks` is green.
+- **Ask before** a GitHub review when the diff is large or touches more than a few files.
+- Small diffs: review if the user asked to ship. Solo: `gh pr review --comment` — never `--approve` your own PR.
+- Merge only after `gh pr checks` is green and required checkboxes are ticked.

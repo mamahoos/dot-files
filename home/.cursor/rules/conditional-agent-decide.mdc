@@ -31,7 +31,7 @@ Use these skills when the task context clearly requires them.
 
 ## Ship / GitHub
 
-- `github-workflow`: Use when creating or editing GitHub issues or PRs, assigning, labeling, requesting review, linking `Closes #N`, or merging. Discover labels and collaborators from `gh`; never invent them.
+- `github-workflow`: Use when creating or editing GitHub issues or PRs, assigning, labeling, ticking open checklists, requesting review, or merging. Do not spam issues. Discover labels and collaborators from `gh`; never invent them.
 
 ## Policy
 
