@@ -3,17 +3,25 @@
 
 .DEFAULT_GOAL := help
 
-.PHONY: help lint shellcheck shfmt smoke idempotent skills-drift check
+.PHONY: help install install-shell-only lint shellcheck shfmt smoke idempotent skills-drift check
 
 help:
 	@printf '%s\n' \
-	  'lint            ShellCheck + shfmt' \
-	  'shellcheck      shellcheck -S error install.sh .github/scripts/*.sh' \
-	  'shfmt           shfmt -d -i 2 home install.sh .github/scripts' \
-	  'smoke           ./.github/scripts/test-install-smoke.sh' \
-	  'idempotent      ./.github/scripts/test-install-idempotent.sh' \
-	  'skills-drift    ./.github/scripts/sync-upstreams.sh --check' \
-	  'check           lint + smoke + idempotent + skills-drift'
+	  'install              ./install.sh' \
+	  'install-shell-only   ./install.sh --shell-only' \
+	  'lint                 ShellCheck + shfmt' \
+	  'shellcheck           shellcheck -S error install.sh .github/scripts/*.sh' \
+	  'shfmt                shfmt -d -i 2 home install.sh .github/scripts' \
+	  'smoke                ./.github/scripts/test-install-smoke.sh' \
+	  'idempotent           ./.github/scripts/test-install-idempotent.sh' \
+	  'skills-drift         ./.github/scripts/sync-upstreams.sh --check' \
+	  'check                lint + smoke + idempotent + skills-drift'
+
+install:
+	./install.sh
+
+install-shell-only:
+	./install.sh --shell-only
 
 lint: shellcheck shfmt
 
