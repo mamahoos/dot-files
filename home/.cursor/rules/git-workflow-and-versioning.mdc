@@ -1,5 +1,5 @@
 ---
-description: Git workflow guardrails for frequent small commits, safe branching, and clean merge flow.
+description: Git workflow guardrails — atomic commits mandatory in every workspace; uncommitted rewrites are a second commit.
 alwaysApply: true
 ---
 
