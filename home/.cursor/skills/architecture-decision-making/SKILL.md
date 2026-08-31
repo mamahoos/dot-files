@@ -112,6 +112,14 @@ First path is this repo. Second is after `./install.sh`. Do not run `scripts/che
 - Skipping Option 0
 - A 40-page architecture for a Compose app you run alone
 
+## Verification
+
+- [ ] `check_decision.py` passes (`--short` only for a two-way door)
+- [ ] Hand is from repo evidence, not a wish list
+- [ ] Scale is numbers or `unknown`
+- [ ] Option 0 was considered
+- [ ] User accepted the Decision or overrode with the trade-off named
+
 ## Additional resources
 
 - [cards.md](cards.md) — how to build the hand
