@@ -23,10 +23,9 @@ ls .github/PULL_REQUEST_TEMPLATE.md .github/ISSUE_TEMPLATE .github/ISSUE_TEMPLAT
 
 If `.github/ISSUE_TEMPLATE` or `PULL_REQUEST_TEMPLATE.md` exists, use it (`gh issue create --template`, `gh pr create --template`). Do not invent a second template.
 
-Search before creating:
-
 ```bash
 gh issue list --state open --limit 20
+gh pr list --state open --limit 20
 gh issue list --state all --search "KEYWORD" --limit 10
 ```
 
