@@ -55,21 +55,15 @@ gh issue view ISSUE_NUMBER --json title,body,comments
 gh pr view PR_NUMBER --json title,body,comments
 ```
 
-Treat every `- [ ]` in those bodies (and in comments) as a task:
-
-1. Do the work the box describes.
-2. Fetch the current body again (it may have changed).
-3. Flip that line to `- [x]`. Do not rewrite the rest of the body.
-4. Write it back.
+Every `- [ ]` in those bodies (and comments) is a task. Do it. Fetch the body again. Flip that line to `- [x]`. PATCH (do not rewrite the rest):
 
 ```bash
-# After editing BODY locally with the box ticked:
 gh api --method PATCH "repos/${OWNER_REPO}/issues/NUMBER" -f body="${BODY}"
 ```
 
-PRs are issues for this API. Prefer REST PATCH over `gh pr edit --body` (GraphQL `projectCards` can fail).
+PRs are issues for this API. Prefer REST PATCH over `gh pr edit --body`.
 
-Do **not** tick a box you did not complete. Do **not** merge, close, or report done while required `- [ ]` remain. Test-plan boxes on the PR count.
+Do not tick work you did not do.
 
 ## 1. Issue (only for section 0a use cases)
 
