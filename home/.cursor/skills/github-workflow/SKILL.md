@@ -10,7 +10,7 @@ Git history is `git-workflow-and-versioning`. This skill is GitHub: issues, labe
 
 Docs: [linking PRs](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue), [sub-issues](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/adding-sub-issues), [labels](https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/managing-labels).
 
-Verification is mandatory. `gh pr merge` is not allowed while any linked body still contains `- [ ]`.
+Verification is mandatory. `gh pr merge` is not allowed while any linked body still contains an unchecked `- [ ]` or `* [ ]`.
 
 ## 0. Discover (every repo, every time)
 
@@ -51,8 +51,8 @@ If **none** of the rows match, skip the issue. Still label the PR. Honor linked 
 Scope: this PR's body **and** every issue the PR body names with `Closes` / `Fixes` / `Resolves` #N. State (open/closed) does not matter. After `gh pr merge` is too late.
 
 ```bash
-gh issue view ISSUE_NUMBER --json title,body,comments
-gh pr view PR_NUMBER --json title,body,comments
+gh issue view ISSUE_NUMBER --json title,body
+gh pr view PR_NUMBER --json title,body
 ```
 
 Every `- [ ]` or `* [ ]` in those **bodies** is a task. Comments are not GitHub task lists and are not merge blockers. Do the work. Fetch the body again. Flip that line to `- [x]` / `* [x]`. PATCH (do not rewrite the rest):
@@ -203,7 +203,7 @@ Do not `--admin` unless the user asks.
 - Skipping the standard flow when a 0a row matches
 - Inventing labels, assignees, or reviewers
 - `Closes #N` with no issue
-- `gh pr merge` while `- [ ]` remains on the PR or a linked issue
+- `gh pr merge` while `- [ ]` or `* [ ]` remains on the PR or a linked issue
 - Ticking boxes after the issue/PR is already merged or closed
 - `--approve` on a self-authored PR
 - Reviewing a large/multi-file diff without asking
