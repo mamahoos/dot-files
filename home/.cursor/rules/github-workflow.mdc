@@ -26,6 +26,15 @@ When a use case below matches, follow the full flow. Do not skip it to "avoid sp
 
 `issue (reuse or create) → branch → PR with Closes #N → label + assignee → tick body checklists → review → green checks → merge`
 
+**Use it for:**
+- the user asked for GitHub flow / an issue / a PR
+- a bug that needs a durable repro and acceptance
+- a feature that needs acceptance criteria
+- work that spans (or will span) more than one PR
+- other collaborators will review, or the change is breaking / security-sensitive / public behavior
+- CI, install, or shared automation
+- an **open** issue already covers this work (join it; `Closes #N`)
+
 ## Discover, don't invent
 
 Before any GitHub write:
