@@ -62,6 +62,7 @@ Skills under `home/.cursor/skills/` come from versioned upstreams (see `.github/
 | `home/.cursor/skills/i-have-adhd/` | [ayghri/i-have-adhd](https://github.com/ayghri/i-have-adhd) ([MIT](https://github.com/ayghri/i-have-adhd/blob/main/LICENSE)) | `.cursor/skills/i-have-adhd/` | none (`disable-model-invocation` already in upstream) |
 | `home/.cursor/skills/resume-builder/` | [dabydat/resume-builder-skill](https://github.com/dabydat/resume-builder-skill) ([MIT](https://github.com/dabydat/resume-builder-skill/blob/master/LICENSE)) | `skill/` | `disable-model-invocation: true` |
 | `home/.cursor/skills/find-skills/` | [vercel-labs/skills](https://github.com/vercel-labs/skills) ([MIT](https://github.com/vercel-labs/skills/blob/main/LICENSE)) | `skills/find-skills/` | `disable-model-invocation: true` |
+| `home/.cursor/skills/*` (anthropics example set) | [anthropics/skills](https://github.com/anthropics/skills) ([Apache 2.0](https://github.com/anthropics/skills/blob/main/skills/frontend-design/LICENSE.txt)) | `skills/` | `disable-model-invocation: true`; skip `docx`/`pdf`/`pptx`/`xlsx` (source-available, not OSS) |
 
 Rules and any skill dirs not listed above are mine (unmanaged by sync).
 
