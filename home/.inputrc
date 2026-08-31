@@ -22,6 +22,7 @@ set editing-mode        vi
 
 $if mode=vi
 set keymap vi-command
+"^[OP": vi-insert
 "k": history-search-backward
 "j": history-search-forward
 "\e[1~": beginning-of-line
