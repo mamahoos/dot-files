@@ -30,20 +30,13 @@ Run that on the PR number and every linked issue number.
 
 ## Standard GitHub flow (mandatory on these use cases)
 
-When a use case below matches, follow the full flow. Do not skip it to "avoid spam":
+When a row matches, do not skip the flow to "avoid spam":
 
-`issue (reuse or create) → branch → PR with Closes #N → label + assignee → tick body checklists → review → green checks → merge`
+`issue → branch → PR with Closes #N → label + assignee → tick boxes → grep gate → review → green checks → merge`
 
-**Use it for:**
-- the user asked for GitHub flow / an issue / a PR
-- a bug that needs a durable repro and acceptance
-- a feature that needs acceptance criteria
-- work that spans (or will span) more than one PR
-- other collaborators will review, or the change is breaking / security-sensitive / public behavior
-- CI, install, or shared automation
-- an **open** issue already covers this work (join it; `Closes #N`)
+**Use it for:** user asked for GitHub flow / an issue / a PR; bug with durable repro; feature with acceptance; multi-PR work; other humans will review, or breaking / security / public behavior; CI, install, shared automation; an issue already covers this work (`Closes #N`).
 
-**Do not** open an issue for a one-file chore, typo, comment, or "so the PR has a number." If none of the use cases match, a labeled PR is enough. Never invent `Closes`.
+**Do not** open an issue for a one-file chore, typo, or "so the PR has a number." Never invent `Closes`.
 
 ## Discover, don't invent
 
