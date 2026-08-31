@@ -206,7 +206,7 @@ gh api "repos/${OWNER_REPO}" --jq '{merge: .allow_merge_commit, squash: .allow_s
 gh pr merge "${PR_NUMBER}" --merge --delete-branch
 ```
 
-`if grep` is required: a failing `grep` inside `if` does not abort; a match **does** `exit 1`. Do not `gh pr merge` until that loop prints nothing.
+`command grep` bypasses aliases (`grep -n` here). `if grep` is required: a non-match inside `if` does not abort; a match **does** `exit 1`. Do not `gh pr merge` until that loop prints nothing.
 
 Do not `--admin` unless the user asks.
 
