@@ -181,7 +181,7 @@ PR_NUMBER=N
 OWNER_REPO=$(gh repo view --json nameWithOwner -q .nameWithOwner)
 gh pr checks "${PR_NUMBER}"
 
-NUMBERS="${PR_NUMBER} $(gh pr view "${PR_NUMBER}" --json body --jq .body | command grep -oiE '\b(close[sd]?|fix(es|ed)?|resolve[sd]?)[[:space:]]+#[0-9]+\b' | command grep -oE '[0-9]+$' | sort -u | tr '\n' ' ')"
+NUMBERS="${PR_NUMBER} $(gh pr view "${PR_NUMBER}" --json body --jq .body | command grep -oiE '^[[:space:]]*(close[sd]?|fix(es|ed)?|resolve[sd]?)[[:space:]]+#[0-9]+\b' | command grep -oE '[0-9]+$' | sort -u | tr '\n' ' ')"
 for n in ${NUMBERS}; do
   if gh api "repos/${OWNER_REPO}/issues/${n}" --jq .body | command grep -E '^[[:space:]]*[-*][[:space:]]+\[ \]'; then
     echo "unchecked boxes in #${n} — tick before merge" >&2
@@ -193,7 +193,7 @@ gh api "repos/${OWNER_REPO}" --jq '{merge: .allow_merge_commit, squash: .allow_s
 gh pr merge "${PR_NUMBER}" --merge --delete-branch
 ```
 
-`command grep` bypasses aliases (`grep -n` here). `if grep` is required: a non-match inside `if` does not abort; a match **does** `exit 1`. Do not `gh pr merge` until that loop prints nothing.
+`command grep` bypasses aliases (`grep -n` here). `^` is start of line so a Test-plan example like `Closes #63` in a sentence is ignored; put the real keyword on its own line. `if grep` is required: a non-match inside `if` does not abort; a match **does** `exit 1`. Do not `gh pr merge` until that loop prints nothing.
 
 Do not `--admin` unless the user asks.
 
