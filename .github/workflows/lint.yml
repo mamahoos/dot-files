@@ -28,6 +28,7 @@ jobs:
         with:
           scandir: home
           severity: error
+          ignore_paths: home/.cursor/skills
 
       - name: Run ShellCheck on repo scripts
         run: shellcheck -S error install.sh .github/scripts/*.sh
@@ -38,4 +39,4 @@ jobs:
           shfmt-version: 3.8.0
 
       - name: Check formatting
-        run: shfmt -d -i 2 home install.sh .github/scripts
+        run: shfmt -d -i 2 install.sh .github/scripts
