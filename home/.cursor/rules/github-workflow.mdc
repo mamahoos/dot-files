@@ -18,6 +18,8 @@ gh issue view N --json title,body,comments
 gh pr view N --json title,body,comments
 ```
 
+Unchecked `- [ ]` items are tasks. Do them. Flip to `- [x]` on the same body. Do not merge, close, or say "done" while required boxes are still open.
+
 ## Discover, don't invent
 
 Before any GitHub write:
