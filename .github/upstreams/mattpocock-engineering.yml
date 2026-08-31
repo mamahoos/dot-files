@@ -1,0 +1,9 @@
+name: mattpocock-engineering
+repo: https://github.com/mattpocock/skills.git
+branch: main
+source: skills/engineering
+destination: home/.cursor/skills
+overlays:
+  - disable-model-invocation
+exclude:
+  - template.sh
