@@ -151,20 +151,18 @@ gh issue edit ISSUE_NUMBER --add-assignee "@me"
 
 ## 4. Review
 
-**Ask first** when the diff is large or touches more than a few files: do not post a GitHub review until the user says yes.
+**Ask first** when the diff is large or touches more than a few files.
 
-Small, focused diffs: review without asking if the user already asked to ship/merge.
+Small diffs: review without asking if the user already asked to ship/merge.
 
-Before requesting or posting a review:
+- [ ] One logical change
+- [ ] Linked checklists ticked or still in progress (0b) — merge still waits on the grep gate
+- [ ] Summary + Test plan; `Closes #N` only if an issue exists
+- [ ] Type label + assignee
+- [ ] No secrets
+- [ ] `gh pr checks` will run, or the gap is stated
 
-- [ ] Diff is one logical change
-- [ ] Open issue/PR checklists are ticked or still in progress (section 0b)
-- [ ] Body has Summary and Test plan; `Closes #N` only if an issue exists
-- [ ] Type label + assignee set
-- [ ] No secrets in the diff
-- [ ] `gh pr checks` will have something real to run, or the gap is stated
-
-**Other collaborators exist** (and are not the author):
+Other collaborators (not the author):
 
 ```bash
 gh api --method POST "repos/${OWNER_REPO}/pulls/PR_NUMBER/requested_reviewers" -f 'reviewers[]=LOGIN'
