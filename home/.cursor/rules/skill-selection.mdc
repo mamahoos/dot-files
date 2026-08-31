@@ -1,0 +1,54 @@
+---
+description: Pick the fewest skills for this task. Core lifecycle for non-trivial work; extras only on a matching signal. Catalog is using-agent-skills, not this rule.
+alwaysApply: true
+---
+
+# Skill selection
+
+`using-agent-skills` is the catalog. This rule only says how many skills to load. Do not copy that tree here.
+
+## Budget
+
+Load the smallest set that covers the task. Do not walk the full discovery tree. Do not read a SKILL.md unless that skill is in the set for this turn.
+
+## Tiny work
+
+Obvious one-file, low-risk edits: `git-workflow-and-versioning` only. Skip the rest; one line why if a lifecycle step is skipped.
+
+## Non-trivial software change
+
+These seven, in order (skip a step only with a one-line why):
+
+1. `spec-driven-development`
+2. `planning-and-task-breakdown`
+3. `incremental-implementation`
+4. `test-driven-development`
+5. `debugging-and-error-recovery` — only when something is already broken
+6. `code-review-and-quality`
+7. `git-workflow-and-versioning`
+
+Unclear intent before a spec: `interview-me` or `idea-refine`, then step 1.
+
+## Extras — signal only
+
+After the spine, add extras only for a matching branch of the `using-agent-skills` discovery tree (example: UI work → `frontend-ui-engineering`, not every Build skill).
+
+If the job is not in that tree, match the task to a `description:` in `home/.cursor/skills/*/SKILL.md`. Do not open every file; search descriptions or use the name the user typed. User `/name` or an explicit skill name wins for this turn.
+
+## Same job, two names
+
+Prefer the core-lifecycle skill unless the user invoked the other:
+
+| Job | Use | Not unless named |
+| --- | --- | --- |
+| TDD | `test-driven-development` | `tdd` |
+| Review | `code-review-and-quality` | `code-review` |
+| Debug | `debugging-and-error-recovery` | `diagnosing-bugs` |
+
+## Slots the discovery tree does not have
+
+- Hard-to-reverse stack, boundary, storage, or deploy: `architecture-decision-making` (then `documentation-and-adrs` only to record).
+- GitHub issues, PRs, labels, merge: `github-workflow` (in addition to `git-workflow-and-versioning`).
+- User looking for an installable skill: `find-skills`.
+
+If an extra skill is used, one short note: which and why.
