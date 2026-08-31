@@ -18,5 +18,3 @@ sources:
     enabled: true
   - file: grafana-k6.yml
     enabled: true
-  - file: grafana-k6.yml
-    enabled: true
