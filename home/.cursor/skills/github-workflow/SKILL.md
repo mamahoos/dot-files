@@ -168,9 +168,9 @@ Other collaborators (not the author):
 gh api --method POST "repos/${OWNER_REPO}/pulls/PR_NUMBER/requested_reviewers" -f 'reviewers[]=LOGIN'
 ```
 
-Skip `--reviewer` if CODEOWNERS already requested them. Never request the PR author. Never invent a login unless they appear in collaborators.
+Skip if CODEOWNERS already requested them. Never request the PR author. Never invent a login.
 
-**Solo** (typical for `mamahoos` personal repos):
+Solo (`mamahoos` personal repos):
 
 ```bash
 gh pr review PR_NUMBER --comment --body "$(cat <<'EOF'
