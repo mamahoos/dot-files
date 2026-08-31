@@ -41,7 +41,11 @@ Don't optimize architecture for imaginary scale.
 - The user asks for architecture, system design, or "what should we use"
 - Before `documentation-and-adrs` on a significant decision
 
-**When not to:** a two-line bugfix; picking a variable name; recording a decision already made (ADR skill); performance work without measured load (`performance-optimization`).
+**When not to:**
+
+- a two-line bugfix or a rename
+- recording a decision already made (`documentation-and-adrs`)
+- performance work without measured load (`performance-optimization`)
 
 ## Door type
 
