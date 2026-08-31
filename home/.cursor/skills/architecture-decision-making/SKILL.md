@@ -117,5 +117,3 @@ First path is this repo. Second is after `./install.sh`. Do not run `scripts/che
 - [cards.md](cards.md) — how to build the hand
 - [reference.md](reference.md) — characteristics, failure modes, cost, standards
 - [examples.md](examples.md) — decisions at this operator's real scale
-- [templates/decision.md](templates/decision.md)
-- [templates/cards.md](templates/cards.md)
