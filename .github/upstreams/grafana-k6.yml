@@ -1,0 +1,7 @@
+name: grafana-k6
+repo: https://github.com/grafana/skills.git
+branch: main
+source: skills/grafana-k6
+destination: home/.cursor/skills
+overlays:
+  - disable-model-invocation
