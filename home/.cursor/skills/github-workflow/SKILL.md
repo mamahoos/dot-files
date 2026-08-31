@@ -110,7 +110,7 @@ CHILD_ID=$(gh api "repos/${OWNER_REPO}/issues/${CHILD_NUM}" --jq .id)
 printf '{"sub_issue_id":%s}\n' "${CHILD_ID}" | gh api --method POST "repos/${OWNER_REPO}/issues/PARENT_NUMBER/sub_issues" --input -
 ```
 
-`--input` is required: `-f sub_issue_id=` sends a string and 422s. `sub_issue_id` is the REST integer `.id`, not the issue number.
+`sub_issue_id` is REST integer `.id`, not the issue number. `-f` 422s.
 
 ## 2. Pull request
 
