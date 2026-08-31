@@ -162,9 +162,9 @@ EOF
 )"
 ```
 
-Match the type label to the issue. Add `--label "automated"` only for bot/sync PRs, **in addition** to the type label.
+If an issue exists, add a `Closes #N` line to that body. Match the type label. Add `--label "automated"` only for bot/sync PRs, **in addition** to the type label.
 
-If create cannot take a flag, patch via REST (PRs are issues). `gh pr edit --add-assignee` can fail on GraphQL `projectCards` — do not retry that path. REST wants a login, not `@me`:
+If create cannot take a flag, patch via REST. `gh pr edit --add-assignee` can fail on GraphQL `projectCards`. REST wants a login, not `@me`:
 
 ```bash
 ME=$(gh api user --jq .login)
