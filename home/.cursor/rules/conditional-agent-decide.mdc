@@ -13,6 +13,10 @@ Use these skills when the task context clearly requires them.
 - `idea-refine`: Use when the problem statement is vague or direction is unclear.
 - `context-engineering`: Use at session start, quality drops, or task switching.
 
+## Architecture
+
+- `architecture-decision-making`: Use when choosing a stack, boundary, storage, deploy shape, or a hard-to-reverse technical door. Makes the Decision from the cards in hand; `documentation-and-adrs` only records it. Don't optimize for imaginary scale.
+
 ## Build / Validation
 
 - `source-driven-development`: Use when framework/library correctness must be aligned with official docs.
@@ -24,7 +28,6 @@ Use these skills when the task context clearly requires them.
 - `performance-optimization`: Use for SLO/CWV targets or suspected performance regressions.
 - `ci-cd-and-automation`: Use for pipeline, checks, hooks, and automation changes.
 - `deprecation-and-migration`: Use for legacy removal and user/data migration paths.
-- `architecture-decision-making`: Use when choosing a stack, boundary, storage, deploy shape, or a hard-to-reverse technical door. Makes the Decision from the cards in hand; `documentation-and-adrs` only records it. Don't optimize for imaginary scale.
 - `documentation-and-adrs`: Use when architecture/API decisions need explicit rationale.
 - `observability-and-instrumentation`: Use when adding logs, metrics, traces, or alerts.
 - `shipping-and-launch`: Use for rollout, release readiness, and rollback planning.
