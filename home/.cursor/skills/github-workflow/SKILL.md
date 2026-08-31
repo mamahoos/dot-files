@@ -65,22 +65,11 @@ PRs are issues for this API. Prefer REST PATCH over `gh pr edit --body`.
 
 Do not tick work you did not do.
 
-## 1. Issue (only for section 0a use cases)
+## 1. Issue (only for section 0a)
 
-Do **not** open an issue for ordinary PRs, one-file chores, copy tweaks, or "so the PR has a number."
+Do **not** open an issue for ordinary PRs, one-file chores, or "so the PR has a number." When 0a matches, create or reuse the issue **before** the PR.
 
-When section 0a matches, the issue is **required**. Create it (or reuse the open one) before the PR. That is the standard GitHub flow, not optional polish.
-
-Type label — pick **exactly one** that exists in `gh label list`:
-
-| Work | Label |
-|---|---|
-| Broken behavior | `bug` |
-| New capability | `enhancement` |
-| Maintenance, config, deps | `chore` |
-| Docs-only | `documentation` |
-
-If that label is absent, stop and ask. Never `gh label create`.
+Type label — exactly one that exists in `gh label list`: `bug` | `enhancement` | `chore` | `documentation`. If absent, ask. Never `gh label create`.
 
 ```bash
 gh issue create \
