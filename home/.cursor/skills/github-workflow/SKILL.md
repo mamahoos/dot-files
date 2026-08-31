@@ -46,9 +46,9 @@ Chores may skip an issue. These use cases **must not**:
 
 If **none** of the rows match, skip the issue. Still label the PR. Honor linked checklists. Do not invent `Closes`. If unsure, ask once.
 
-## 0b. Checklists (do not skip)
+## 0b. Checklists — tick BEFORE merge
 
-Open issue and PR **bodies are part of the work**. Agents forget this. Read them twice: once before coding, once before merge.
+Scope: this PR's body **and** every issue the PR body names with `Closes` / `Fixes` / `Resolves` #N. State (open/closed) does not matter. After `gh pr merge` is too late.
 
 ```bash
 gh issue view ISSUE_NUMBER --json title,body,comments
