@@ -14,7 +14,7 @@ help:
 	  'shfmt                shfmt -d -i 2 home install.sh .github/scripts' \
 	  'smoke                ./.github/scripts/test-install-smoke.sh' \
 	  'idempotent           ./.github/scripts/test-install-idempotent.sh' \
-	  'skills-drift         ./.github/scripts/sync-upstreams.sh --check' \
+	  'skills-drift         ./.github/scripts/sync-upstreams.sh --check --pull' \
 	  'check                lint + smoke + idempotent + skills-drift'
 
 install:
@@ -38,6 +38,6 @@ idempotent:
 	./.github/scripts/test-install-idempotent.sh
 
 skills-drift:
-	./.github/scripts/sync-upstreams.sh --check
+	./.github/scripts/sync-upstreams.sh --check --pull
 
 check: lint smoke idempotent skills-drift

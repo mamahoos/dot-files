@@ -51,6 +51,7 @@ Options:
   --pull           Update cached clones before syncing
   --dry-run        Show rsync itemize without writing
   --check          Exit 1 if any managed skill differs from expected
+                   (updates cached clones, same as --pull)
   --source NAME    Only process the named source
   --list-sources   Print enabled source names as JSON array and exit
 EOF
@@ -91,6 +92,11 @@ _sync_parse_args() {
   if [[ "$CHECK" == true && "$DRY_RUN" == true ]]; then
     _sync_error "use either --check or --dry-run, not both"
     exit 1
+  fi
+
+  # Stale .cache/upstreams makes --check report false drift. Match CI: always fetch.
+  if [[ "$CHECK" == true ]]; then
+    PULL=true
   fi
 }
 
