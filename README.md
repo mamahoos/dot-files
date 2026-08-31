@@ -28,6 +28,7 @@ Versioned Linux configs I use day to day.
 │   ├── htop/
 │   └── tmux/
 ├── install.sh
+├── Makefile          # local stand-ins for CI (`make help`)
 └── .github/          # CI & repo scripts (not installed)
 ```
 
@@ -41,6 +42,14 @@ Versioned Linux configs I use day to day.
 ```
 
 `.cursor` children link individually into `~/.cursor/` so Cursor-managed paths are not replaced wholesale.
+
+## Local checks
+
+Same commands CI runs locally. `make` prints targets; `make check` runs the full set (ShellCheck, shfmt, install smoke/idempotent, skills drift).
+
+```bash
+make check
+```
 
 ## Cursor skills
 
