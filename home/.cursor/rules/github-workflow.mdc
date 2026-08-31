@@ -14,14 +14,14 @@ When creating or editing GitHub issues or PRs, load `.cursor/skills/github-workf
 Scope is the **PR body** and every issue the PR names (`Closes` / `Fixes` / `Resolves` #N). Open vs closed does not matter. Tick **before** `gh pr merge`. After merge is too late.
 
 ```bash
-gh issue view N --json title,body,comments
-gh pr view N --json title,body,comments
+gh issue view N --json title,body
+gh pr view N --json title,body
 ```
 
-`- [ ]` is unfinished work. Do it, PATCH to `- [x]`, then this must print nothing (else do not merge):
+`- [ ]` or `* [ ]` is unfinished work. Do it, PATCH to `- [x]` / `* [x]`, then this must print nothing (else do not merge):
 
 ```bash
-if gh api "repos/OWNER/REPO/issues/N" --jq .body | command grep -E '^[[:space:]]*- \[ \]'; then
+if gh api "repos/OWNER/REPO/issues/N" --jq .body | command grep -E '^[[:space:]]*[-*][[:space:]]+\[ \]'; then
   exit 1
 fi
 ```
@@ -57,4 +57,4 @@ Exactly one type label if it exists in `gh label list`: `bug` | `enhancement` | 
 - `--assignee "@me"` when the authenticated user is a collaborator. Other humans with push: ask.
 - Ask before a GitHub review when the diff is large or touches more than a few files.
 - Solo: `gh pr review --comment` — never `--approve` your own PR.
-- Merge only after `gh pr checks` is green **and** the grep gate above fails to find `- [ ]`.
+- Merge only after `gh pr checks` is green **and** the grep gate above fails to find `- [ ]` or `* [ ]`.

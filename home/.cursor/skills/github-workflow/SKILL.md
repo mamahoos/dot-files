@@ -10,7 +10,7 @@ Git history is `git-workflow-and-versioning`. This skill is GitHub: issues, labe
 
 Docs: [linking PRs](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue), [sub-issues](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/adding-sub-issues), [labels](https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/managing-labels).
 
-Verification is mandatory. `gh pr merge` is not allowed while any linked body still contains `- [ ]`.
+Verification is mandatory. `gh pr merge` is not allowed while any linked body still contains an unchecked `- [ ]` or `* [ ]`.
 
 ## 0. Discover (every repo, every time)
 
@@ -51,11 +51,11 @@ If **none** of the rows match, skip the issue. Still label the PR. Honor linked 
 Scope: this PR's body **and** every issue the PR body names with `Closes` / `Fixes` / `Resolves` #N. State (open/closed) does not matter. After `gh pr merge` is too late.
 
 ```bash
-gh issue view ISSUE_NUMBER --json title,body,comments
-gh pr view PR_NUMBER --json title,body,comments
+gh issue view ISSUE_NUMBER --json title,body
+gh pr view PR_NUMBER --json title,body
 ```
 
-Every `- [ ]` in those bodies (and comments) is a task. Do it. Fetch the body again. Flip that line to `- [x]`. PATCH (do not rewrite the rest):
+Every `- [ ]` or `* [ ]` in those **bodies** is a task. Comments are not GitHub task lists and are not merge blockers. Do the work. Fetch the body again. Flip that line to `- [x]` / `* [x]`. PATCH (do not rewrite the rest):
 
 ```bash
 gh api --method PATCH "repos/${OWNER_REPO}/issues/NUMBER" -f body="${BODY}"
@@ -95,22 +95,7 @@ EOF
 
 Acceptance boxes are real work — tick via 0b before merge.
 
-Sub-issue only when splitting into independently mergeable PRs. If `gh issue create --help | grep -q -- --parent`:
-
-```bash
-gh issue create --title "TITLE" --body "BODY" --label "enhancement" --assignee "@me" --parent PARENT_NUMBER
-```
-
-Else (gh < 2.94):
-
-```bash
-CHILD_URL=$(gh issue create --title "TITLE" --body "BODY" --label "enhancement" --assignee "@me")
-CHILD_NUM=${CHILD_URL##*/}
-CHILD_ID=$(gh api "repos/${OWNER_REPO}/issues/${CHILD_NUM}" --jq .id)
-printf '{"sub_issue_id":%s}\n' "${CHILD_ID}" | gh api --method POST "repos/${OWNER_REPO}/issues/PARENT_NUMBER/sub_issues" --input -
-```
-
-`sub_issue_id` is REST integer `.id`, not the issue number. `-f` 422s.
+This repo uses checklists, not sub-issues. Sub-issues only when splitting into independently mergeable PRs: `gh issue create --parent` if help lists it; else POST REST `sub_issue_id` as integer `.id` (not the issue number; `-f` 422s).
 
 ## 2. Pull request
 
@@ -150,6 +135,8 @@ gh issue edit ISSUE_NUMBER --add-assignee "@me"
 ```
 
 ## 4. Review
+
+Review the diff with `code-review-and-quality` (and `code-simplification` when the change is cleanup). The GitHub comment is the summary, not the review.
 
 **Ask first** when the diff is large or touches more than a few files.
 
@@ -194,9 +181,9 @@ PR_NUMBER=N
 OWNER_REPO=$(gh repo view --json nameWithOwner -q .nameWithOwner)
 gh pr checks "${PR_NUMBER}"
 
-NUMBERS="${PR_NUMBER} $(gh pr view "${PR_NUMBER}" --json body --jq .body | command grep -oiE '(close[sd]?|fix(e[sd])?|resolve[sd]?) #[0-9]+' | command grep -oE '[0-9]+' | sort -u | tr '\n' ' ')"
+NUMBERS="${PR_NUMBER} $(gh pr view "${PR_NUMBER}" --json body --jq .body | command grep -oiE '^[[:space:]]*(close[sd]?|fix(es|ed)?|resolve[sd]?)[[:space:]]+#[0-9]+\b' | command grep -oE '[0-9]+$' | sort -u | tr '\n' ' ')"
 for n in ${NUMBERS}; do
-  if gh api "repos/${OWNER_REPO}/issues/${n}" --jq .body | command grep -E '^[[:space:]]*- \[ \]'; then
+  if gh api "repos/${OWNER_REPO}/issues/${n}" --jq .body | command grep -E '^[[:space:]]*[-*][[:space:]]+\[ \]'; then
     echo "unchecked boxes in #${n} — tick before merge" >&2
     exit 1
   fi
@@ -206,7 +193,7 @@ gh api "repos/${OWNER_REPO}" --jq '{merge: .allow_merge_commit, squash: .allow_s
 gh pr merge "${PR_NUMBER}" --merge --delete-branch
 ```
 
-`command grep` bypasses aliases (`grep -n` here). `if grep` is required: a non-match inside `if` does not abort; a match **does** `exit 1`. Do not `gh pr merge` until that loop prints nothing.
+`command grep` bypasses aliases (`grep -n` here). `^` is start of line so a Test-plan example like `Closes #63` in a sentence is ignored; put the real keyword on its own line. `if grep` is required: a non-match inside `if` does not abort; a match **does** `exit 1`. Do not `gh pr merge` until that loop prints nothing.
 
 Do not `--admin` unless the user asks.
 
@@ -216,7 +203,7 @@ Do not `--admin` unless the user asks.
 - Skipping the standard flow when a 0a row matches
 - Inventing labels, assignees, or reviewers
 - `Closes #N` with no issue
-- `gh pr merge` while `- [ ]` remains on the PR or a linked issue
+- `gh pr merge` while `- [ ]` or `* [ ]` remains on the PR or a linked issue
 - Ticking boxes after the issue/PR is already merged or closed
 - `--approve` on a self-authored PR
 - Reviewing a large/multi-file diff without asking
