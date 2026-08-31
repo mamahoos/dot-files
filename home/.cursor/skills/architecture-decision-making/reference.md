@@ -6,7 +6,7 @@ Loaded from `SKILL.md` when you need catalogs. Do not treat this as a second pip
 
 From ISO/IEC 25010-style quality, only what this Decision must protect:
 
-| Characteristic | Realistic question for a 1-operator system |
+| Characteristic | Realistic question for the operators in the hand |
 |---|---|
 | Maintainability | Can you change it in a year without a rewrite? |
 | Operability | Can you deploy, backup, and debug it at 02:00 alone? |
