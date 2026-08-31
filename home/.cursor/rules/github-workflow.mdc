@@ -56,5 +56,6 @@ Exactly one type label if it exists in `gh label list`: `bug` | `enhancement` | 
 ## Assign and review
 
 - Assignee: `--assignee "@me"` when the authenticated user is a collaborator. If other humans have push, ask who owns it.
-- Reviewer: request only other collaborators (or CODEOWNERS). Solo repo: `gh pr review --comment` — never `--approve` your own PR.
-- Merge only after `gh pr checks` is green.
+- **Ask before** a GitHub review when the diff is large or touches more than a few files.
+- Small diffs: review if the user asked to ship. Solo: `gh pr review --comment` — never `--approve` your own PR.
+- Merge only after `gh pr checks` is green and required checkboxes are ticked.
