@@ -5,3 +5,5 @@ source: skills/engineering
 destination: home/.cursor/skills
 overlays:
   - disable-model-invocation
+exclude:
+  - template.sh
