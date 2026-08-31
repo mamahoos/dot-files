@@ -1,0 +1,7 @@
+name: mattpocock-productivity
+repo: https://github.com/mattpocock/skills.git
+branch: main
+source: skills/productivity
+destination: home/.cursor/skills
+overlays:
+  - disable-model-invocation
