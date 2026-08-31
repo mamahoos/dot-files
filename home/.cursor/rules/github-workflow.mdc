@@ -9,9 +9,9 @@ Git commits/branches: `git-workflow-and-versioning`. Issues/PRs/labels/assignees
 
 When creating or editing GitHub issues or PRs, load `.cursor/skills/github-workflow/SKILL.md`. Do not improvise `gh` flags.
 
-## Open bodies are work
+## Linked bodies — tick before merge
 
-Before you start, and again before you claim done, read the body (and comments) of every **open** issue and PR this work touches:
+Scope is the **PR body** and every issue the PR names (`Closes` / `Fixes` / `Resolves` #N). Open vs closed does not matter. Tick **before** `gh pr merge`. After merge is too late.
 
 ```bash
 gh issue view N --json title,body,comments
