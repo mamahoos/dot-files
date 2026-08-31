@@ -40,8 +40,6 @@ When a row matches, do not skip the flow to "avoid spam":
 
 ## Discover, don't invent
 
-Before any GitHub write:
-
 ```bash
 gh repo view --json nameWithOwner,defaultBranchRef
 gh label list
