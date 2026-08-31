@@ -183,7 +183,7 @@ gh pr checks "${PR_NUMBER}"
 
 NUMBERS="${PR_NUMBER} $(gh pr view "${PR_NUMBER}" --json body --jq .body | command grep -oiE '\b(close[sd]?|fix(es|ed)?|resolve[sd]?)[[:space:]]+#[0-9]+\b' | command grep -oE '[0-9]+$' | sort -u | tr '\n' ' ')"
 for n in ${NUMBERS}; do
-  if gh api "repos/${OWNER_REPO}/issues/${n}" --jq .body | command grep -E '^[[:space:]]*- \[ \]'; then
+  if gh api "repos/${OWNER_REPO}/issues/${n}" --jq .body | command grep -E '^[[:space:]]*[-*][[:space:]]+\[ \]'; then
     echo "unchecked boxes in #${n} — tick before merge" >&2
     exit 1
   fi
