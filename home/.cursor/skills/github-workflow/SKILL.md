@@ -237,8 +237,10 @@ Do not `--admin` or skip checks unless the user explicitly asks.
 
 ## Anti-patterns
 
+- Opening an issue for every PR
+- Skipping the standard flow (issue → `Closes #N` → checklists → review → merge) when a section 0a use case matches
 - Inventing `priority/*`, `type/*`, `area/*` when those labels do not exist
-- Opening a non-trivial PR with no issue and no `Closes #N`
+- Putting `Closes #N` when no issue exists
 - `--approve` on a self-authored PR
 - `--reviewer` of a non-collaborator
 - `gh label create` to make the taxonomy you wish you had
