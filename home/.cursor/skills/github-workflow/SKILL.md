@@ -31,6 +31,20 @@ gh issue list --state all --search "KEYWORD" --limit 10
 
 Reuse an open issue if it is the same work. Do not duplicate.
 
+## 0a. When the standard GitHub flow is mandatory
+
+Chores may skip an issue. These use cases **must not**:
+
+| Use case | Why the full flow |
+|---|---|
+| User asked for an issue, a PR, or "GitHub flow" | Explicit |
+| Bug with repro that should outlive the branch | Durable record |
+| Feature that needs acceptance criteria | Reviewable contract |
+| Work spanning (or likely to span) multiple PRs | Tracker + `Closes` per slice |
+| Other humans will review; breaking, security, or public behavior | Collaboration |
+| CI, install, or shared automation | Test plan on the PR |
+| An **open** issue already covers this work | Join it; do not fork a parallel thread |
+
 ## 1. Issue (required for non-trivial work)
 
 Skip only for a **one-file chore** with no behavior/API/CI change. Everything else gets an issue first.
