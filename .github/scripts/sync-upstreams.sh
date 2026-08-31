@@ -401,6 +401,22 @@ _sync_build_expected_skill() {
   _sync_apply_overlays_tree "$expected_dir" "${overlays[@]}"
 }
 
+# GNU diff --exclude matches the basename. Rsync patterns may end with /.
+_sync_diff_trees() {
+  local left="$1"
+  local right="$2"
+  shift 2
+  local -a diff_args=(-rq)
+  local pattern
+
+  for pattern in "$@"; do
+    [[ -n "$pattern" ]] || continue
+    pattern="${pattern%/}"
+    diff_args+=(--exclude="$pattern")
+  done
+  diff "${diff_args[@]}" "$left" "$right"
+}
+
 # ==============================================================================
 # PROCESS ONE SOURCE
 # ==============================================================================
@@ -472,7 +488,7 @@ _sync_process_source() {
           drifted=true
           continue
         fi
-        if ! diff -rq "$local_skill" "$expected_skill" >>"$drift_report" 2>&1; then
+        if ! _sync_diff_trees "$local_skill" "$expected_skill" "${excludes[@]}" >>"$drift_report" 2>&1; then
           drifted=true
         fi
       else
@@ -495,7 +511,7 @@ _sync_process_source() {
       if [[ ! -d "$dest_abs" ]]; then
         _sync_error "missing managed skill: $destination (source: $name)"
         drifted=true
-      elif ! diff -rq "$dest_abs" "$expected_skill" >>"$drift_report" 2>&1; then
+      elif ! _sync_diff_trees "$dest_abs" "$expected_skill" "${excludes[@]}" >>"$drift_report" 2>&1; then
         drifted=true
       fi
     else
