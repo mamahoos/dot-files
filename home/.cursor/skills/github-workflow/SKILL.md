@@ -241,7 +241,9 @@ Do not `--admin` or skip checks unless the user explicitly asks.
 - Skipping the standard flow (issue → `Closes #N` → checklists → review → merge) when a section 0a use case matches
 - Inventing `priority/*`, `type/*`, `area/*` when those labels do not exist
 - Putting `Closes #N` when no issue exists
+- Merging with unchecked `- [ ]` still in the issue or PR body
 - `--approve` on a self-authored PR
 - `--reviewer` of a non-collaborator
+- Posting a GitHub review on a large/multi-file diff without asking
 - `gh label create` to make the taxonomy you wish you had
 - Skipping this skill and guessing `gh` flags from memory
