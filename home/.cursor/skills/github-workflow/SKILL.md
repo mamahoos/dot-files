@@ -143,7 +143,7 @@ gh api --method POST "repos/${OWNER_REPO}/issues/PR_NUMBER/labels" -f 'labels[]=
 
 ## 3. Assign
 
-Collaborators only. Prefer `--assignee "@me"` when the authenticated user is in that list. If two or more humans have `push`, ask who owns it.
+Collaborators only. `--assignee "@me"` if the authenticated user is in that list. Two or more humans with `push`: ask.
 
 ```bash
 gh issue edit ISSUE_NUMBER --add-assignee "@me"
