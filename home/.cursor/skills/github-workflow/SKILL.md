@@ -181,7 +181,7 @@ PR_NUMBER=N
 OWNER_REPO=$(gh repo view --json nameWithOwner -q .nameWithOwner)
 gh pr checks "${PR_NUMBER}"
 
-NUMBERS="${PR_NUMBER} $(gh pr view "${PR_NUMBER}" --json body --jq .body | command grep -oiE '(close[sd]?|fix(e[sd])?|resolve[sd]?) #[0-9]+' | command grep -oE '[0-9]+' | sort -u | tr '\n' ' ')"
+NUMBERS="${PR_NUMBER} $(gh pr view "${PR_NUMBER}" --json body --jq .body | command grep -oiE '\b(close[sd]?|fix(es|ed)?|resolve[sd]?)[[:space:]]+#[0-9]+\b' | command grep -oE '[0-9]+$' | sort -u | tr '\n' ' ')"
 for n in ${NUMBERS}; do
   if gh api "repos/${OWNER_REPO}/issues/${n}" --jq .body | command grep -E '^[[:space:]]*- \[ \]'; then
     echo "unchecked boxes in #${n} — tick before merge" >&2
