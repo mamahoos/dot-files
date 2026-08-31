@@ -9,6 +9,15 @@ Git commits/branches: `git-workflow-and-versioning`. Issues/PRs/labels/assignees
 
 When creating or editing GitHub issues or PRs, load `.cursor/skills/github-workflow/SKILL.md`. Do not improvise `gh` flags.
 
+## Open bodies are work
+
+Before you start, and again before you claim done, read the body (and comments) of every **open** issue and PR this work touches:
+
+```bash
+gh issue view N --json title,body,comments
+gh pr view N --json title,body,comments
+```
+
 ## Discover, don't invent
 
 Before any GitHub write:
