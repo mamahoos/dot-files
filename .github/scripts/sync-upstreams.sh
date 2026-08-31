@@ -51,6 +51,7 @@ Options:
   --pull           Update cached clones before syncing
   --dry-run        Show rsync itemize without writing
   --check          Exit 1 if any managed skill differs from expected
+                   (updates cached clones, same as --pull)
   --source NAME    Only process the named source
   --list-sources   Print enabled source names as JSON array and exit
 EOF
@@ -91,6 +92,11 @@ _sync_parse_args() {
   if [[ "$CHECK" == true && "$DRY_RUN" == true ]]; then
     _sync_error "use either --check or --dry-run, not both"
     exit 1
+  fi
+
+  # Stale .cache/upstreams makes --check report false drift. Match CI: always fetch.
+  if [[ "$CHECK" == true ]]; then
+    PULL=true
   fi
 }
 
@@ -395,6 +401,22 @@ _sync_build_expected_skill() {
   _sync_apply_overlays_tree "$expected_dir" "${overlays[@]}"
 }
 
+# GNU diff --exclude matches the basename. Rsync patterns may end with /.
+_sync_diff_trees() {
+  local left="$1"
+  local right="$2"
+  shift 2
+  local -a diff_args=(-rq)
+  local pattern
+
+  for pattern in "$@"; do
+    [[ -n "$pattern" ]] || continue
+    pattern="${pattern%/}"
+    diff_args+=(--exclude="$pattern")
+  done
+  diff "${diff_args[@]}" "$left" "$right"
+}
+
 # ==============================================================================
 # PROCESS ONE SOURCE
 # ==============================================================================
@@ -466,7 +488,7 @@ _sync_process_source() {
           drifted=true
           continue
         fi
-        if ! diff -rq "$local_skill" "$expected_skill" >>"$drift_report" 2>&1; then
+        if ! _sync_diff_trees "$local_skill" "$expected_skill" "${excludes[@]}" >>"$drift_report" 2>&1; then
           drifted=true
         fi
       else
@@ -489,7 +511,7 @@ _sync_process_source() {
       if [[ ! -d "$dest_abs" ]]; then
         _sync_error "missing managed skill: $destination (source: $name)"
         drifted=true
-      elif ! diff -rq "$dest_abs" "$expected_skill" >>"$drift_report" 2>&1; then
+      elif ! _sync_diff_trees "$dest_abs" "$expected_skill" "${excludes[@]}" >>"$drift_report" 2>&1; then
         drifted=true
       fi
     else
