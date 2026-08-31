@@ -21,17 +21,12 @@ gh label list
 gh api "repos/${OWNER_REPO}/collaborators" --jq '.[] | {login, role_name}'
 gh api "repos/${OWNER_REPO}/contents/.github/CODEOWNERS" >/dev/null 2>&1 || true
 ls .github/PULL_REQUEST_TEMPLATE.md .github/ISSUE_TEMPLATE .github/ISSUE_TEMPLATE.md 2>/dev/null || true
-```
-
-If `.github/ISSUE_TEMPLATE` or `PULL_REQUEST_TEMPLATE.md` exists, use it (`gh issue create --template`, `gh pr create --template`). Do not invent a second template.
-
-```bash
 gh issue list --state open --limit 20
 gh pr list --state open --limit 20
 gh issue list --state all --search "KEYWORD" --limit 10
 ```
 
-Reuse an open issue if it is the same work. Do not duplicate.
+If a template exists, use it. Reuse an issue that already covers the work. Do not duplicate.
 
 ## 0a. When the standard GitHub flow is mandatory
 
