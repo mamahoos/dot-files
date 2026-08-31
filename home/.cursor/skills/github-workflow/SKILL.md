@@ -183,24 +183,32 @@ EOF
 )"
 ```
 
-Do **not** `gh pr review --approve` on your own PR. GitHub rejects self-approval.
+Do **not** `gh pr review --approve` on your own PR.
 
-## 5. Merge
+## 5. Merge — grep gate then merge
+
+Tick first (0b). Then, on the **PR number and every `Closes`/`Fixes`/`Resolves` #N** in the PR body:
 
 ```bash
-gh pr checks PR_NUMBER
-gh issue view ISSUE_NUMBER --json body
-gh pr view PR_NUMBER --json body
+PR_NUMBER=N
+OWNER_REPO=$(gh repo view --json nameWithOwner -q .nameWithOwner)
+gh pr checks "${PR_NUMBER}"
+
+NUMBERS="${PR_NUMBER} $(gh pr view "${PR_NUMBER}" --json body --jq .body | grep -oiE '(close[sd]?|fix(e[sd])?|resolve[sd]?) #[0-9]+' | grep -oE '[0-9]+' | sort -u | tr '\n' ' ')"
+for n in ${NUMBERS}; do
+  if gh api "repos/${OWNER_REPO}/issues/${n}" --jq .body | grep -E '^[[:space:]]*- \[ \]'; then
+    echo "unchecked boxes in #${n} — tick before merge" >&2
+    exit 1
+  fi
+done
+
 gh api "repos/${OWNER_REPO}" --jq '{merge: .allow_merge_commit, squash: .allow_squash_merge, rebase: .allow_rebase_merge}'
+gh pr merge "${PR_NUMBER}" --merge --delete-branch
 ```
 
-Wait until required checks pass **and** required `- [ ]` boxes on the PR (and linked issue) are `- [x]`. Match recent merge style; in `mamahoos/dot-files` that is merge commits:
+`if grep` is required: a failing `grep` inside `if` does not abort; a match **does** `exit 1`. Do not `gh pr merge` until that loop prints nothing.
 
-```bash
-gh pr merge PR_NUMBER --merge --delete-branch
-```
-
-Do not `--admin` or skip checks unless the user explicitly asks.
+Do not `--admin` unless the user asks.
 
 ## Anti-patterns
 
