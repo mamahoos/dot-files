@@ -201,9 +201,9 @@ Before requesting or posting a review:
 gh api --method POST "repos/${OWNER_REPO}/pulls/PR_NUMBER/requested_reviewers" -f 'reviewers[]=LOGIN'
 ```
 
-Skip `--reviewer` if CODEOWNERS already requested them. Never request the PR author. Never invent a login (`copilot`, friends, etc.) unless they appear in collaborators.
+Skip `--reviewer` if CODEOWNERS already requested them. Never request the PR author. Never invent a login unless they appear in collaborators.
 
-**Solo** (only the author can be assigned — typical for `mamahoos` personal repos):
+**Solo** (typical for `mamahoos` personal repos):
 
 ```bash
 gh pr review PR_NUMBER --comment --body "$(cat <<'EOF'
