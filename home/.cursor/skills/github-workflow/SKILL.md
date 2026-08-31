@@ -114,7 +114,7 @@ printf '{"sub_issue_id":%s}\n' "${CHILD_ID}" | gh api --method POST "repos/${OWN
 
 ## 2. Pull request
 
-When section 0a matched, the PR **must** include `Closes #N` and target the **default branch**. If there is no issue, omit `Closes`. Related work that should not close: `Related to #N`.
+When 0a matched: target the default branch and include `Closes #N`. No issue → omit `Closes`. Related-only: `Related to #N`.
 
 ```bash
 gh pr create \
