@@ -20,6 +20,12 @@ gh pr view N --json title,body,comments
 
 Unchecked `- [ ]` items are tasks. Do them. Flip to `- [x]` on the same body. Do not merge, close, or say "done" while required boxes are still open.
 
+## Standard GitHub flow (mandatory on these use cases)
+
+When a use case below matches, follow the full flow. Do not skip it to "avoid spam":
+
+`issue (reuse or create) → branch → PR with Closes #N → label + assignee → tick body checklists → review → green checks → merge`
+
 ## Discover, don't invent
 
 Before any GitHub write:
