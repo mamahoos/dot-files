@@ -18,7 +18,15 @@ gh issue view N --json title,body,comments
 gh pr view N --json title,body,comments
 ```
 
-Unchecked `- [ ]` items are tasks. Do them. Flip to `- [x]` on the same body. Do not merge, close, or say "done" while required boxes are still open.
+`- [ ]` is unfinished work. Do it, PATCH to `- [x]`, then this must print nothing (else do not merge):
+
+```bash
+if gh api "repos/OWNER/REPO/issues/N" --jq .body | grep -E '^[[:space:]]*- \[ \]'; then
+  exit 1
+fi
+```
+
+Run that on the PR number and every linked issue number.
 
 ## Standard GitHub flow (mandatory on these use cases)
 
