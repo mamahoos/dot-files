@@ -227,7 +227,7 @@ gh pr view PR_NUMBER --json body
 gh api "repos/${OWNER_REPO}" --jq '{merge: .allow_merge_commit, squash: .allow_squash_merge, rebase: .allow_rebase_merge}'
 ```
 
-Wait until required checks pass. Match recent merge style (`gh pr list --state merged --limit 5 --json mergeCommit,title`); in `mamahoos/dot-files` that is merge commits:
+Wait until required checks pass **and** required `- [ ]` boxes on the PR (and linked issue) are `- [x]`. Match recent merge style; in `mamahoos/dot-files` that is merge commits:
 
 ```bash
 gh pr merge PR_NUMBER --merge --delete-branch
