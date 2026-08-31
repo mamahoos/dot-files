@@ -83,9 +83,11 @@ PRs are issues for this API. Prefer REST PATCH over `gh pr edit --body` (GraphQL
 
 Do **not** tick a box you did not complete. Do **not** merge, close, or report done while required `- [ ]` remain. Test-plan boxes on the PR count.
 
-## 1. Issue (required for non-trivial work)
+## 1. Issue (only for section 0a use cases)
 
-Skip only for a **one-file chore** with no behavior/API/CI change. Everything else gets an issue first.
+Do **not** open an issue for ordinary PRs, one-file chores, copy tweaks, or "so the PR has a number."
+
+When section 0a matches, the issue is **required**. Create it (or reuse the open one) before the PR. That is the standard GitHub flow, not optional polish.
 
 Type label — pick **exactly one** that exists in `gh label list`:
 
