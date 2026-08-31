@@ -55,7 +55,7 @@ gh issue view ISSUE_NUMBER --json title,body,comments
 gh pr view PR_NUMBER --json title,body,comments
 ```
 
-Every `- [ ]` in those bodies (and comments) is a task. Do it. Fetch the body again. Flip that line to `- [x]`. PATCH (do not rewrite the rest):
+Every `- [ ]` or `* [ ]` in those **bodies** is a task. Comments are not GitHub task lists and are not merge blockers. Do the work. Fetch the body again. Flip that line to `- [x]` / `* [x]`. PATCH (do not rewrite the rest):
 
 ```bash
 gh api --method PATCH "repos/${OWNER_REPO}/issues/NUMBER" -f body="${BODY}"
