@@ -8,7 +8,9 @@ disable-model-invocation: true
 
 Git history is `git-workflow-and-versioning`. This skill is GitHub: issues, labels, assignees, reviews, merge.
 
-Official sources: [linking PRs to issues](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue), [sub-issues](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/adding-sub-issues), [default labels](https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/managing-labels).
+Docs: [linking PRs](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue), [sub-issues](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/adding-sub-issues), [labels](https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/managing-labels).
+
+Verification is mandatory. `gh pr merge` is not allowed while any linked body still contains `- [ ]`.
 
 ## 0. Discover (every repo, every time)
 
