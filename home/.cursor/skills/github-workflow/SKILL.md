@@ -1,6 +1,6 @@
 ---
 name: github-workflow
-description: Professional GitHub issue/PR workflow with gh CLI. Use when a best-practice or special use case needs the standard GitHub flow (issue → PR → Closes #N → review → merge), and when assigning, labeling, ticking open checklists, or merging.
+description: Professional GitHub issue/PR workflow with gh CLI. Use when a best-practice use case needs issue → PR → Closes #N → tick checklists → merge, and when assigning, labeling, or merging. Tick linked boxes before merge; grep - [ ] is a hard gate.
 disable-model-invocation: true
 ---
 
