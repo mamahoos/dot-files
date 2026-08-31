@@ -145,7 +145,7 @@ printf '{"sub_issue_id":%s}\n' "${CHILD_ID}" | gh api --method POST "repos/${OWN
 
 ## 2. Pull request
 
-Body **must** include `Closes #N` for non-trivial work ([GitHub closing keywords](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue)). Keywords only work when the PR targets the **default branch**.
+When section 0a matched, the PR **must** include `Closes #N` and target the **default branch**. If there is no issue, omit `Closes`. Related work that should not close: `Related to #N`.
 
 ```bash
 gh pr create \
