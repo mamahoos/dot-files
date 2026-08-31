@@ -156,8 +156,6 @@ gh pr create \
 ## Summary
 - What changed and why.
 
-Closes #N
-
 ## Test plan
 - [ ] How a reviewer verifies this
 EOF
