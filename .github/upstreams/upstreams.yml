@@ -14,3 +14,5 @@ sources:
     enabled: true
   - file: mattpocock-productivity.yml
     enabled: true
+  - file: anthropics-skills.yml
+    enabled: true

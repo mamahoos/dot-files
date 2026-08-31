@@ -3,6 +3,15 @@
 
 # Third-party search helpers — keep GitHub language stats on our own files
 home/.cursor/skills/ui-ux-pro-max/scripts/** linguist-vendored
+home/.cursor/skills/canvas-design/canvas-fonts/** linguist-vendored
+home/.cursor/skills/mcp-builder/scripts/** linguist-vendored
+home/.cursor/skills/skill-creator/scripts/** linguist-vendored
+home/.cursor/skills/skill-creator/eval-viewer/** linguist-vendored
+home/.cursor/skills/slack-gif-creator/core/** linguist-vendored
+home/.cursor/skills/webapp-testing/scripts/** linguist-vendored
+home/.cursor/skills/webapp-testing/examples/** linguist-vendored
+home/.cursor/skills/algorithmic-art/templates/** linguist-vendored
+home/.cursor/skills/web-artifacts-builder/scripts/** linguist-vendored
 
 # YAML is linguist type:data, so GitHub omits it from language stats unless marked detectable
 *.yml linguist-detectable

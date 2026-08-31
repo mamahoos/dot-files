@@ -11,7 +11,7 @@ help:
 	  'install-shell-only   ./install.sh --shell-only' \
 	  'lint                 ShellCheck + shfmt' \
 	  'shellcheck           shellcheck -S error install.sh .github/scripts/*.sh' \
-	  'shfmt                shfmt -d -i 2 home install.sh .github/scripts' \
+	  'shfmt                shfmt -d -i 2 install.sh .github/scripts' \
 	  'smoke                ./.github/scripts/test-install-smoke.sh' \
 	  'idempotent           ./.github/scripts/test-install-idempotent.sh' \
 	  'skills-drift         ./.github/scripts/sync-upstreams.sh --check --pull' \
@@ -29,7 +29,7 @@ shellcheck:
 	shellcheck -S error install.sh .github/scripts/*.sh
 
 shfmt:
-	shfmt -d -i 2 home install.sh .github/scripts
+	shfmt -d -i 2 install.sh .github/scripts
 
 smoke:
 	./.github/scripts/test-install-smoke.sh

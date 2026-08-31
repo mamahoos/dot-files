@@ -1,0 +1,13 @@
+name: anthropics-skills
+repo: https://github.com/anthropics/skills.git
+branch: main
+source: skills
+destination: home/.cursor/skills
+overlays:
+  - disable-model-invocation
+# Source-available document skills; LICENSE.txt forbids redistribution.
+skip:
+  - docx
+  - pdf
+  - pptx
+  - xlsx
