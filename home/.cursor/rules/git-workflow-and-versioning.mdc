@@ -11,8 +11,8 @@ Use `.cursor/skills/git-workflow-and-versioning/SKILL.md` for detailed procedure
 ## Default Behavior
 
 - Keep changes small and incremental.
-- After each completed and verified slice, create a commit.
-- Prefer many small atomic commits over one large commit.
+- After each completed and verified slice, create a commit. Do not wait to be asked.
+- Atomic commits are mandatory: many small commits, never one large mixed commit.
 - Keep `main` stable; do not keep long-running feature branches.
 
 ## Commit Rules
