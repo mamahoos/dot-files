@@ -95,22 +95,7 @@ EOF
 
 Acceptance boxes are real work — tick via 0b before merge.
 
-Sub-issue only when splitting into independently mergeable PRs. If `gh issue create --help | grep -q -- --parent`:
-
-```bash
-gh issue create --title "TITLE" --body "BODY" --label "enhancement" --assignee "@me" --parent PARENT_NUMBER
-```
-
-Else (gh < 2.94):
-
-```bash
-CHILD_URL=$(gh issue create --title "TITLE" --body "BODY" --label "enhancement" --assignee "@me")
-CHILD_NUM=${CHILD_URL##*/}
-CHILD_ID=$(gh api "repos/${OWNER_REPO}/issues/${CHILD_NUM}" --jq .id)
-printf '{"sub_issue_id":%s}\n' "${CHILD_ID}" | gh api --method POST "repos/${OWNER_REPO}/issues/PARENT_NUMBER/sub_issues" --input -
-```
-
-`sub_issue_id` is REST integer `.id`, not the issue number. `-f` 422s.
+This repo uses checklists, not sub-issues. Sub-issues only when splitting into independently mergeable PRs: `gh issue create --parent` if help lists it; else POST REST `sub_issue_id` as integer `.id` (not the issue number; `-f` 422s).
 
 ## 2. Pull request
 
