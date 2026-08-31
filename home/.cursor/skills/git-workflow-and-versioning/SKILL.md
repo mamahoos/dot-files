@@ -48,18 +48,7 @@ Commits are save points. If the next change breaks something, you can revert to 
 
 ### 2. Atomic Commits
 
-Each commit does one logical thing. **Mandatory in every workspace**, not a preference. After you write a hunk, commit it before you edit it again.
-
-If you already wrote a line (or hunk) and have **not** committed it, and you now want to change it: that is **two changes**. Commit the current tree first, then edit, then commit the edit. Do not fold the rewrite into the dirty working tree.
-
-```
-# Required: two commits
-git add path && git commit -m "feat: add the first version of the hunk"
-# then edit the same lines
-git add path && git commit -m "fix: correct the hunk"
-
-# Forbidden: write, rewrite, one commit
-```
+Each commit does one logical thing:
 
 ```
 # Good: Each commit is self-contained
@@ -327,7 +316,6 @@ Write the entry in the same change that makes the change, while the impact is fr
 | Rationalization | Reality |
 |---|---|
 | "I'll commit when the feature is done" | One giant commit is impossible to review, debug, or revert. Commit each slice. |
-| "I'll just fix this uncommitted line first, then commit once" | That is two changes. Commit the current hunk, then edit, then commit the edit. |
 | "The message doesn't matter" | Messages are documentation. Future you (and future agents) will need to understand what changed and why. |
 | "I'll squash it all later" | Squashing destroys the development narrative. Prefer clean incremental commits from the start. |
 | "Branches add overhead" | Short-lived branches are free and prevent conflicting work from colliding. Long-lived branches are the problem — merge within 1-3 days. |
@@ -340,7 +328,6 @@ Write the entry in the same change that makes the change, while the impact is fr
 ## Red Flags
 
 - Large uncommitted changes accumulating
-- Rewriting uncommitted lines without committing the first version (two changes, one blob)
 - Commit messages like "fix", "update", "misc"
 - Formatting changes mixed with behavior changes
 - No `.gitignore` in the project
@@ -356,7 +343,6 @@ Write the entry in the same change that makes the change, while the impact is fr
 For every commit:
 
 - [ ] Commit does one logical thing
-- [ ] Uncommitted lines were not rewritten in the same blob; a rewrite is a second commit
 - [ ] Message explains the why, follows type conventions
 - [ ] Tests pass before committing
 - [ ] No secrets in the diff
