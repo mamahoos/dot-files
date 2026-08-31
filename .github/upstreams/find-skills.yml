@@ -1,0 +1,7 @@
+name: find-skills
+repo: https://github.com/vercel-labs/skills.git
+branch: main
+source: skills/find-skills
+destination: home/.cursor/skills/find-skills
+overlays:
+  - disable-model-invocation

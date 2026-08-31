@@ -8,3 +8,5 @@ sources:
     enabled: true
   - file: resume-builder.yml
     enabled: true
+  - file: find-skills.yml
+    enabled: true

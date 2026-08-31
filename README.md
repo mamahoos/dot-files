@@ -61,6 +61,7 @@ Skills under `home/.cursor/skills/` come from versioned upstreams (see `.github/
 | `home/.cursor/skills/ui-ux-pro-max/` | [nextlevelbuilder/ui-ux-pro-max-skill](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill) ([MIT](https://github.com/nextlevelbuilder/ui-ux-pro-max-skill/blob/main/LICENSE)) | `.claude/skills/ui-ux-pro-max/` | search.py path rewritten to `$HOME/.cursor/skills/...` (`scripts/` vendored for linguist) |
 | `home/.cursor/skills/i-have-adhd/` | [ayghri/i-have-adhd](https://github.com/ayghri/i-have-adhd) ([MIT](https://github.com/ayghri/i-have-adhd/blob/main/LICENSE)) | `.cursor/skills/i-have-adhd/` | none (`disable-model-invocation` already in upstream) |
 | `home/.cursor/skills/resume-builder/` | [dabydat/resume-builder-skill](https://github.com/dabydat/resume-builder-skill) ([MIT](https://github.com/dabydat/resume-builder-skill/blob/master/LICENSE)) | `skill/` | `disable-model-invocation: true` |
+| `home/.cursor/skills/find-skills/` | [vercel-labs/skills](https://github.com/vercel-labs/skills) ([MIT](https://github.com/vercel-labs/skills/blob/main/LICENSE)) | `skills/find-skills/` | `disable-model-invocation: true` |
 
 Rules and any skill dirs not listed above are mine (unmanaged by sync).
 
