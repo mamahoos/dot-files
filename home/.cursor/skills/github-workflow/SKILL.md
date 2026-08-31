@@ -122,7 +122,7 @@ EOF
 )"
 ```
 
-Capture the number from the printed URL.
+Capture the number from the printed URL. Those Acceptance boxes are real work — tick them when done (section 0b).
 
 Parent/sub-issue: use only when one tracking issue splits into **independently mergeable** PRs (not a checklist inside a single PR). This repo historically used checklists, not sub-issues — do not create hierarchy for a single deliverable.
 
