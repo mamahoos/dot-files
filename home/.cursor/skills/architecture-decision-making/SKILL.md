@@ -87,7 +87,7 @@ Copy and track:
 
 ## Output
 
-Fill [templates/decision.md](templates/decision.md). Optional project overlay: [templates/cards.md](templates/cards.md) as `.architecture/cards.md`.
+Fill [templates/decision.md](templates/decision.md). Write it as a working file (`/tmp/decision.md` or next to the change). Do not create `docs/decisions/` here — that folder belongs to `documentation-and-adrs` after the Decision is accepted. Optional project overlay: [templates/cards.md](templates/cards.md) as `.architecture/cards.md`.
 
 ```bash
 python3 home/.cursor/skills/architecture-decision-making/scripts/check_decision.py PATH
