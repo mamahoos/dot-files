@@ -90,12 +90,13 @@ Copy and track:
 Fill [templates/decision.md](templates/decision.md). Optional project overlay: [templates/cards.md](templates/cards.md) as `.architecture/cards.md`.
 
 ```bash
-python3 "${SKILL_DIR:-.}/scripts/check_decision.py" PATH
+python3 home/.cursor/skills/architecture-decision-making/scripts/check_decision.py PATH
+python3 ~/.cursor/skills/architecture-decision-making/scripts/check_decision.py PATH
 # two-way door:
-python3 scripts/check_decision.py --short PATH
+python3 home/.cursor/skills/architecture-decision-making/scripts/check_decision.py --short PATH
 ```
 
-`SKILL_DIR` is this skill's directory (`home/.cursor/skills/architecture-decision-making` in this repo).
+First path is this repo. Second is after `./install.sh`. Do not run `scripts/check_decision.py` from an arbitrary cwd.
 
 ## Anti-patterns
 
