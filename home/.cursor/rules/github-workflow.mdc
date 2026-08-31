@@ -5,20 +5,13 @@ alwaysApply: true
 
 # GitHub Workflow
 
-Git commits/branches: `git-workflow-and-versioning`. Issues/PRs/labels/assignees: this rule.
-
-When creating or editing GitHub issues or PRs, load `.cursor/skills/github-workflow/SKILL.md`. Do not improvise `gh` flags.
+Commits and branches: `git-workflow-and-versioning`. Issues, PRs, labels, assignees, reviews, merge: this rule. Before creating or editing an issue or PR, load `.cursor/skills/github-workflow/SKILL.md` — do not improvise `gh` flags.
 
 ## Linked bodies — tick before merge
 
-Scope is the **PR body** and every issue the PR names (`Closes` / `Fixes` / `Resolves` #N). Open vs closed does not matter. Tick **before** `gh pr merge`. After merge is too late.
+Scope is the **PR body** plus every issue it names with `Closes` / `Fixes` / `Resolves` #N, open or closed. `- [ ]` and `* [ ]` are unfinished work: do the work, PATCH the body to `- [x]`, and never tick what you did not verify. After `gh pr merge` is too late.
 
-```bash
-gh issue view N --json title,body
-gh pr view N --json title,body
-```
-
-`- [ ]` or `* [ ]` is unfinished work. Do it, PATCH to `- [x]` / `* [x]`, then this must print nothing (else do not merge):
+Run this on the PR number and every linked issue number; if it prints anything, do not merge:
 
 ```bash
 if gh api "repos/OWNER/REPO/issues/N" --jq .body | command grep -E '^[[:space:]]*[-*][[:space:]]+\[ \]'; then
@@ -26,35 +19,23 @@ if gh api "repos/OWNER/REPO/issues/N" --jq .body | command grep -E '^[[:space:]]
 fi
 ```
 
-Run that on the PR number and every linked issue number.
-
-## Standard GitHub flow (mandatory on these use cases)
-
-When a row matches, do not skip the flow to "avoid spam":
+## Standard flow (mandatory on these use cases)
 
 `issue → branch → PR with Closes #N → label + assignee → tick boxes → grep gate → review → green checks → merge`
 
-**Use it for:** user asked for GitHub flow / an issue / a PR; bug with durable repro; feature with acceptance; multi-PR work; other humans will review, or breaking / security / public behavior; CI, install, shared automation; an issue already covers this work (`Closes #N`).
+Required when: the user asked for GitHub flow, an issue, or a PR; a bug has a durable repro; a feature needs acceptance criteria; work spans multiple PRs; other humans will review, or it is breaking / security / public behavior; it touches CI, install, or shared automation; an issue already covers it (`Closes #N`). Do not skip the flow to "avoid spam".
 
-**Do not** open an issue for a one-file chore, typo, or "so the PR has a number." Never invent `Closes`.
+Do **not** open an issue for a one-file chore, a typo, or "so the PR has a number". Never invent `Closes`.
 
 ## Discover, don't invent
 
-```bash
-gh repo view --json nameWithOwner,defaultBranchRef
-gh label list
-gh api "repos/$(gh repo view --json nameWithOwner -q .nameWithOwner)/collaborators" --jq '.[].login'
-```
+Read the repo before acting: `gh repo view --json nameWithOwner,defaultBranchRef`, `gh label list`, and the collaborator list. Never create labels. Never assign or request review from a login that is not a collaborator, and never from the PR author.
 
-Never create labels. Never assign or request-review a login that is not in that list. Never request review from the PR author.
+Exactly one type label if it exists: `bug` | `enhancement` | `chore` | `documentation`; ask if it is missing. `automated` only on bot/sync PRs.
 
-## Labels
+## Assign, review, merge
 
-Exactly one type label if it exists in `gh label list`: `bug` | `enhancement` | `chore` | `documentation`. Add `automated` only on bot/sync PRs. If the type is missing, ask.
-
-## Assign and review
-
-- `--assignee "@me"` when the authenticated user is a collaborator. Other humans with push: ask.
+- `--assignee "@me"` when the authenticated user is a collaborator; ask when other humans have push.
 - Ask before a GitHub review when the diff is large or touches more than a few files.
-- Solo: `gh pr review --comment` — never `--approve` your own PR.
-- Merge only after `gh pr checks` is green **and** the grep gate above fails to find `- [ ]` or `* [ ]`.
+- Solo: `gh pr review --comment`, never `--approve` on your own PR.
+- Merge only when `gh pr checks` is green **and** the grep gate above prints nothing.

@@ -5,53 +5,25 @@ alwaysApply: true
 
 # Git Workflow and Versioning
 
-Apply this workflow for any coding change in any workspace this rule is installed in (user-level `~/.cursor/rules`, every repo).
-Use `.cursor/skills/git-workflow-and-versioning/SKILL.md` for detailed procedures and examples.
-
-## Default Behavior
-
-- Keep changes small and incremental.
-- After each completed and verified slice, create a commit. Do not wait to be asked.
-- Atomic commits are mandatory: many small commits, never one large mixed commit.
-- Keep `main` stable; do not keep long-running feature branches.
+Applies to any coding change in any workspace this rule is installed in. Procedures and examples: `.cursor/skills/git-workflow-and-versioning/SKILL.md`.
 
 ## Atomic commits (mandatory)
 
-Every commit is one logical change. This is not optional and does not depend on which repo you are in.
+One logical change per commit, in every repo. Many small commits, never one large mixed commit. Commit after each verified slice without being asked; do not wait.
 
-- After you write a hunk, **commit it before you edit it again**.
-- If you already wrote a line (or hunk) and have **not** committed it, and you now want to change it: that is **two changes**. Commit the current tree first, then edit, then commit the edit. Do not fold the rewrite into the dirty working tree.
-- Do not accumulate a write + a later rewrite + a formatting pass in one uncommitted blob.
-- Do not `git commit --amend` to hide a second change unless the user explicitly asked and amend is allowed.
-- One hunk → one `git apply --index` (or equivalent) → one commit.
+- After you write a hunk, **commit it before you edit it again**. One hunk → one `git apply --index` (or equivalent) → one commit.
+- Rewriting a line you wrote but have **not** committed is a **second change**: commit the current tree, then edit, then commit the edit. Do not fold a write + rewrite + formatting pass into one dirty blob.
+- Do not `git commit --amend` to hide a second change unless the user asked and amend is allowed.
+- Do not mix refactor + feature + formatting.
+- Message prefix: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`.
+- Before committing: review the staged diff and run relevant tests/lint.
 
-## Commit Rules
+## Branches
 
-- One logical change per commit.
-- Use descriptive commit messages with a type prefix: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`.
-- Do not mix refactor + feature + formatting in one commit.
-- Before commit: review staged diff, run relevant tests/lint, and avoid committing secrets.
+Tiny isolated fixes go on the active branch. Non-trivial work (multi-file, risky refactor, experiment, parallel work) gets its own branch first: `feature/` | `fix/` | `refactor/` | `chore/` + short description. Keep `main` stable and branches short-lived.
 
-## Branch Rules
+Sync with the base branch often, re-verify after resolving conflicts, and never force-push a shared branch unless asked.
 
-- For tiny and isolated fixes, commit directly on the active working branch.
-- For non-trivial tasks (multi-file changes, risky refactors, experiments, parallel work), create a dedicated branch first.
-- Branch naming:
-  - `feature/<short-description>`
-  - `fix/<short-description>`
-  - `refactor/<short-description>`
-  - `chore/<short-description>`
-- Keep branches short-lived and merge back quickly.
+## Scope
 
-## Merge and Safety
-
-- Rebase or sync frequently with the base branch to reduce drift.
-- Resolve conflicts carefully and re-run verification before merge.
-- Never force-push shared branches unless explicitly requested.
-- Never commit `.env`, secrets, build artifacts, or unrelated generated files.
-
-## Scope Discipline
-
-- Commit only files related to the current task.
-- If unrelated local changes exist, avoid mixing them into the same commit.
-- In change summaries, clearly state what changed and what was intentionally left untouched.
+Commit only files belonging to the current task; never `.env`, secrets, build artifacts, or unrelated generated files. If unrelated local changes exist, keep them out of the commit. In summaries, state what changed and what was intentionally left untouched.
