@@ -119,4 +119,4 @@
     unpushed = log @{u}..HEAD --oneline
     unpulled = log HEAD..@{u} --oneline
 
-    zip      = archive --format=zip --output
+    zip      = archive --format=zip --output    # Usage: git zip <output-file> <commit-range>
