@@ -45,6 +45,15 @@ Chores may skip an issue. These use cases **must not**:
 | CI, install, or shared automation | Test plan on the PR |
 | An **open** issue already covers this work | Join it; do not fork a parallel thread |
 
+**Full flow (in order):**
+
+1. Reuse or create the issue (section 1). Acceptance boxes are real work.
+2. Branch. Implement.
+3. Open the PR targeting the default branch with `Closes #N`, type label, `--assignee "@me"`.
+4. Read issue + PR bodies. Do `- [ ]`. Tick `- [x]` (section 0b).
+5. Review: ask first if the diff is large or > a few files; then comment review (solo) or request a collaborator.
+6. `gh pr checks` green → merge. Linked issue closes via the keyword.
+
 ## 1. Issue (required for non-trivial work)
 
 Skip only for a **one-file chore** with no behavior/API/CI change. Everything else gets an issue first.
