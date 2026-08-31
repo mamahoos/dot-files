@@ -63,7 +63,7 @@ Copy and track:
 - [ ] Pipeline completed (short or full)
 - [ ] Option 0 (status quo / do nothing) considered
 - [ ] Decision packet written from templates/decision.md
-- [ ] scripts/check_decision.py PATH passes
+- [ ] `python3 home/.cursor/skills/architecture-decision-making/scripts/check_decision.py PATH` passes
 - [ ] User accepted the Decision (or overrode with eyes open)
 - [ ] If significant: hand off to documentation-and-adrs
 ```
