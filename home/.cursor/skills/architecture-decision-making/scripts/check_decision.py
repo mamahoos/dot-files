@@ -27,7 +27,7 @@ SHORT_HEADINGS = (
     "Decision",
 )
 
-HEADING_RE = re.compile(r"^#{1,3}\s+(.*\S)\s*$")
+HEADING_RE = re.compile(r"^##\s+(.*\S)\s*$")
 
 
 def parse_headings(text: str) -> list[str]:

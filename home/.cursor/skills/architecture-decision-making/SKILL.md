@@ -41,7 +41,11 @@ Don't optimize architecture for imaginary scale.
 - The user asks for architecture, system design, or "what should we use"
 - Before `documentation-and-adrs` on a significant decision
 
-**When not to:** a two-line bugfix; picking a variable name; recording a decision already made (ADR skill); performance work without measured load (`performance-optimization`).
+**When not to:**
+
+- a two-line bugfix or a rename
+- recording a decision already made (`documentation-and-adrs`)
+- performance work without measured load (`performance-optimization`)
 
 ## Door type
 
@@ -63,7 +67,7 @@ Copy and track:
 - [ ] Pipeline completed (short or full)
 - [ ] Option 0 (status quo / do nothing) considered
 - [ ] Decision packet written from templates/decision.md
-- [ ] scripts/check_decision.py PATH passes
+- [ ] `python3 home/.cursor/skills/architecture-decision-making/scripts/check_decision.py PATH` passes
 - [ ] User accepted the Decision (or overrode with eyes open)
 - [ ] If significant: hand off to documentation-and-adrs
 ```
@@ -87,15 +91,16 @@ Copy and track:
 
 ## Output
 
-Fill [templates/decision.md](templates/decision.md). Optional project overlay: [templates/cards.md](templates/cards.md) as `.architecture/cards.md`.
+Fill [templates/decision.md](templates/decision.md). Write it as a working file (`/tmp/decision.md` or next to the change). Do not create `docs/decisions/` here — that folder belongs to `documentation-and-adrs` after the Decision is accepted. Optional project overlay: [templates/cards.md](templates/cards.md) as `.architecture/cards.md`.
 
 ```bash
-python3 "${SKILL_DIR:-.}/scripts/check_decision.py" PATH
+python3 home/.cursor/skills/architecture-decision-making/scripts/check_decision.py PATH
+python3 ~/.cursor/skills/architecture-decision-making/scripts/check_decision.py PATH
 # two-way door:
-python3 scripts/check_decision.py --short PATH
+python3 home/.cursor/skills/architecture-decision-making/scripts/check_decision.py --short PATH
 ```
 
-`SKILL_DIR` is this skill's directory (`home/.cursor/skills/architecture-decision-making` in this repo).
+First path is this repo. Second is after `./install.sh`. Do not run `scripts/check_decision.py` from an arbitrary cwd.
 
 ## Anti-patterns
 
@@ -107,10 +112,16 @@ python3 scripts/check_decision.py --short PATH
 - Skipping Option 0
 - A 40-page architecture for a Compose app you run alone
 
+## Verification
+
+- [ ] `check_decision.py` passes (`--short` only for a two-way door)
+- [ ] Hand is from repo evidence, not a wish list
+- [ ] Scale is numbers or `unknown`
+- [ ] Option 0 was considered
+- [ ] User accepted the Decision or overrode with the trade-off named
+
 ## Additional resources
 
 - [cards.md](cards.md) — how to build the hand
 - [reference.md](reference.md) — characteristics, failure modes, cost, standards
 - [examples.md](examples.md) — decisions at this operator's real scale
-- [templates/decision.md](templates/decision.md)
-- [templates/cards.md](templates/cards.md)

@@ -16,8 +16,6 @@ These are sketches, not ADRs. They show playing the hand, not a conference topol
 
 **Decision (typical):** Option 0. No fleet, no second operator, no measured host count that justifies a control plane. New-card tax for Ansible-as-source-of-truth is unpaid. Revisit if host count and shared state become evidence, not a wish.
 
-Don't optimize architecture for imaginary scale.
-
 ## 2. Small FastAPI service you run on one VPS
 
 **Hand:** Python, FastAPI, Docker Compose, Caddy/Traefik you already operate, GitHub Actions. PostgreSQL if the app already has it. Operators: 1. Scale evidence: `unknown` or "tens of requests/day".
@@ -32,7 +30,7 @@ Don't optimize architecture for imaginary scale.
 
 **Option C:** managed Postgres + Kubernetes.
 
-**Decision (typical):** A or B from data shape and backup story you will actually run. C plays cards not in the hand (cluster, managed vendor, extra network). Failure modes that matter: volume not backed up; single VPS down — not multi-AZ.
+**Decision:** Option A (SQLite in the volume) unless `compose.yml` already has PostgreSQL — then Option B. Option C is out of the hand. Failure modes that matter: volume not backed up; single VPS down — not multi-AZ.
 
 ## 3. Rejected shape
 
