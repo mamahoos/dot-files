@@ -40,7 +40,7 @@ Chores may skip an issue. These use cases **must not**:
 | Work spanning (or likely to span) multiple PRs | Tracker + `Closes` per slice |
 | Other humans will review; breaking, security, or public behavior | Collaboration |
 | CI, install, or shared automation | Test plan on the PR |
-| An **open** issue already covers this work | Join it; do not fork a parallel thread |
+| An issue already covers this work | Join it; `Closes #N` |
 
 **Full flow (in order):**
 
