@@ -182,10 +182,15 @@ gh issue edit ISSUE_NUMBER --add-assignee "@me"
 
 ## 4. Review
 
-Before requesting review:
+**Ask first** when the diff is large or touches more than a few files: do not post a GitHub review until the user says yes.
+
+Small, focused diffs: review without asking if the user already asked to ship/merge.
+
+Before requesting or posting a review:
 
 - [ ] Diff is one logical change
-- [ ] Body has Summary, `Closes #N` (if required), Test plan
+- [ ] Open issue/PR checklists are ticked or still in progress (section 0b)
+- [ ] Body has Summary and Test plan; `Closes #N` only if an issue exists
 - [ ] Type label + assignee set
 - [ ] No secrets in the diff
 - [ ] `gh pr checks` will have something real to run, or the gap is stated
