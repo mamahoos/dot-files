@@ -42,18 +42,9 @@ Chores may skip an issue. These use cases **must not**:
 | CI, install, or shared automation | Test plan on the PR |
 | An issue already covers this work | Join it; `Closes #N` |
 
-**Full flow (in order):**
+**Order:** issue → branch → PR with `Closes #N` → tick boxes (0b) → grep gate (section 5) → review → `gh pr checks` → merge.
 
-1. Reuse or create the issue (section 1). Acceptance boxes are real work.
-2. Branch. Implement.
-3. Open the PR targeting the default branch with `Closes #N`, type label, `--assignee "@me"`.
-4. Read issue + PR bodies. Do `- [ ]`. Tick `- [x]` (section 0b).
-5. Review: ask first if the diff is large or > a few files; then comment review (solo) or request a collaborator.
-6. `gh pr checks` green → merge. Linked issue closes via the keyword.
-
-If **none** of the rows match, skip the issue. Still use a labeled PR, honor any existing open checklists, and do not invent `Closes`.
-
-When unsure whether a row matches, ask once. Do not silently skip a matching use case.
+If **none** of the rows match, skip the issue. Still label the PR. Honor linked checklists. Do not invent `Closes`. If unsure, ask once.
 
 ## 0b. Checklists (do not skip)
 
