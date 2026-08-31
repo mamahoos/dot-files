@@ -32,7 +32,7 @@ Don't optimize architecture for imaginary scale.
 
 **Option C:** managed Postgres + Kubernetes.
 
-**Decision (typical):** A or B from data shape and backup story you will actually run. C plays cards not in the hand (cluster, managed vendor, extra network). Failure modes that matter: volume not backed up; single VPS down — not multi-AZ.
+**Decision:** Option A (SQLite in the volume) unless `compose.yml` already has PostgreSQL — then Option B. Option C is out of the hand. Failure modes that matter: volume not backed up; single VPS down — not multi-AZ.
 
 ## 3. Rejected shape
 
