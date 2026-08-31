@@ -222,6 +222,8 @@ Do **not** `gh pr review --approve` on your own PR. GitHub rejects self-approval
 
 ```bash
 gh pr checks PR_NUMBER
+gh issue view ISSUE_NUMBER --json body
+gh pr view PR_NUMBER --json body
 gh api "repos/${OWNER_REPO}" --jq '{merge: .allow_merge_commit, squash: .allow_squash_merge, rebase: .allow_rebase_merge}'
 ```
 
