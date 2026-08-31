@@ -35,6 +35,8 @@ When a use case below matches, follow the full flow. Do not skip it to "avoid sp
 - CI, install, or shared automation
 - an **open** issue already covers this work (join it; `Closes #N`)
 
+**Do not** open an issue for a one-file chore, typo, comment, or "so the PR has a number." If none of the use cases match, a labeled PR is enough. Never invent `Closes`.
+
 ## Discover, don't invent
 
 Before any GitHub write:
