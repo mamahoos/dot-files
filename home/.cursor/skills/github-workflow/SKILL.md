@@ -101,7 +101,7 @@ Sub-issue only when splitting into independently mergeable PRs. If `gh issue cre
 gh issue create --title "TITLE" --body "BODY" --label "enhancement" --assignee "@me" --parent PARENT_NUMBER
 ```
 
-Else (gh < 2.94, including 2.46):
+Else (gh < 2.94):
 
 ```bash
 CHILD_URL=$(gh issue create --title "TITLE" --body "BODY" --label "enhancement" --assignee "@me")
