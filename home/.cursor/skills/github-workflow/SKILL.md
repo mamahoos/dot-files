@@ -54,6 +54,10 @@ Chores may skip an issue. These use cases **must not**:
 5. Review: ask first if the diff is large or > a few files; then comment review (solo) or request a collaborator.
 6. `gh pr checks` green → merge. Linked issue closes via the keyword.
 
+If **none** of the rows match, skip the issue. Still use a labeled PR, honor any existing open checklists, and do not invent `Closes`.
+
+When unsure whether a row matches, ask once. Do not silently skip a matching use case.
+
 ## 1. Issue (required for non-trivial work)
 
 Skip only for a **one-file chore** with no behavior/API/CI change. Everything else gets an issue first.
