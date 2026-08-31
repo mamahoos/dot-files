@@ -47,6 +47,9 @@ Sync home/.cursor/skills from sources listed in .github/upstreams/upstreams.yml.
 Only managed skill dirs (claimed by an enabled upstream) are written or
 compared. Unmanaged dirs under the skills root are left alone.
 
+A skills-root source may list skill directory names under skip: those dirs
+are neither claimed nor synced (used to omit non-redistributable skills).
+
 Options:
   --pull           Update cached clones before syncing
   --dry-run        Show rsync itemize without writing
@@ -329,6 +332,17 @@ _sync_is_skills_root() {
   [[ "$dest" == "home/.cursor/skills" || "$dest" == */.cursor/skills ]]
 }
 
+_sync_in_list() {
+  local needle="$1"
+  shift
+  local item
+
+  for item in "$@"; do
+    [[ -n "$item" && "$item" == "$needle" ]] && return 0
+  done
+  return 1
+}
+
 _sync_claim() {
   local skill="$1"
   local source_name="$2"
@@ -428,6 +442,7 @@ _sync_process_source() {
   local skill_dir skill_name
   local -a overlays=()
   local -a excludes=()
+  local -a skip_skills=()
   local expected_root drift_report expected_skill local_skill
   local drifted=false
 
@@ -452,6 +467,7 @@ _sync_process_source() {
 
   mapfile -t overlays < <(_sync_yaml_list "$config_file" overlays)
   mapfile -t excludes < <(_sync_yaml_list "$config_file" exclude)
+  mapfile -t skip_skills < <(_sync_yaml_list "$config_file" skip)
 
   if [[ -n "$SOURCE_FILTER" && "$name" != "$SOURCE_FILTER" ]]; then
     return 0
@@ -475,6 +491,10 @@ _sync_process_source() {
   if _sync_is_skills_root "$destination"; then
     while IFS= read -r -d '' skill_dir; do
       skill_name="$(basename "$skill_dir")"
+      if _sync_in_list "$skill_name" "${skip_skills[@]}"; then
+        printf 'skipping %s (source: %s)\n' "$skill_name" "$name"
+        continue
+      fi
       if ! _sync_claim "$skill_name" "$name"; then
         continue
       fi
