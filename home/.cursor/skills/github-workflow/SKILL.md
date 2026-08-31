@@ -1,6 +1,6 @@
 ---
 name: github-workflow
-description: Professional GitHub issue/PR workflow with gh CLI. Use when opening issues or pull requests, assigning, labeling, requesting review, linking Closes #N, or merging.
+description: Professional GitHub issue/PR workflow with gh CLI. Use when a best-practice or special use case needs the standard GitHub flow (issue → PR → Closes #N → review → merge), and when assigning, labeling, ticking open checklists, or merging.
 disable-model-invocation: true
 ---
 
