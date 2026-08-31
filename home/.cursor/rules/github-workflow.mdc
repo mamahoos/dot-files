@@ -51,14 +51,7 @@ Never create labels. Never assign or request-review a login that is not in that 
 
 ## Labels
 
-Exactly one type label, and only if it exists in `gh label list`:
-
-- `bug` — broken behavior
-- `enhancement` — new capability
-- `chore` — maintenance, config, deps
-- `documentation` — docs-only
-
-Add `automated` only on bot/sync PRs, in addition to the type. If the needed type is missing, ask. Do not apply triage labels (`wontfix`, `duplicate`, `invalid`, `question`, `good first issue`, `help wanted`) on new work.
+Exactly one type label if it exists in `gh label list`: `bug` | `enhancement` | `chore` | `documentation`. Add `automated` only on bot/sync PRs. If the type is missing, ask.
 
 ## Assign and review
 
