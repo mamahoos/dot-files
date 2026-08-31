@@ -136,6 +136,8 @@ gh issue edit ISSUE_NUMBER --add-assignee "@me"
 
 ## 4. Review
 
+Review the diff with `code-review-and-quality` (and `code-simplification` when the change is cleanup). The GitHub comment is the summary, not the review.
+
 **Ask first** when the diff is large or touches more than a few files.
 
 Small diffs: review without asking if the user already asked to ship/merge.
