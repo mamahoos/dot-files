@@ -6,7 +6,7 @@ A Decision that plays cards we do not hold is fiction. Build the hand from evide
 
 1. `.architecture/cards.md` in the current repo, if it exists (copy from [templates/cards.md](templates/cards.md)).
 2. Else derive, in this order:
-   - repo artifacts: `compose.yml` / `Dockerfile` / `pyproject.toml` / `go.mod` / `.github/workflows`
+   - repo artifacts: `compose.yml` / `compose.yaml` / `docker-compose.yml` / `Dockerfile` / `pyproject.toml` / `go.mod` / `.github/workflows`
    - `graphify query` / existing modules
    - user-level `~/.cursor/rules/00-user-context.mdc` (confident vs learning vs conceptual)
    - `gh` collaborators and hosting you can see (not hypothetical teams)
