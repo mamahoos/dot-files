@@ -21,7 +21,7 @@ gh pr view N --json title,body,comments
 `- [ ]` is unfinished work. Do it, PATCH to `- [x]`, then this must print nothing (else do not merge):
 
 ```bash
-if gh api "repos/OWNER/REPO/issues/N" --jq .body | command grep -E '^[[:space:]]*- \[ \]'; then
+if gh api "repos/OWNER/REPO/issues/N" --jq .body | command grep -E '^[[:space:]]*[-*][[:space:]]+\[ \]'; then
   exit 1
 fi
 ```
