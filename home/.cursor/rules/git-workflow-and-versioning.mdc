@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Git Workflow and Versioning
 
-Apply this workflow for any coding change in this repository.
+Apply this workflow for any coding change in any workspace this rule is installed in (user-level `~/.cursor/rules`, every repo).
 Use `.cursor/skills/git-workflow-and-versioning/SKILL.md` for detailed procedures and examples.
 
 ## Default Behavior
