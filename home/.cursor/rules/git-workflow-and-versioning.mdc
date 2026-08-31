@@ -15,6 +15,16 @@ Use `.cursor/skills/git-workflow-and-versioning/SKILL.md` for detailed procedure
 - Atomic commits are mandatory: many small commits, never one large mixed commit.
 - Keep `main` stable; do not keep long-running feature branches.
 
+## Atomic commits (mandatory)
+
+Every commit is one logical change. This is not optional and does not depend on which repo you are in.
+
+- After you write a hunk, **commit it before you edit it again**.
+- If you already wrote a line (or hunk) and have **not** committed it, and you now want to change it: that is **two changes**. Commit the current tree first, then edit, then commit the edit. Do not fold the rewrite into the dirty working tree.
+- Do not accumulate a write + a later rewrite + a formatting pass in one uncommitted blob.
+- Do not `git commit --amend` to hide a second change unless the user explicitly asked and amend is allowed.
+- One hunk → one `git apply --index` (or equivalent) → one commit.
+
 ## Commit Rules
 
 - One logical change per commit.
