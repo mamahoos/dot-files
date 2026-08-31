@@ -16,8 +16,6 @@ These are sketches, not ADRs. They show playing the hand, not a conference topol
 
 **Decision (typical):** Option 0. No fleet, no second operator, no measured host count that justifies a control plane. New-card tax for Ansible-as-source-of-truth is unpaid. Revisit if host count and shared state become evidence, not a wish.
 
-Don't optimize architecture for imaginary scale.
-
 ## 2. Small FastAPI service you run on one VPS
 
 **Hand:** Python, FastAPI, Docker Compose, Caddy/Traefik you already operate, GitHub Actions. PostgreSQL if the app already has it. Operators: 1. Scale evidence: `unknown` or "tens of requests/day".
