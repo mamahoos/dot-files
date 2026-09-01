@@ -13,6 +13,14 @@ font-size = 13
 font-feature = calt
 font-feature = liga
 
+# Completely unhinted FreeType (not just no-hinting while autohint stays on).
+freetype-load-flags = no-hinting,no-autohint,no-force-autohint,no-monochrome
+alpha-blending = linear-corrected
+
+# Extra air in the cell so glyphs do not feel packed against the cursor.
+adjust-cell-height = 10%
+adjust-cell-width = 4%
+
 # ------------------------------------------------------------
 # Green terminal aesthetic
 # ------------------------------------------------------------
@@ -84,17 +92,25 @@ background-blur = 30
 # ------------------------------------------------------------
 # Cursor
 # ------------------------------------------------------------
+# Community shaders expect Ghostty's native cursor rect (usually block).
+# cursor-opacity 0 + a homegrown shader put the bar on the wrong row.
 
 cursor-style = block
 cursor-style-blink = true
 cursor-opacity = 1
+adjust-cursor-height = -28%
+adjust-cursor-thickness = -20%
+
+mouse-hide-while-typing = true
 
 # ------------------------------------------------------------
 # Window
 # ------------------------------------------------------------
 
-window-padding-x = 14
-window-padding-y = 12
+window-padding-x = 18
+window-padding-y = 16
+window-padding-balance = true
+window-padding-color = extend
 
 window-theme = ghostty
 
@@ -106,11 +122,18 @@ split-divider-color = 174D25
 # ------------------------------------------------------------
 
 shell-integration = bash
-shell-integration-features = ssh-env,ssh-terminfo,title
+shell-integration-features = ssh-env,ssh-terminfo,title,no-cursor
 
 # ------------------------------------------------------------
 # Performance / rendering
 # ------------------------------------------------------------
 
-# Let Ghostty use its normal GPU renderer.
-# No software-rendering workaround here.
+# GPU path, vsync-aligned where the runtime supports it.
+# Do not raise background-blur further: Ghostty 1.3 warns high
+# intensity can stutter on Linux compositors (the opposite of smooth).
+window-vsync = true
+
+# Sweep (sahaj-b) for larger jumps; Boo (hced) for 1-cell type/backspace.
+custom-shader = shaders/cursor_sweep.glsl
+custom-shader = shaders/boo-cursor.glsl
+custom-shader-animation = always
