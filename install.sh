@@ -11,6 +11,7 @@ readonly HOME_SRC="$REPO_ROOT/home"
 readonly CONFIG_SRC="$REPO_ROOT/config"
 readonly TARGET_HOME="${DOTFILES_HOME:-$HOME}"
 readonly TARGET_CONFIG="${XDG_CONFIG_HOME:-$TARGET_HOME/.config}"
+readonly TARGET_DATA="${XDG_DATA_HOME:-$TARGET_HOME/.local/share}"
 readonly STAMP="$(date +%Y%m%d-%H%M%S)"
 readonly BACKUP_DIR="$TARGET_HOME/.dotfiles-backup/$STAMP"
 readonly SHELL_ONLY_FILES=(
@@ -135,6 +136,22 @@ _link_config_tree() {
   _link_children "$CONFIG_SRC" "$TARGET_CONFIG"
 }
 
+# GNOME/GTK look up Icon=com.mitchellh.ghostty in hicolor, not ~/.config/ghostty.
+# Do not symlink all of ~/.local — only this app icon.
+_link_ghostty_icon() {
+  local src dest name sz
+  src="$CONFIG_SRC/ghostty/icons/com.mitchellh.ghostty.png"
+  if [[ ! -f "$src" ]]; then
+    return 0
+  fi
+
+  name="com.mitchellh.ghostty.png"
+  for sz in 48 256 512 1024; do
+    dest="$TARGET_DATA/icons/hicolor/${sz}x${sz}/apps/$name"
+    _link_one "$src" "$dest"
+  done
+}
+
 _link_shell_only() {
   local name
 
@@ -178,6 +195,7 @@ main() {
     mkdir -p "$TARGET_CONFIG"
     _link_home_tree
     _link_config_tree
+    _link_ghostty_icon
     printf 'linked dotfiles from %s\n' "$REPO_ROOT"
   fi
 
