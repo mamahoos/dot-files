@@ -17,5 +17,6 @@ _WHITE='\[\e[38;5;252m\]'
 _DIM='\[\e[38;5;245m\]'
 
 # Double quotes so color vars expand at source time.
-# \u \h \w stay for bash to expand when drawing the prompt.
-PS1="${_GREEN}\u${_DIM}@${_GREEN}\h ${_DIM_GREEN}\w${_RESET} ${_BRIGHT_GREEN}❯${_RESET} "
+# \u \w stay for bash to expand when drawing the prompt.
+# Hostname is omitted: this machine's \h equals \u (mamahoos@mamahoos).
+PS1="${_GREEN}\u ${_DIM_GREEN}\w${_RESET} ${_BRIGHT_GREEN}❯${_RESET} "
