@@ -114,6 +114,10 @@ window-padding-color = extend
 
 window-theme = ghostty
 
+# GTK 1.3.1 can re-fire resize when the scrollbar appears (ghostty#12161),
+# so the cols×rows overlay loops in the middle of the window.
+resize-overlay = never
+
 unfocused-split-opacity = 0.72
 split-divider-color = 174D25
 
