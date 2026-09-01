@@ -92,10 +92,12 @@ background-blur = 30
 # ------------------------------------------------------------
 # Cursor
 # ------------------------------------------------------------
+# Native Ghostty cannot do VS Code smooth-caret / smooth-blink.
+# We hide the snapped caret and draw a sliding, fading one in a shader.
 
-cursor-style = block
-cursor-style-blink = true
-cursor-opacity = 1
+cursor-style = bar
+cursor-style-blink = false
+cursor-opacity = 0
 
 mouse-hide-while-typing = true
 
@@ -118,7 +120,7 @@ split-divider-color = 174D25
 # ------------------------------------------------------------
 
 shell-integration = bash
-shell-integration-features = ssh-env,ssh-terminfo,title
+shell-integration-features = ssh-env,ssh-terminfo,title,no-cursor
 
 # ------------------------------------------------------------
 # Performance / rendering
@@ -128,3 +130,6 @@ shell-integration-features = ssh-env,ssh-terminfo,title
 # Do not raise background-blur further: Ghostty 1.3 warns high
 # intensity can stutter on Linux compositors (the opposite of smooth).
 window-vsync = true
+
+custom-shader = shaders/smooth-caret.glsl
+custom-shader-animation = true
