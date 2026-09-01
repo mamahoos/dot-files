@@ -22,6 +22,7 @@ readonly SHELL_ONLY_FILES=(
   .bash_functions
   .bash_prompt
   .inputrc
+  .nanorc
 )
 
 SHELL_ONLY=0
