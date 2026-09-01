@@ -18,8 +18,8 @@ freetype-load-flags = no-hinting,no-autohint,no-force-autohint,no-monochrome
 alpha-blending = linear-corrected
 
 # Extra air in the cell so glyphs do not feel packed against the cursor.
-adjust-cell-height = 18%
-adjust-cell-width = 6%
+adjust-cell-height = 10%
+adjust-cell-width = 4%
 
 # ------------------------------------------------------------
 # Green terminal aesthetic
@@ -92,12 +92,14 @@ background-blur = 30
 # ------------------------------------------------------------
 # Cursor
 # ------------------------------------------------------------
-# Native Ghostty cannot do VS Code smooth-caret / smooth-blink.
-# We hide the snapped caret and draw a sliding, fading one in a shader.
+# Community shaders expect Ghostty's native cursor rect (usually block).
+# cursor-opacity 0 + a homegrown shader put the bar on the wrong row.
 
-cursor-style = bar
-cursor-style-blink = false
-cursor-opacity = 0
+cursor-style = block
+cursor-style-blink = true
+cursor-opacity = 1
+adjust-cursor-height = -28%
+adjust-cursor-thickness = -20%
 
 mouse-hide-while-typing = true
 
@@ -131,5 +133,5 @@ shell-integration-features = ssh-env,ssh-terminfo,title,no-cursor
 # intensity can stutter on Linux compositors (the opposite of smooth).
 window-vsync = true
 
-custom-shader = shaders/smooth-caret.glsl
+custom-shader = shaders/cursor_sweep.glsl
 custom-shader-animation = true
