@@ -13,9 +13,8 @@ font-size = 13
 font-feature = calt
 font-feature = liga
 
-# Unhinted glyphs + linear-corrected blending: less pixel-snapping, softer edges.
-# (Linux/FreeType only; hinting is the usual source of "crisp but harsh" text.)
-freetype-load-flags = no-hinting
+# Completely unhinted FreeType (not just no-hinting while autohint stays on).
+freetype-load-flags = no-hinting,no-autohint,no-force-autohint,no-monochrome
 alpha-blending = linear-corrected
 
 # Extra air in the cell so glyphs do not feel packed against the cursor.
