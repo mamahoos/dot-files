@@ -98,6 +98,9 @@ window-padding-y = 12
 
 window-theme = ghostty
 
+unfocused-split-opacity = 0.72
+split-divider-color = 174D25
+
 # ------------------------------------------------------------
 # Shell integration
 # ------------------------------------------------------------
