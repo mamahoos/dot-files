@@ -121,4 +121,5 @@ jobs:
 
             CI runs on this PR via `SKILLS_SYNC_TOKEN` (`lint`, `check-skills-drift`, `Gitleaks`).
           labels: chore, automated
+          assignees: mamahoos
           delete-branch: true
