@@ -68,6 +68,10 @@ shopt -s complete_fullquote
 # Vi editing (matches ~/.inputrc editing-mode)
 set -o vi
 
+# Readline Esc-v and CLI tools use $VISUAL, then $EDITOR.
+export EDITOR=nvim
+export VISUAL=nvim
+
 # ======================================================================
 # 4. Color support
 # ======================================================================
