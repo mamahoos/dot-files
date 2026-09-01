@@ -1,0 +1,113 @@
+# ============================================================
+# Ghostty — mamahoos
+# ============================================================
+
+# ------------------------------------------------------------
+# Font
+# ------------------------------------------------------------
+
+font-family = JetBrains Mono
+font-size = 13
+
+# Programming ligatures
+font-feature = calt
+font-feature = liga
+
+# ------------------------------------------------------------
+# Green terminal aesthetic
+# ------------------------------------------------------------
+
+background = 020603
+foreground = B8E8BC
+
+cursor-color = 7CFF88
+cursor-text = 020603
+
+selection-background = 145C25
+selection-foreground = E8FFE9
+
+# Black
+palette = 0=#020603
+
+# Red
+palette = 1=#D65C5C
+
+# Green
+palette = 2=#4ED66D
+
+# Yellow
+palette = 3=#C9D66A
+
+# Blue
+palette = 4=#5C8FD6
+
+# Magenta
+palette = 5=#A66AD6
+
+# Cyan
+palette = 6=#5CCFCF
+
+# White
+palette = 7=#B8E8BC
+
+# Bright black
+palette = 8=#28402C
+
+# Bright red
+palette = 9=#FF6B6B
+
+# Bright green
+palette = 10=#63FF82
+
+# Bright yellow
+palette = 11=#E5F56B
+
+# Bright blue
+palette = 12=#70A5FF
+
+# Bright magenta
+palette = 13=#C17CFF
+
+# Bright cyan
+palette = 14=#6FFFE9
+
+# Bright white
+palette = 15=#E8FFE9
+
+# ------------------------------------------------------------
+# Transparency / glass
+# ------------------------------------------------------------
+
+background-opacity = 0.88
+background-blur = 30
+
+# ------------------------------------------------------------
+# Cursor
+# ------------------------------------------------------------
+
+cursor-style = block
+cursor-style-blink = true
+cursor-opacity = 1
+
+# ------------------------------------------------------------
+# Window
+# ------------------------------------------------------------
+
+window-padding-x = 14
+window-padding-y = 12
+
+window-theme = ghostty
+
+# ------------------------------------------------------------
+# Shell integration
+# ------------------------------------------------------------
+
+shell-integration = bash
+shell-integration-features = ssh-env,ssh-terminfo,title
+
+# ------------------------------------------------------------
+# Performance / rendering
+# ------------------------------------------------------------
+
+# Let Ghostty use its normal GPU renderer.
+# No software-rendering workaround here.
