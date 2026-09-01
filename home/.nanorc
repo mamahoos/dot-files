@@ -1,9 +1,49 @@
-# ~/.nanorc
+# ============================================================
+# GNU nano — mamahoos
+# ============================================================
 # Complements Debian /etc/nanorc. Fallback when $EDITOR is still nano.
 
-# ======================================================================
+# ------------------------------------------------------------
 # Indentation
-# ======================================================================
-# Tab inserts four spaces; tabsize sets display width for existing tabs.
+# ------------------------------------------------------------
+
 set tabsize 4
 set tabstospaces
+set autoindent
+set indentguides
+set trimblanks
+
+# ------------------------------------------------------------
+# Editing
+# ------------------------------------------------------------
+
+set wordbounds
+set smarthome
+
+# ------------------------------------------------------------
+# UI
+# ------------------------------------------------------------
+
+set linenumbers
+set constantshow
+set mouse
+
+# ------------------------------------------------------------
+# Colors
+# ------------------------------------------------------------
+
+set titlecolor bold,white,blue
+set statuscolor bold,white,green
+set errorcolor bold,white,red
+set keycolor cyan
+set numbercolor yellow
+set selectedcolor lightwhite,blue
+set spotlightcolor lightblack,yellow
+set functioncolor green
+set stripecolor ,magenta
+
+# ------------------------------------------------------------
+# Syntax highlighting
+# ------------------------------------------------------------
+
+include "/usr/share/nano/*.nanorc"
