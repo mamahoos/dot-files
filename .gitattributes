@@ -1,6 +1,9 @@
 # Auto detect text files and perform LF normalization
 * text=auto
 
+# Third-party Ghostty cursor shaders (boo / cursor_sweep) — do not dominate linguist as GLSL
+config/ghostty/shaders/** linguist-vendored
+
 # Third-party search helpers — keep GitHub language stats on our own files
 home/.cursor/skills/ui-ux-pro-max/scripts/** linguist-vendored
 home/.cursor/skills/canvas-design/canvas-fonts/** linguist-vendored
