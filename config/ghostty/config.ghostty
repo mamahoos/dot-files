@@ -135,6 +135,10 @@ keybind = alt+shift+arrow_down=goto_split:down
 keybind = alt+shift+arrow_left=goto_split:left
 keybind = alt+shift+arrow_right=goto_split:right
 
+# Cycle
+keybind = super+ctrl+[=goto_split:previous
+keybind = super+ctrl+]=goto_split:next
+
 # ------------------------------------------------------------
 # Shell integration
 # ------------------------------------------------------------
