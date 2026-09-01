@@ -1,0 +1,7 @@
+Artwork: dracula_option_4 (1024×1024 PNG extracted from the upstream .icns)
+
+Source: https://github.com/dhanishgajjar/terminal-icons
+Author: Dhanish Gajjar
+
+The upstream repository does not ship a LICENSE file. This file is vendored
+only as the Linux Ghostty icon override (com.mitchellh.ghostty.png).
