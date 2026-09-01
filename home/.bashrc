@@ -134,6 +134,13 @@ if [ -f "$HOME/.bashrc.ghostty" ]; then
     source "$HOME/.bashrc.ghostty"
 fi
 
+# Ghostty starts bash via GHOSTTY_BASH_INJECT (POSIX, then this file).
+# Readline is already initialized with library defaults, so ~/.inputrc
+# never applied: bind -v showed show-mode-in-prompt off and (cmd)/(ins).
+if [ -f "$HOME/.inputrc" ]; then
+    bind -f "$HOME/.inputrc"
+fi
+
 # ======================================================================
 # 11. Local-only overrides (never commit secrets)
 # ======================================================================
