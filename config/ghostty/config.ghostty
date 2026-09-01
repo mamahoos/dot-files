@@ -148,6 +148,9 @@ keybind = super+ctrl+shift+arrow_right=resize_split:right,10
 # Zoom
 keybind = ctrl+shift+enter=toggle_split_zoom
 
+# Delete
+keybind = ctrl+shift+x=close_surface
+
 # ------------------------------------------------------------
 # Shell integration
 # ------------------------------------------------------------
