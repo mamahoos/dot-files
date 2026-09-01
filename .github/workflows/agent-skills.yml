@@ -16,7 +16,9 @@ on:
       - .github/scripts/sync-upstreams.sh
       - .github/workflows/agent-skills.yml
   schedule:
-    - cron: "30 5 * * *" # 09:00 IRAN (UTC+3:30) — safety net when main is quiet
+    # GitHub cron is UTC. Minutes 30 + hours 2,5,8,... = every 3h at :00 IRST
+    # (UTC+3:30), including the old 09:00 slot (05:30 UTC).
+    - cron: "30 2,5,8,11,14,17,20,23 * * *"
   workflow_dispatch:
 
 concurrency:
@@ -99,7 +101,7 @@ jobs:
         run: |
           case "${{ github.event_name }}" in
             push) echo "label=drift on push to main (run ${{ github.run_id }})" >> "$GITHUB_OUTPUT" ;;
-            schedule) echo "label=daily schedule (09:00 +3:30 UTC)" >> "$GITHUB_OUTPUT" ;;
+            schedule) echo "label=every-3h schedule (IRST :00)" >> "$GITHUB_OUTPUT" ;;
             *) echo "label=manual dispatch (run ${{ github.run_id }})" >> "$GITHUB_OUTPUT" ;;
           esac
 
@@ -119,4 +121,5 @@ jobs:
 
             CI runs on this PR via `SKILLS_SYNC_TOKEN` (`lint`, `check-skills-drift`, `Gitleaks`).
           labels: chore, automated
+          assignees: mamahoos
           delete-branch: true
