@@ -156,7 +156,8 @@ keybind = ctrl+shift+x=close_surface
 # ------------------------------------------------------------
 
 shell-integration = bash
-shell-integration-features = ssh-env,ssh-terminfo,title,no-cursor
+# sudo: wrap local `sudo` with --preserve-env=TERMINFO (Ghostty default is no-sudo).
+shell-integration-features = ssh-env,ssh-terminfo,title,no-cursor,sudo
 
 # ------------------------------------------------------------
 # Performance / rendering
