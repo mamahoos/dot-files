@@ -1,0 +1,21 @@
+# ============================================================
+# Bash Prompt
+# ============================================================
+# Sourced from ~/.bashrc. Keep this file static-only for now:
+# colors + bash prompt escapes. Git, exit status, SSH, and
+# Readline vim-mode belong in later slices — not inline PS1.
+# ============================================================
+
+# Reset
+_RESET='\[\e[0m\]'
+
+# Colors (256-color). Kept even if unused yet — later segments reuse them.
+_GREEN='\[\e[38;5;114m\]'
+_BRIGHT_GREEN='\[\e[38;5;120m\]'
+_DIM_GREEN='\[\e[38;5;71m\]'
+_WHITE='\[\e[38;5;252m\]'
+_DIM='\[\e[38;5;245m\]'
+
+# Double quotes so color vars expand at source time.
+# \u \h \w stay for bash to expand when drawing the prompt.
+PS1="${_GREEN}\u${_DIM}@${_GREEN}\h ${_DIM_GREEN}\w${_RESET} ${_BRIGHT_GREEN}❯${_RESET} "
