@@ -123,6 +123,17 @@ main() {
   config_child="${config_entries[0]}"
   _smoke_assert_link "$dest_config/$(basename "$config_child")" "$config_child"
 
+  _smoke_assert_link \
+    "$dest_home/.local/share/icons/hicolor/1024x1024/apps/com.mitchellh.ghostty.png" \
+    "$REPO_ROOT/config/ghostty/icons/com.mitchellh.ghostty.png"
+  _smoke_assert_link \
+    "$dest_home/.local/share/icons/hicolor/48x48/apps/com.mitchellh.ghostty.png" \
+    "$REPO_ROOT/config/ghostty/icons/com.mitchellh.ghostty.png"
+  if [[ -e "$dest_shell/.local/share/icons/hicolor/1024x1024/apps/com.mitchellh.ghostty.png" ]]; then
+    _smoke_error "--shell-only linked Ghostty icon"
+    return 1
+  fi
+
   printf 'install smoke ok\n'
 }
 
