@@ -9,7 +9,7 @@ Versioned Linux configs I use day to day.
 | Path | Contents |
 | --- | --- |
 | `home/` | Bash, git, Cursor (rules, agents, skills) |
-| `config/` | btop, htop, tmux |
+| `config/` | btop, htop, tmux, ghostty |
 | `install.sh` | Symlink `home/` and `config/` into place |
 
 ## Structure
@@ -17,7 +17,7 @@ Versioned Linux configs I use day to day.
 ```text
 .
 ├── home/
-│   ├── .bashrc, .bash_aliases, .bash_functions, .inputrc
+│   ├── .bashrc, .bashrc.tools, .bashrc.ghostty, .bash_prompt, .bash_aliases, .bash_functions, .inputrc
 │   ├── .gitconfig, .gitmessage
 │   └── .cursor/
 │       ├── agents/
@@ -26,7 +26,8 @@ Versioned Linux configs I use day to day.
 ├── config/
 │   ├── btop/
 │   ├── htop/
-│   └── tmux/
+│   ├── tmux/
+│   └── ghostty/
 ├── install.sh
 ├── Makefile          # local stand-ins for CI (`make help`)
 └── .github/          # CI & repo scripts (not installed)
