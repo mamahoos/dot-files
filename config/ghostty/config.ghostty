@@ -122,6 +122,14 @@ unfocused-split-opacity = 0.72
 split-divider-color = 174D25
 
 # ------------------------------------------------------------
+# Splits / Navigation
+# ------------------------------------------------------------
+
+# Create
+keybind = ctrl+shift+o=new_split:right
+keybind = ctrl+shift+e=new_split:down
+
+# ------------------------------------------------------------
 # Shell integration
 # ------------------------------------------------------------
 
