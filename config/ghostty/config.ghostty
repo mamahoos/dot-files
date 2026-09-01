@@ -129,6 +129,12 @@ split-divider-color = 174D25
 keybind = ctrl+shift+o=new_split:right
 keybind = ctrl+shift+e=new_split:down
 
+# Focus (alt+shift: GNOME already owns ctrl+alt+arrows for workspaces)
+keybind = alt+shift+arrow_up=goto_split:up
+keybind = alt+shift+arrow_down=goto_split:down
+keybind = alt+shift+arrow_left=goto_split:left
+keybind = alt+shift+arrow_right=goto_split:right
+
 # ------------------------------------------------------------
 # Shell integration
 # ------------------------------------------------------------
