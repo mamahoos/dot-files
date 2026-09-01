@@ -133,5 +133,7 @@ shell-integration-features = ssh-env,ssh-terminfo,title,no-cursor
 # intensity can stutter on Linux compositors (the opposite of smooth).
 window-vsync = true
 
+# Sweep (sahaj-b) for larger jumps; Boo (hced) for 1-cell type/backspace.
 custom-shader = shaders/cursor_sweep.glsl
-custom-shader-animation = true
+custom-shader = shaders/boo-cursor.glsl
+custom-shader-animation = always
