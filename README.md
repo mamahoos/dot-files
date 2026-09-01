@@ -17,7 +17,7 @@ Versioned Linux configs I use day to day.
 ```text
 .
 ├── home/
-│   ├── .bashrc, .bash_aliases, .bash_functions, .inputrc
+│   ├── .bashrc, .bashrc.tools, .bashrc.ghostty, .bash_aliases, .bash_functions, .inputrc
 │   ├── .gitconfig, .gitmessage
 │   └── .cursor/
 │       ├── agents/

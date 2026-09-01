@@ -72,6 +72,7 @@ main() {
   "$INSTALL_SH"
 
   _smoke_assert_link "$dest_home/.bashrc" "$REPO_ROOT/home/.bashrc"
+  _smoke_assert_link "$dest_home/.bashrc.ghostty" "$REPO_ROOT/home/.bashrc.ghostty"
   _smoke_assert_link "$dest_home/.inputrc" "$REPO_ROOT/home/.inputrc"
   _smoke_assert_link "$dest_home/.gitconfig" "$REPO_ROOT/home/.gitconfig"
   _smoke_assert_link "$dest_home/.gitmessage" "$REPO_ROOT/home/.gitmessage"

@@ -1,0 +1,10 @@
+# ======================================================================
+# ~/.bashrc.ghostty
+# ----------------------------------------------------------------------
+# Ghostty bash shell integration. No-op outside Ghostty or if resources
+# are missing (other terminals, SSH without inject).
+# ======================================================================
+
+if [ -n "${GHOSTTY_RESOURCES_DIR:-}" ] && [ -f "${GHOSTTY_RESOURCES_DIR}/shell-integration/bash/ghostty.bash" ]; then
+    builtin source "${GHOSTTY_RESOURCES_DIR}/shell-integration/bash/ghostty.bash"
+fi

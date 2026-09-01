@@ -165,7 +165,15 @@ if [ -f "$HOME/.bashrc.tools" ]; then
 fi
 
 # ======================================================================
-# 11. Local-only overrides (never commit secrets)
+# 11. Ghostty (no-op outside Ghostty)
+# ======================================================================
+
+if [ -f "$HOME/.bashrc.ghostty" ]; then
+    source "$HOME/.bashrc.ghostty"
+fi
+
+# ======================================================================
+# 12. Local-only overrides (never commit secrets)
 # ======================================================================
 
 if [ -f "$HOME/.bashrc.local" ]; then
