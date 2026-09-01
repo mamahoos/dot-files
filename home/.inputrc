@@ -19,11 +19,11 @@ set convert-meta off
 # /etc/inputrc emacs Home/End bindings do not apply in vi mode.
 set editing-mode vi
 # Cursor shape = mode (Ghostty no-cursor: do not also inject a bar via PS1).
-# cmd = blinking block; insert = blinking bar (DECSCUSR). Strings are
-# non-printing only so the prompt does not grow.
+# Quoted: a space in CSI "Ps SP q" would otherwise split the inputrc token.
+# cmd = blinking block; insert = blinking bar.
 set show-mode-in-prompt on
-set vi-cmd-mode-string \1\e[1 q\2
-set vi-ins-mode-string \1\e[5 q\2
+set vi-cmd-mode-string "\1\e[1 q\2"
+set vi-ins-mode-string "\1\e[5 q\2"
 
 $if mode=vi
 set keymap vi-command
