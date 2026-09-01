@@ -1,0 +1,9 @@
+# ~/.nanorc
+# Complements Debian /etc/nanorc. Fallback when $EDITOR is still nano.
+
+# ======================================================================
+# Indentation
+# ======================================================================
+# Tab inserts four spaces; tabsize sets display width for existing tabs.
+set tabsize 4
+set tabstospaces
