@@ -145,6 +145,9 @@ keybind = super+ctrl+shift+arrow_down=resize_split:down,10
 keybind = super+ctrl+shift+arrow_left=resize_split:left,10
 keybind = super+ctrl+shift+arrow_right=resize_split:right,10
 
+# Zoom
+keybind = ctrl+shift+enter=toggle_split_zoom
+
 # ------------------------------------------------------------
 # Shell integration
 # ------------------------------------------------------------
