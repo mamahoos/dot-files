@@ -10,7 +10,6 @@
 set tabsize 4
 set tabstospaces
 set autoindent
-set indentguides
 set trimblanks
 
 # ------------------------------------------------------------
