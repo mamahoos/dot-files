@@ -1,9 +1,9 @@
 return {
   {
-    name = "ghostty-green-theme",
+    "ghostty-green-theme",
     priority = 1000,
     lazy = false,
-    config = function()
+    init = function()
       require("ghostty-green").setup()
     end,
   },
