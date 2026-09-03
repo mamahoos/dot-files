@@ -1,13 +1,16 @@
 name: Agent skills
 
 # Multi-source upstream mirror: check → sync PR per source (on drift) → verify after merge.
+# Merged chore/sync-* PRs with the automated label have their head branch deleted.
 #
 # Requires secret SKILLS_SYNC_TOKEN (PAT with Contents + Pull requests write)
 # so lint and check-skills-drift run on automated sync PRs.
 
 on:
   # Required check: do not path-filter PRs or GitHub waits forever for this status.
+  # `closed` is for deleting merged chore/sync-* branches; check-skills-drift skips it.
   pull_request:
+    types: [opened, synchronize, reopened, closed]
   push:
     branches: [main]
     paths:
@@ -30,6 +33,7 @@ permissions:
 
 jobs:
   check-skills-drift:
+    if: github.event_name != 'pull_request' || github.event.action != 'closed'
     runs-on: ubuntu-latest
 
     steps:
@@ -123,3 +127,38 @@ jobs:
           labels: chore, automated
           assignees: mamahoos
           delete-branch: true
+
+  # create-pull-request's delete-branch only runs when that action runs again
+  # (empty PR / next drift). After a successful merge there is no drift, so
+  # delete the head branch here instead.
+  delete-merged-sync-branch:
+    if: >-
+      github.repository == 'mamahoos/dot-files' &&
+      github.event_name == 'pull_request' &&
+      github.event.action == 'closed' &&
+      github.event.pull_request.merged == true &&
+      github.event.pull_request.base.ref == 'main' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      startsWith(github.event.pull_request.head.ref, 'chore/sync-') &&
+      contains(github.event.pull_request.labels.*.name, 'automated')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Delete merged sync branch
+        env:
+          GH_TOKEN: ${{ secrets.SKILLS_SYNC_TOKEN }}
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          set -euo pipefail
+          if [[ ! "$BRANCH" =~ ^chore/sync-[a-z0-9][a-z0-9.-]*$ ]]; then
+            echo "skip: not a skills sync branch: $BRANCH"
+            exit 0
+          fi
+          if output="$(gh api --method DELETE "repos/${GITHUB_REPOSITORY}/git/refs/heads/${BRANCH}" 2>&1)"; then
+            echo "deleted origin/${BRANCH}"
+          elif grep -Eq 'HTTP 404|Not Found|Reference does not exist' <<<"$output"; then
+            echo "already gone: origin/${BRANCH}"
+          else
+            printf '%s\n' "$output" >&2
+            exit 1
+          fi
