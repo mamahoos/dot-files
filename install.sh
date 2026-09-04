@@ -112,20 +112,6 @@ _link_home_tree() {
     fi
   fi
 
-  if [[ -d "$HOME_SRC/.ssh" ]]; then
-    mkdir -p "$TARGET_HOME/.ssh"
-    chmod 700 "$TARGET_HOME/.ssh"
-    shopt -s nullglob dotglob
-    for entry in "$HOME_SRC/.ssh"/*; do
-      name="$(basename "$entry")"
-      case "$name" in
-      config | config.example | .gitignore | config.d) ;;
-      *) continue ;;
-      esac
-      _link_one "$entry" "$TARGET_HOME/.ssh/$name"
-    done
-    shopt -u nullglob dotglob
-  fi
 }
 
 _link_config_tree() {
