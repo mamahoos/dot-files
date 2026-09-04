@@ -9,6 +9,10 @@ alwaysApply: true
 
 `mamahoos` on GitHub and Telegram; use that name in technical contexts. Computer Engineering student working in DevOps / Infrastructure / Platform Engineering. Programming since 2020.
 
+## Workspace layout
+
+`~/dev/personal/` = active repos; `work/` = employer repos; `vendor/` = third-party clones. `desk/` is the live workbench: `config/` (sensitive), `runbooks/` (operations), `deploy/` (bundles), `knowledge/` (learning), `inbox/` (temporary). `archive/` is frozen projects and artifacts.
+
 ## Technical profile
 
 Strongest in Python and DevOps/infrastructure.
