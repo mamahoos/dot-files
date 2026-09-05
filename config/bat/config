@@ -1,1 +1,16 @@
+# ======================================================================
+# ~/.config/bat/config
+# ----------------------------------------------------------------------
+# bat/batcat configuration. Debian ships the binary as batcat; the
+# config path is still ~/.config/bat/config.
+# ======================================================================
+
+
+# ======================================================================
+# Syntax mappings
+# ----------------------------------------------------------------------
+# Treat *.conf as SSH Config so ~/.ssh/config.d/*.conf highlights.
+# The glob is global: any .conf file gets this syntax, not only SSH.
+# ======================================================================
+
 --map-syntax "*.conf:SSH Config"
