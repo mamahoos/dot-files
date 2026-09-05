@@ -9,7 +9,7 @@ Versioned Linux configs I use day to day.
 | Path | Contents |
 | --- | --- |
 | `home/` | Bash, git, Cursor (rules, agents, skills) |
-| `config/` | btop, htop, tmux, ghostty |
+| `config/` | bat, btop, htop, tmux, ghostty |
 | `install.sh` | Symlink `home/` and `config/` into place |
 
 ## Structure
@@ -24,6 +24,7 @@ Versioned Linux configs I use day to day.
 │       ├── rules/
 │       └── skills/
 ├── config/
+│   ├── bat/
 │   ├── btop/
 │   ├── htop/
 │   ├── tmux/
