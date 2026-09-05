@@ -20,6 +20,10 @@ home/.cursor/skills/ui-ux-pro-max/**/__pycache__/
 # Logs
 *.log
 
+# TPM / resurrect if they ever land in the linked XDG tree
+config/tmux/plugins/
+config/tmux/resurrect/
+
 # Graphify — generated output and local-only tooling
 graphify-out/
 raw/
