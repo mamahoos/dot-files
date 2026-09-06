@@ -86,7 +86,7 @@ palette = 15=#E8FFE9
 # Transparency / glass
 # ------------------------------------------------------------
 
-background-opacity = 0.82
+background-opacity = 0.80
 background-blur = 30
 
 # ------------------------------------------------------------
