@@ -10,6 +10,7 @@ on:
       - .github/scripts/test-install-*.sh
       - .github/workflows/install.yml
   pull_request:
+    types: [opened, synchronize, reopened]
     paths:
       - install.sh
       - home/**
