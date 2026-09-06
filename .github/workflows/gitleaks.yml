@@ -3,7 +3,9 @@ name: Secret Scan
 on:
   push:
     branches: [main]
+  # Omit `closed`: a cancelled required check on merge turns the PR red.
   pull_request:
+    types: [opened, synchronize, reopened]
   workflow_dispatch:
 
 permissions:

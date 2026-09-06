@@ -1,0 +1,52 @@
+name: Delete merged sync branch
+
+# create-pull-request's delete-branch only runs when that action runs again
+# (empty PR / next drift). After a successful merge there is no drift, so
+# delete the head branch here.
+#
+# Must not live in agent-skills.yml: that workflow's check-skills-drift is a
+# required check, and a skipped job on pull_request closed is a red X.
+# pull_request_target + base-branch context also survives merge (the
+# refs/pull/N/merge ref is gone, which cancelled the old job — see #124).
+
+on:
+  pull_request_target:
+    types: [closed]
+
+concurrency:
+  group: delete-merged-sync-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  delete-merged-sync-branch:
+    if: >-
+      github.repository == 'mamahoos/dot-files' &&
+      github.event.pull_request.merged == true &&
+      github.event.pull_request.base.ref == 'main' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      startsWith(github.event.pull_request.head.ref, 'chore/sync-') &&
+      contains(github.event.pull_request.labels.*.name, 'automated')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Delete merged sync branch
+        env:
+          GH_TOKEN: ${{ secrets.SKILLS_SYNC_TOKEN }}
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          set -euo pipefail
+          if [[ ! "$BRANCH" =~ ^chore/sync-[a-z0-9][a-z0-9.-]*$ ]]; then
+            echo "skip: not a skills sync branch: $BRANCH"
+            exit 0
+          fi
+          if output="$(gh api --method DELETE "repos/${GITHUB_REPOSITORY}/git/refs/heads/${BRANCH}" 2>&1)"; then
+            echo "deleted origin/${BRANCH}"
+          elif grep -Eq 'HTTP 404|Not Found|Reference does not exist' <<<"$output"; then
+            echo "already gone: origin/${BRANCH}"
+          else
+            printf '%s\n' "$output" >&2
+            exit 1
+          fi

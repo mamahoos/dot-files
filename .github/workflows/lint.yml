@@ -10,7 +10,9 @@ on:
       - .shellcheckrc
       - .github/workflows/lint.yml
   # Required check: do not path-filter PRs or GitHub waits forever for this status.
+  # Omit `closed`: a cancelled/skipped required check on merge turns the PR red.
   pull_request:
+    types: [opened, synchronize, reopened]
 
 concurrency:
   group: lint-${{ github.workflow }}-${{ github.ref }}
