@@ -1,10 +1,10 @@
 {
     "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
 
-    // Keep the distro logo recognizable while using the Ghostty-green palette.
+    // A compact terminal mark keeps the info column readable in narrow panes.
     "logo": {
-        "type": "auto",
-        "source": "",
+        "type": "data",
+        "source": "$1      ╭────────────╮\n$1      │ $2● $3● $4● $1│\n$1      ├────────────┤\n$1      │ $2mamahoos$1  │\n$1      │ $3  >_       $1│\n$1      ╰────────────╯",
         "color": {
             "1": "#4ED66D",
             "2": "#63FF82",
@@ -17,9 +17,9 @@
             "9": "#FF6B6B"
         },
         "padding": {
-            "right": 4
+            "right": 5
         },
-        "printRemaining": true
+        "printRemaining": false
     },
 
     "display": {
@@ -32,7 +32,7 @@
             "separator": "#28402C"
         },
         "key": {
-            "width": 12,
+            "width": 14,
             "type": "string"
         }
     },
@@ -41,7 +41,7 @@
         "title",
         {
             "type": "separator",
-            "string": "────────────────────────"
+            "string": "──────────────────────────"
         },
         "os",
         "host",
