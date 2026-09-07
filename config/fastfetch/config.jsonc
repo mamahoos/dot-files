@@ -73,7 +73,7 @@
         {
             "type": "battery",
             "key": "Battery",
-            "format": "{capacity}% {status}"
+            "format": "{capacity} {status}"
         },
         {
             "type": "break",
