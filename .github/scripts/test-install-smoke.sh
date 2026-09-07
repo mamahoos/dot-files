@@ -51,7 +51,8 @@ _smoke_assert_link() {
 # ==============================================================================
 
 main() {
-  local dest_home dest_config dest_shell cursor_child config_child
+  local dest_home dest_config dest_shell cursor_child config_child config_entry
+  local config_name
   local cursor_entries=() config_entries=()
 
   if [[ ! -x "$INSTALL_SH" ]]; then
@@ -122,6 +123,18 @@ main() {
   fi
   config_child="${config_entries[0]}"
   _smoke_assert_link "$dest_config/$(basename "$config_child")" "$config_child"
+
+  for config_entry in "${config_entries[@]}"; do
+    config_name="$(basename "$config_entry")"
+    if [[ "$config_name" == "ghostty" ]]; then
+      continue
+    fi
+    _smoke_assert_link "$dest_shell/.config/$config_name" "$config_entry"
+  done
+  if [[ -e "$dest_shell/.config/ghostty" ]]; then
+    _smoke_error "--shell-only linked Ghostty config"
+    return 1
+  fi
 
   _smoke_assert_link \
     "$dest_home/.local/share/icons/hicolor/1024x1024/apps/com.mitchellh.ghostty.png" \
