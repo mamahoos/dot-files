@@ -123,6 +123,25 @@ _link_config_tree() {
   _link_children "$CONFIG_SRC" "$TARGET_CONFIG"
 }
 
+_link_config_tree_shell_only() {
+  local entry name
+
+  if [[ ! -d "$CONFIG_SRC" ]]; then
+    return 0
+  fi
+
+  mkdir -p "$TARGET_CONFIG"
+  shopt -s nullglob dotglob
+  for entry in "$CONFIG_SRC"/*; do
+    name="$(basename "$entry")"
+    if [[ "$name" == "ghostty" ]]; then
+      continue
+    fi
+    _link_one "$entry" "$TARGET_CONFIG/$name"
+  done
+  shopt -u nullglob dotglob
+}
+
 # GNOME/GTK look up Icon=com.mitchellh.ghostty in hicolor, not ~/.config/ghostty.
 # Do not symlink all of ~/.local — only this app icon.
 _link_ghostty_icon() {
@@ -177,9 +196,8 @@ main() {
 
   if ((SHELL_ONLY)); then
     _link_shell_only
-    _link_config_tree
-    _link_ghostty_icon
-    printf 'linked shell dotfiles and config from %s\n' "$REPO_ROOT"
+    _link_config_tree_shell_only
+    printf 'linked shell dotfiles from %s\n' "$REPO_ROOT"
   else
     mkdir -p "$TARGET_CONFIG"
     _link_home_tree
