@@ -24,13 +24,13 @@
     },
 
     "display": {
-        "separator": "  │  ",
+        "separator": "  ",
         "brightColor": true,
         "color": {
             "keys": "#D6B85A",
             "title": "#E5C76B",
-            "output": "#B8E8BC",
-            "separator": "#6B5A2A"
+            "output": "#63FF82",
+            "separator": "#28402C"
         },
         "key": {
             "width": 14,
@@ -40,10 +40,6 @@
 
     "modules": [
         "title",
-        {
-            "type": "separator",
-            "string": "──────────────────────────"
-        },
         "os",
         "host",
         "kernel",
