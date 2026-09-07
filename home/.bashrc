@@ -120,6 +120,12 @@ if ! shopt -oq posix; then
     elif [ -f /etc/bash_completion ]; then
         source /etc/bash_completion
     fi
+
+    # Python argcomplete can replace bash-completion's default lazy loader.
+    # Load Docker explicitly so `docker compose` completion remains available.
+    if [ -r /usr/share/bash-completion/completions/docker ]; then
+        source /usr/share/bash-completion/completions/docker
+    fi
 fi
 
 # ======================================================================
@@ -151,12 +157,6 @@ fi
 
 if [ -f "$HOME/.bashrc.local" ]; then
     source "$HOME/.bashrc.local"
-fi
-
-# Python argcomplete can replace bash-completion's default lazy loader.
-# Load Docker explicitly so `docker compose` completion remains available.
-if [ -r /usr/share/bash-completion/completions/docker ]; then
-    source /usr/share/bash-completion/completions/docker
 fi
 
 # ======================================================================
