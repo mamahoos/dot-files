@@ -24,13 +24,13 @@
     },
 
     "display": {
-        "separator": "  ",
+        "separator": "  │  ",
         "brightColor": true,
         "color": {
-            "keys": "#4ED66D",
+            "keys": "#D6B85A",
             "title": "#E5C76B",
             "output": "#B8E8BC",
-            "separator": "#28402C"
+            "separator": "#6B5A2A"
         },
         "key": {
             "width": 14,
