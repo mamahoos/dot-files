@@ -177,7 +177,9 @@ main() {
 
   if ((SHELL_ONLY)); then
     _link_shell_only
-    printf 'linked shell dotfiles from %s\n' "$REPO_ROOT"
+    _link_config_tree
+    _link_ghostty_icon
+    printf 'linked shell dotfiles and config from %s\n' "$REPO_ROOT"
   else
     mkdir -p "$TARGET_CONFIG"
     _link_home_tree
