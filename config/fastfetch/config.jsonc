@@ -1,0 +1,70 @@
+{
+    "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+
+    // Debian's compact logo keeps the info column readable in narrow panes.
+    "logo": {
+        "type": "small",
+        "source": "Debian",
+        "color": {
+            "1": "#4ED66D",
+            "2": "#63FF82",
+            "3": "#B8E8BC",
+            "4": "#5CCFCF",
+            "5": "#7CFF88",
+            "6": "#E8FFE9",
+            "7": "#B8E8BC",
+            "8": "#28402C",
+            "9": "#FF6B6B"
+        },
+        "padding": {
+            "top": 1,
+            "right": 5
+        },
+        "printRemaining": false
+    },
+
+    "display": {
+        "separator": "  ",
+        "brightColor": true,
+        "color": {
+            "keys": "#4ED66D",
+            "title": "#7CFF88",
+            "output": "#B8E8BC",
+            "separator": "#28402C"
+        },
+        "key": {
+            "width": 14,
+            "type": "string"
+        }
+    },
+
+    "modules": [
+        "title",
+        {
+            "type": "separator",
+            "string": "──────────────────────────"
+        },
+        "os",
+        "host",
+        "kernel",
+        "uptime",
+        "packages",
+        "shell",
+        "de",
+        "wm",
+        "terminal",
+        "terminalfont",
+        "cpu",
+        "memory",
+        "disk",
+        "localip",
+        "battery",
+        {
+            "type": "break",
+            "display": {
+                "outputColor": "#28402C"
+            }
+        },
+        "colors"
+    ]
+}
