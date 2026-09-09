@@ -1,5 +1,5 @@
 # Local secret gate — same engine as .github/workflows/gitleaks.yml (CI).
-# Install once after clone:  pre-commit install
+# Install once after clone:  make pre-commit-install
 # Skip one commit:           SKIP=gitleaks git commit ...
 repos:
   - repo: https://github.com/gitleaks/gitleaks
