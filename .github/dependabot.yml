@@ -15,6 +15,20 @@ updates:
     commit-message:
       prefix: "chore"
 
+  # Bumps `rev:` in /.pre-commit-config.yaml (e.g. gitleaks v8.30.1).
+  - package-ecosystem: "pre-commit"
+    directory: "/"
+    schedule:
+      interval: weekly
+
+    open-pull-requests-limit: 5
+
+    labels:
+      - dependencies
+
+    commit-message:
+      prefix: "chore"
+
 # Disabled: this repo has no Dockerfiles. Re-enable when images exist.
   # - package-ecosystem: "docker"
   #   directory: "/"
