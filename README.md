@@ -40,7 +40,7 @@ Versioned Linux configs I use day to day.
 > This symlinks configs into your home directory. Anything replaced is moved to `~/.dotfiles-backup/`. Use at your own risk.
 
 ```bash
-./install.sh
+make install
 ```
 
 `.cursor` children link individually into `~/.cursor/` so Cursor-managed paths are not replaced wholesale.
