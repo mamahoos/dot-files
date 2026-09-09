@@ -1,21 +1,22 @@
 {
     "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
 
-    // Green + gold Debian fetch: airy section groups, tracked keys,
-    // custom swirl logo — no boxes, no nerd icons.
+    // Ghostty green + gold fetch, with burnt amber for logo / section marks /
+    // frame edges. Compact keys, light L-bracket spine — no boxes, no
+    // Nothing-style tracked capitals, no nerd icons.
 
     "logo": {
         "type": "file",
         // Absolute (~) so CWD does not fall back to the builtin Debian logo.
         "source": "~/.config/fastfetch/debian.txt",
         "color": {
-            "1": "#D6B85A",
+            "1": "#D4893A",
             "2": "#4ED66D"
         },
         "padding": {
             "left": 1,
             "right": 4,
-            "top": 1
+            "top": 0
         }
     },
 
@@ -23,7 +24,7 @@
         "separator": "  ",
         "brightColor": false,
         "key": {
-            "width": 17
+            "width": 12
         },
         "color": {
             "keys": "#D6B85A",
@@ -35,7 +36,7 @@
             "type": ["num", "bar"],
             "color": {
                 "green": "#4ED66D",
-                "yellow": "#D6B85A",
+                "yellow": "#D4893A",
                 "red": "#FF6B6B"
             }
         },
@@ -59,110 +60,110 @@
         {
             "type": "title",
             "key": " ",
-            "format": "\u001b[38;2;229;199;107m{user-name}\u001b[0m \u001b[38;2;40;64;44mat\u001b[0m \u001b[38;2;184;232;188m{host-name}\u001b[0m"
+            "format": "\u001b[38;2;212;137;58m┌─\u001b[0m  \u001b[38;2;229;199;107m{user-name}\u001b[0m \u001b[38;2;40;64;44m·\u001b[0m \u001b[38;2;184;232;188m{host-name}\u001b[0m"
         },
         {
             "type": "custom",
-            "format": "\u001b[38;2;40;64;44m──────────────────────────────\u001b[0m"
+            "format": "\u001b[38;2;107;74;40m│\u001b[0m"
         },
 
         {
             "type": "custom",
-            "format": "\u001b[38;2;214;184;90m// SYSTEM\u001b[0m"
+            "format": "\u001b[38;2;107;74;40m│\u001b[0m  \u001b[38;2;212;137;58m// SYSTEM\u001b[0m"
         },
         {
             "type": "os",
-            "key": "O S",
+            "key": "│ OS",
             "format": "{pretty-name} {arch}"
         },
         {
             "type": "host",
-            "key": "H O S T",
+            "key": "│ Host",
             "format": "{name}"
         },
         {
             "type": "kernel",
-            "key": "K E R N E L",
+            "key": "│ Kernel",
             "format": "{release}"
         },
         {
             "type": "uptime",
-            "key": "U P T I M E"
+            "key": "│ Uptime"
         },
         {
             "type": "packages",
-            "key": "P A C K A G E S"
+            "key": "│ Packages"
         },
 
         {
             "type": "custom",
-            "format": "\u001b[38;2;40;64;44m──────────────────────────────\u001b[0m"
+            "format": "\u001b[38;2;107;74;40m│\u001b[0m"
         },
 
         {
             "type": "custom",
-            "format": "\u001b[38;2;214;184;90m// HARDWARE\u001b[0m"
+            "format": "\u001b[38;2;107;74;40m│\u001b[0m  \u001b[38;2;212;137;58m// HARDWARE\u001b[0m"
         },
         {
             "type": "cpu",
-            "key": "C P U",
+            "key": "│ CPU",
             "format": "{name}"
         },
         {
             "type": "gpu",
-            "key": "G P U",
+            "key": "│ GPU",
             "hideType": "integrated",
             "format": "{name}"
         },
         {
             "type": "memory",
-            "key": "M E M O R Y",
+            "key": "│ Memory",
             "format": "{used} / {total}  {percentage-bar} {percentage}"
         },
         {
             "type": "disk",
-            "key": "D I S K",
+            "key": "│ Disk",
             "folders": "/",
             "format": "{size-used} / {size-total}  {size-percentage-bar} {size-percentage}"
         },
         {
             "type": "battery",
-            "key": "B A T T E R Y",
+            "key": "│ Battery",
             "format": "{capacity} {status}"
         },
 
         {
             "type": "custom",
-            "format": "\u001b[38;2;40;64;44m──────────────────────────────\u001b[0m"
+            "format": "\u001b[38;2;107;74;40m│\u001b[0m"
         },
 
         {
             "type": "custom",
-            "format": "\u001b[38;2;214;184;90m// SESSION\u001b[0m"
+            "format": "\u001b[38;2;107;74;40m│\u001b[0m  \u001b[38;2;212;137;58m// SESSION\u001b[0m"
         },
         {
             "type": "wm",
-            "key": "W M",
+            "key": "│ WM",
             "format": "{pretty-name}"
         },
         {
             "type": "shell",
-            "key": "S H E L L",
+            "key": "│ Shell",
             "format": "{pretty-name} {version}"
         },
         {
             "type": "terminal",
-            "key": "T E R M",
+            "key": "│ Term",
             "format": "{pretty-name}"
         },
         {
             "type": "display",
-            "key": "S C R E E N",
+            "key": "│ Screen",
             "format": "{width}x{height} @ {refresh-rate} Hz"
         },
         {
             "type": "localip",
-            "key": "N E T",
+            "key": "│ Net",
             "showIpv4": true,
             "showIpv6": false,
             "showLoop": false,
@@ -172,7 +173,7 @@
 
         {
             "type": "custom",
-            "format": "\u001b[38;2;40;64;44m└─\u001b[0m"
+            "format": "\u001b[38;2;212;137;58m└─\u001b[0m"
         }
     ]
 }
