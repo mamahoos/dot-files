@@ -28,6 +28,8 @@ shfmt -d -i 2 install.sh .github/scripts
 ./.github/scripts/test-install-smoke.sh
 ./.github/scripts/test-install-idempotent.sh
 ./.github/scripts/sync-upstreams.sh --check
+pre-commit install                  # once: Gitleaks on commit (see /.pre-commit-config.yaml)
+pre-commit run gitleaks --all-files
 ```
 
 ## Notes
