@@ -3,7 +3,7 @@
 
 .DEFAULT_GOAL := help
 
-.PHONY: help install install-shell-only lint shellcheck shfmt smoke idempotent skills-drift check
+.PHONY: help install install-shell-only lint shellcheck shfmt smoke idempotent skills-drift check pre-commit-install gitleaks
 
 help:
 	@printf '%s\n' \
@@ -15,6 +15,8 @@ help:
 	  'smoke                ./.github/scripts/test-install-smoke.sh' \
 	  'idempotent           ./.github/scripts/test-install-idempotent.sh' \
 	  'skills-drift         ./.github/scripts/sync-upstreams.sh --check --pull' \
+	  'pre-commit-install   pre-commit install (Gitleaks secret gate)' \
+	  'gitleaks             pre-commit run gitleaks --all-files' \
 	  'check                lint + smoke + idempotent + skills-drift'
 
 install:
@@ -41,3 +43,9 @@ skills-drift:
 	./.github/scripts/sync-upstreams.sh --check --pull
 
 check: lint smoke idempotent skills-drift
+
+pre-commit-install:
+	pre-commit install
+
+gitleaks:
+	pre-commit run gitleaks --all-files
