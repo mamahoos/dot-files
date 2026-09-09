@@ -52,7 +52,8 @@
             "width": 10
         },
         "size": {
-            "binaryPrefix": "si"
+            "binaryPrefix": "si",
+            "ndigits": 1
         }
     },
 
@@ -118,13 +119,14 @@
         {
             "type": "memory",
             "key": "│ Memory",
-            "format": "{used} / {total}  {percentage-bar} {percentage}"
+            // Size fields linked with box-drawing leaders (┄).
+            "format": "lua:local a=...; local ch='┄'; local w=13; local dim='\\27[38;2;107;74;40m'; local rst='\\27[0m'; local function L(s) s=tostring(s or '')..' '; local n=w-#s; if n<0 then n=0 end; return s..dim..string.rep(ch,n)..rst end; local function R(s) s=' '..tostring(s or ''); local n=w-#s; if n<0 then n=0 end; return dim..string.rep(ch,n)..rst..s end; return L(a.used)..' / '..R(a.total)..'  '..(a.percentageBar or '')..' '..(a.percentage or '')"
         },
         {
             "type": "disk",
             "key": "│ Disk",
             "folders": "/",
-            "format": "{size-used} / {size-total}  {size-percentage-bar} {size-percentage}"
+            "format": "lua:local a=...; local ch='┄'; local w=13; local dim='\\27[38;2;107;74;40m'; local rst='\\27[0m'; local function L(s) s=tostring(s or '')..' '; local n=w-#s; if n<0 then n=0 end; return s..dim..string.rep(ch,n)..rst end; local function R(s) s=' '..tostring(s or ''); local n=w-#s; if n<0 then n=0 end; return dim..string.rep(ch,n)..rst..s end; return L(a.sizeUsed)..' / '..R(a.sizeTotal)..'  '..(a.sizePercentageBar or '')..' '..(a.sizePercentage or '')"
         },
         {
             "type": "battery",
