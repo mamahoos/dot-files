@@ -29,7 +29,7 @@
         "color": {
             "keys": "#D6B85A",
             "title": "#E5C76B",
-            "output": "#C5D0C6",
+            "output": "#B8E8BC",
             "separator": "#28402C"
         },
         "percent": {
@@ -60,7 +60,7 @@
         {
             "type": "title",
             "key": " ",
-            "format": "\u001b[38;2;212;137;58m┌─\u001b[0m  \u001b[38;2;229;199;107m{user-name}\u001b[0m \u001b[38;2;40;64;44m·\u001b[0m \u001b[38;2;197;208;198m{host-name}\u001b[0m"
+            "format": "\u001b[38;2;212;137;58m┌─\u001b[0m  \u001b[38;2;229;199;107m{user-name}\u001b[0m \u001b[38;2;40;64;44m·\u001b[0m \u001b[38;2;184;232;188m{host-name}\u001b[0m"
         },
         {
             "type": "custom",
