@@ -36,4 +36,4 @@ pre-commit run gitleaks --all-files
 
 - **Lint**, **Gitleaks**, and **check-skills-drift** are required status checks. Their `pull_request` triggers are `opened` / `synchronize` / `reopened` only — `closed` is omitted so a skipped or cancelled run cannot turn a successful merge red.
 - **Agent skills** needs secret `SKILLS_SYNC_TOKEN` (Contents + Pull requests) for automated sync PRs. After you merge a `chore/sync-*` PR labeled `automated`, [`delete-merged-sync-branch.yml`](delete-merged-sync-branch.yml) deletes the head branch (`pull_request_target`, not the disappearing `refs/pull/N/merge` ref).
-- Dependabot config is in [`../dependabot.yml`](../dependabot.yml) (Actions + Docker).
+- Dependabot config is in [`../dependabot.yml`](../dependabot.yml) (Actions + pre-commit hook `rev` pins).
