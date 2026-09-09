@@ -53,6 +53,17 @@ Same commands CI runs locally. `make` prints targets; `make check` runs the full
 make check
 ```
 
+### Secret scan (pre-commit)
+
+CI already runs [Gitleaks](https://github.com/gitleaks/gitleaks) on every push/PR. Locally, the same engine gates commits via [pre-commit](https://pre-commit.com/):
+
+```bash
+# once per clone (pre-commit package required: apt/pip/brew)
+make pre-commit-install   # or: pre-commit install
+```
+
+After that, every `git commit` scans **staged** changes. Skip once with `SKIP=gitleaks git commit …`. Manual full-tree scan: `make gitleaks`.
+
 ## Cursor skills
 
 Skills under `home/.cursor/skills/` come from versioned upstreams (see `.github/upstreams/`) plus any local-only dirs you add by hand. Sync with `./.github/scripts/sync-upstreams.sh --pull`.
