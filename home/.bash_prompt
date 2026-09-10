@@ -1,7 +1,7 @@
 # ============================================================
 # Bash Prompt — VPS / pacman
 # ============================================================
-# Server branch: show user@host. Laptop main keeps user + cwd only.
+# vps branch: show user@host. Laptop main keeps user + cwd only.
 # Colors aligned with Ghostty green + gold.
 # ============================================================
 
