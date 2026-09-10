@@ -17,6 +17,12 @@ case $- in
       *) return ;;
 esac
 
+# Ghostty sets TERM=xterm-ghostty over SSH. If this host has no terminfo
+# for it, nano/vim fail with "Error opening terminal". Fall back early.
+if [[ "${TERM}" == *ghostty* ]] && ! infocmp "${TERM}" &>/dev/null; then
+    export TERM=xterm-256color
+fi
+
 # ======================================================================
 # 2. Bash history behavior
 # ======================================================================
