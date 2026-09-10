@@ -43,6 +43,12 @@ Versioned Linux configs I use day to day.
 make install
 ```
 
+| Command | What it links |
+| --- | --- |
+| `make install` | Full tree (including your git identity + gpg.conf) |
+| `make install-shell-only` | Shell + most `config/` — **no** `.gitconfig` / `.gitmessage` (safe for shared hosts / friends) |
+| `make install-shell-with-git` | Shell-only **plus** your git identity (machine that should commit as you) |
+
 `.cursor` children link individually into `~/.cursor/` so Cursor-managed paths are not replaced wholesale.
 
 ## Local checks
