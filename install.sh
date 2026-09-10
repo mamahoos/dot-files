@@ -15,8 +15,6 @@ readonly TARGET_DATA="${XDG_DATA_HOME:-$TARGET_HOME/.local/share}"
 readonly STAMP="$(date +%Y%m%d-%H%M%S)"
 readonly BACKUP_DIR="$TARGET_HOME/.dotfiles-backup/$STAMP"
 readonly SHELL_ONLY_FILES=(
-  .gitconfig
-  .gitmessage
   .bashrc
   .bash_aliases
   .bash_functions
@@ -24,8 +22,14 @@ readonly SHELL_ONLY_FILES=(
   .inputrc
   .nanorc
 )
+# Identity / signing — full install or --shell-only --with-git only.
+readonly GIT_IDENTITY_FILES=(
+  .gitconfig
+  .gitmessage
+)
 
 SHELL_ONLY=0
+WITH_GIT=0
 
 # ==============================================================================
 # LOGGING
@@ -170,6 +174,18 @@ _link_shell_only() {
   done
 }
 
+_link_git_identity() {
+  local name
+
+  for name in "${GIT_IDENTITY_FILES[@]}"; do
+    if [[ ! -e "$HOME_SRC/$name" ]]; then
+      _link_error "source missing: $HOME_SRC/$name"
+      return 1
+    fi
+    _link_one "$HOME_SRC/$name" "$TARGET_HOME/$name"
+  done
+}
+
 _parse_args() {
   while (($#)); do
     case "$1" in
@@ -177,12 +193,21 @@ _parse_args() {
       SHELL_ONLY=1
       shift
       ;;
+    --with-git)
+      WITH_GIT=1
+      shift
+      ;;
     *)
-      _link_error "unknown option: $1 (try --shell-only)"
+      _link_error "unknown option: $1 (try --shell-only and/or --with-git)"
       return 1
       ;;
     esac
   done
+
+  if ((WITH_GIT)) && ! ((SHELL_ONLY)); then
+    _link_error "--with-git requires --shell-only (full install already links git identity)"
+    return 1
+  fi
 }
 
 # ==============================================================================
@@ -197,7 +222,12 @@ main() {
   if ((SHELL_ONLY)); then
     _link_shell_only
     _link_config_tree_shell_only
-    printf 'linked shell dotfiles from %s\n' "$REPO_ROOT"
+    if ((WITH_GIT)); then
+      _link_git_identity
+      printf 'linked shell + git identity from %s\n' "$REPO_ROOT"
+    else
+      printf 'linked shell dotfiles from %s (no git identity)\n' "$REPO_ROOT"
+    fi
   else
     mkdir -p "$TARGET_CONFIG"
     _link_home_tree
