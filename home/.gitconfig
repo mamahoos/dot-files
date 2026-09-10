@@ -1,8 +1,7 @@
 [user]
     name    = mamahoos
     email   = m4m4hoos@gmail.com
-    # signing key: ~/.gnupg/gpg.conf default-key
-    signingkey = 36ECB76080BA15C0BF93CC93B083DC8105E593AE   # gitleaks:allow
+    # No signingkey on server profile — hosts usually lack the private key.
 
 [sendemail]
     smtpServer     = smtp.gmail.com
@@ -14,7 +13,7 @@
     # password: Gmail App Password via git credential / libsecret (do not store here)
 
 [commit]
-    gpgSign  = true
+    gpgSign  = false
     template = ~/.gitmessage
     verbose  = true
 
@@ -28,11 +27,8 @@
     sort = -committerdate
 
 [tag]
-    gpgSign = true
+    gpgSign = false
     sort    = version:refname
-
-[gpg]
-    program = /usr/bin/gpg
 
 [init]
     defaultBranch = main
