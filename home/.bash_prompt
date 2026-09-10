@@ -1,7 +1,8 @@
 # ============================================================
-# Bash Prompt — VPS / pacman
+# Bash Prompt — server
 # ============================================================
-# vps branch: show user@host. Laptop main keeps user + cwd only.
+# Long-lived branch for shared / remote hosts (VPS, work, friends,
+# root shells). Shows user@host. Laptop profile stays on main.
 # Colors aligned with Ghostty green + gold.
 # ============================================================
 
