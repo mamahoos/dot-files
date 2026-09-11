@@ -1,16 +1,14 @@
 name: Agent skills
 
-# Multi-source upstream mirror: check → sync PR per source (on drift) → verify after merge.
-# Merged chore/sync-* branches are deleted by delete-merged-sync-branch.yml
-# (not this workflow: a skipped required check-skills-drift on `closed` was a red X).
+# Required drift check only. Opening sync PRs lives in agent-skills-sync.yml
+# so skipped sync jobs are not attached to every push/PR SHA (GitHub counts
+# skipped jobs in the commit X/Y total).
 #
-# Requires secret SKILLS_SYNC_TOKEN (PAT with Contents + Pull requests write)
-# so lint and check-skills-drift run on automated sync PRs.
+# Do not listen to `closed`: a skipped required check (check-skills-drift) is a
+# red X on the merged PR. Branch delete lives in delete-merged-sync-branch.yml.
 
 on:
   # Required check: do not path-filter PRs or GitHub waits forever for this status.
-  # Do not listen to `closed`: a skipped required check (check-skills-drift) is a
-  # red X on the merged PR. Branch delete lives in delete-merged-sync-branch.yml.
   pull_request:
     types: [opened, synchronize, reopened]
   push:
@@ -20,10 +18,6 @@ on:
       - .github/upstreams/**
       - .github/scripts/sync-upstreams.sh
       - .github/workflows/agent-skills.yml
-  schedule:
-    # GitHub cron is UTC. Minutes 30 + hours 2,5,8,... = every 3h at :00 IRST
-    # (UTC+3:30), including the old 09:00 slot (05:30 UTC).
-    - cron: "30 2,5,8,11,14,17,20,23 * * *"
   workflow_dispatch:
 
 concurrency:
@@ -42,89 +36,3 @@ jobs:
 
       - name: Check skills drift against upstreams
         run: ./.github/scripts/sync-upstreams.sh --check --pull
-
-  sync-matrix:
-    needs: check-skills-drift
-    if: >-
-      failure() &&
-      github.repository == 'mamahoos/dot-files' &&
-      github.ref == 'refs/heads/main' &&
-      (github.event_name == 'push' ||
-       github.event_name == 'schedule' ||
-       github.event_name == 'workflow_dispatch')
-    runs-on: ubuntu-latest
-    outputs:
-      sources: ${{ steps.list.outputs.sources }}
-
-    steps:
-      - uses: actions/checkout@v7
-
-      - name: List enabled sources
-        id: list
-        run: |
-          {
-            echo 'sources<<EOF'
-            ./.github/scripts/sync-upstreams.sh --list-sources
-            echo 'EOF'
-          } >> "$GITHUB_OUTPUT"
-
-  sync-pr:
-    needs: sync-matrix
-    # always() is required: without it GHA skips this job when check-skills-drift
-    # failed earlier in the workflow, even though sync-matrix succeeded.
-    if: >-
-      always() &&
-      needs.sync-matrix.result == 'success' &&
-      needs.sync-matrix.outputs.sources != '' &&
-      needs.sync-matrix.outputs.sources != '[]'
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        source: ${{ fromJson(needs.sync-matrix.outputs.sources) }}
-    permissions:
-      contents: write
-      pull-requests: write
-
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          token: ${{ secrets.SKILLS_SYNC_TOKEN }}
-
-      - name: Remove stale sync branch
-        run: git push origin --delete "chore/sync-${{ matrix.source }}" || true
-
-      - name: Sync source into working tree
-        id: sync
-        run: |
-          ./.github/scripts/sync-upstreams.sh --pull --source "${{ matrix.source }}"
-          sha="$(git -C ".cache/upstreams/${{ matrix.source }}" rev-parse HEAD)"
-          echo "sha=$sha" >> "$GITHUB_OUTPUT"
-
-      - name: Resolve trigger label
-        id: trigger
-        run: |
-          case "${{ github.event_name }}" in
-            push) echo "label=drift on push to main (run ${{ github.run_id }})" >> "$GITHUB_OUTPUT" ;;
-            schedule) echo "label=every-3h schedule (IRST :00)" >> "$GITHUB_OUTPUT" ;;
-            *) echo "label=manual dispatch (run ${{ github.run_id }})" >> "$GITHUB_OUTPUT" ;;
-          esac
-
-      - name: Open PR if changed
-        uses: peter-evans/create-pull-request@v8
-        with:
-          token: ${{ secrets.SKILLS_SYNC_TOKEN }}
-          branch: chore/sync-${{ matrix.source }}
-          commit-message: "chore(cursor): sync ${{ matrix.source }} from upstream"
-          title: "chore(cursor): sync ${{ matrix.source }} from upstream"
-          body: |
-            Automated sync of `${{ matrix.source }}` at `${{ steps.sync.outputs.sha }}`.
-
-            Triggered by: ${{ steps.trigger.outputs.label }}
-
-            Review the diff and merge if it looks good.
-
-            CI runs on this PR via `SKILLS_SYNC_TOKEN` (`lint`, `check-skills-drift`, `Gitleaks`).
-          labels: chore, automated
-          assignees: mamahoos
-          delete-branch: true

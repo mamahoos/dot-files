@@ -88,10 +88,16 @@ main() {
   dest_shell="$FAKE_ROOT/shell-home"
   mkdir -p "$dest_shell"
   DOTFILES_HOME="$dest_shell" XDG_CONFIG_HOME="$dest_shell/.config" "$INSTALL_SH" --shell-only >/dev/null
-  _smoke_assert_link "$dest_shell/.gitconfig" "$REPO_ROOT/home/.gitconfig"
-  _smoke_assert_link "$dest_shell/.gitmessage" "$REPO_ROOT/home/.gitmessage"
   _smoke_assert_link "$dest_shell/.inputrc" "$REPO_ROOT/home/.inputrc"
   _smoke_assert_link "$dest_shell/.bash_prompt" "$REPO_ROOT/home/.bash_prompt"
+  if [[ -e "$dest_shell/.gitconfig" ]]; then
+    _smoke_error "--shell-only linked .gitconfig"
+    return 1
+  fi
+  if [[ -e "$dest_shell/.gitmessage" ]]; then
+    _smoke_error "--shell-only linked .gitmessage"
+    return 1
+  fi
   if [[ -e "$dest_shell/.cursor" ]]; then
     _smoke_error "--shell-only linked .cursor"
     return 1
@@ -102,6 +108,18 @@ main() {
   fi
   if [[ -e "$dest_shell/.gnupg" ]]; then
     _smoke_error "--shell-only linked .gnupg"
+    return 1
+  fi
+
+  dest_shell_git="$FAKE_ROOT/shell-git-home"
+  mkdir -p "$dest_shell_git"
+  DOTFILES_HOME="$dest_shell_git" XDG_CONFIG_HOME="$dest_shell_git/.config" \
+    "$INSTALL_SH" --shell-only --with-git >/dev/null
+  _smoke_assert_link "$dest_shell_git/.gitconfig" "$REPO_ROOT/home/.gitconfig"
+  _smoke_assert_link "$dest_shell_git/.gitmessage" "$REPO_ROOT/home/.gitmessage"
+  _smoke_assert_link "$dest_shell_git/.bashrc" "$REPO_ROOT/home/.bashrc"
+  if [[ -e "$dest_shell_git/.gnupg" ]]; then
+    _smoke_error "--shell-only --with-git linked .gnupg"
     return 1
   fi
 

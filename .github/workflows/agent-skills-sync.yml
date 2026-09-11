@@ -1,0 +1,67 @@
+name: Agent skills sync
+
+# Opens one chore/sync-* PR per drifted upstream. Separate from
+# agent-skills.yml so push/PR SHAs do not get skipped sync-matrix/sync-pr jobs.
+#
+# One job (not a matrix): skipped sibling jobs count in GitHub's X/Y checks.
+# Per-source isolation is a reset-to-main loop in open-skills-sync-prs.sh.
+#
+# Requires secret SKILLS_SYNC_TOKEN (PAT with Contents + Pull requests write)
+# so lint and check-skills-drift run on automated sync PRs (GITHUB_TOKEN would
+# not retrigger workflows).
+
+on:
+  schedule:
+    # GitHub cron is UTC. Minutes 30 + hours 2,5,8,... = every 3h at :00 IRST
+    # (UTC+3:30), including the old 09:00 slot (05:30 UTC).
+    - cron: "30 2,5,8,11,14,17,20,23 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: agent-skills-sync
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    if: github.repository == 'mamahoos/dot-files'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          token: ${{ secrets.SKILLS_SYNC_TOKEN }}
+
+      - name: Detect drift
+        id: drift
+        run: |
+          set +e
+          ./.github/scripts/sync-upstreams.sh --check --pull
+          status=$?
+          set -e
+          if [[ "$status" -eq 0 ]]; then
+            echo "drifted=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "drifted=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Resolve trigger label
+        if: steps.drift.outputs.drifted == 'true'
+        id: trigger
+        run: |
+          case "${{ github.event_name }}" in
+            schedule) echo "label=every-3h schedule (IRST :00)" >> "$GITHUB_OUTPUT" ;;
+            *) echo "label=manual dispatch (run ${{ github.run_id }})" >> "$GITHUB_OUTPUT" ;;
+          esac
+
+      - name: Open sync PRs
+        if: steps.drift.outputs.drifted == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.SKILLS_SYNC_TOKEN }}
+          TRIGGER_LABEL: ${{ steps.trigger.outputs.label }}
+        run: ./.github/scripts/open-skills-sync-prs.sh

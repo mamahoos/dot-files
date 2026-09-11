@@ -43,6 +43,12 @@ Versioned Linux configs I use day to day.
 make install
 ```
 
+| Command | What it links |
+| --- | --- |
+| `make install` | Full tree (including your git identity + gpg.conf) |
+| `make install-shell-only` | Shell + most `config/` — **no** `.gitconfig` / `.gitmessage` (safe for shared hosts / friends) |
+| `make install-shell-with-git` | Shell-only **plus** your git identity (machine that should commit as you) |
+
 `.cursor` children link individually into `~/.cursor/` so Cursor-managed paths are not replaced wholesale.
 
 ## Local checks
@@ -53,16 +59,16 @@ Same commands CI runs locally. `make` prints targets; `make check` runs the full
 make check
 ```
 
-### Secret scan (pre-commit)
+### pre-commit
 
-CI already runs [Gitleaks](https://github.com/gitleaks/gitleaks) on every push/PR. Locally, the same engine gates commits via [pre-commit](https://pre-commit.com/):
+CI already runs [Gitleaks](https://github.com/gitleaks/gitleaks) on every push/PR, plus ShellCheck/shfmt in Lint. Locally [pre-commit](https://pre-commit.com/) runs those engines (and actionlint) on staged files:
 
 ```bash
 # once per clone (pre-commit package required: apt/pip/brew)
 make pre-commit-install   # or: pre-commit install
 ```
 
-After that, every `git commit` scans **staged** changes. Skip once with `SKIP=gitleaks git commit …`. Manual full-tree scan: `make gitleaks`.
+After that, every `git commit` runs the configured hooks on **staged** changes (Gitleaks, ShellCheck `-S error` except `home/.cursor/skills/`, shfmt `-d -i 2` on `install.sh` and `.github/scripts/`, actionlint on `.github/workflows/`). Skip one hook with `SKIP=gitleaks git commit …`. Manual full-tree scan: `make gitleaks` or `pre-commit run <hook> --all-files`.
 
 ## Cursor skills
 
