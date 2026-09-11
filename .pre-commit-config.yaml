@@ -1,6 +1,7 @@
 # Local gates. Gitleaks matches .github/workflows/gitleaks.yml.
 # ShellCheck matches lint.yml: -S error; skip vendored Cursor skills.
 # shfmt matches lint.yml: -d -i 2 on install.sh and .github/scripts only.
+# actionlint checks .github/workflows YAML locally.
 # Install once after clone:  make pre-commit-install
 # Skip one hook:             SKIP=gitleaks git commit ...
 repos:
@@ -20,4 +21,9 @@ repos:
       - id: shfmt
         args: ["-d", "-i", "2"]
         files: ^(install\.sh|\.github/scripts/)
+  # Official rhysd/actionlint golang hook needs Go 1.25+; this wraps the same binary.
+  - repo: https://github.com/Mateusz-Grzelinski/actionlint-py
+    rev: v1.7.12.24
+    hooks:
+      - id: actionlint
 
