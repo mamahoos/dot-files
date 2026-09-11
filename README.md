@@ -68,7 +68,7 @@ CI already runs [Gitleaks](https://github.com/gitleaks/gitleaks) on every push/P
 make pre-commit-install   # or: pre-commit install
 ```
 
-After that, every `git commit` scans **staged** changes. Skip once with `SKIP=gitleaks git commit …`. Manual full-tree scan: `make gitleaks`.
+After that, every `git commit` runs the configured hooks on **staged** changes (Gitleaks, then ShellCheck `-S error` except `home/.cursor/skills/`). Skip one hook with `SKIP=gitleaks git commit …`. Manual full-tree scan: `make gitleaks` or `pre-commit run shellcheck --all-files`.
 
 ## Cursor skills
 

@@ -16,7 +16,7 @@ help:
 	  'smoke                   ./.github/scripts/test-install-smoke.sh' \
 	  'idempotent              ./.github/scripts/test-install-idempotent.sh' \
 	  'skills-drift            ./.github/scripts/sync-upstreams.sh --check --pull' \
-	  'pre-commit-install      pre-commit install (Gitleaks secret gate)' \
+	  'pre-commit-install      pre-commit install (Gitleaks + ShellCheck)' \
 	  'gitleaks                pre-commit run gitleaks --all-files' \
 	  'check                   lint + smoke + idempotent + skills-drift'
 
