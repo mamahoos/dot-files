@@ -1,29 +1,35 @@
-# Local gates. Gitleaks matches .github/workflows/gitleaks.yml.
-# ShellCheck matches lint.yml: -S error; skip vendored Cursor skills.
-# shfmt matches lint.yml: -d -i 2 on install.sh and .github/scripts only.
-# actionlint checks .github/workflows YAML locally.
-# Install once after clone:  make pre-commit-install
-# Skip one hook:             SKIP=gitleaks git commit ...
+# ==============================================================================
+# .pre-commit-config.yaml
+# ------------------------------------------------------------------------------
+# Local commit gates. Install once: make pre-commit-install
+# Skip one hook: SKIP=gitleaks git commit ...
+# ==============================================================================
+
 repos:
+  # Gitleaks — same engine as .github/workflows/gitleaks.yml
   - repo: https://github.com/gitleaks/gitleaks
     rev: v8.30.1
     hooks:
       - id: gitleaks
+
+  # ShellCheck — lint.yml: -S error; skip vendored Cursor skills
   - repo: https://github.com/shellcheck-py/shellcheck-py
     rev: v0.11.0.1
     hooks:
       - id: shellcheck
         args: ["-S", "error"]
         exclude: ^home/\.cursor/skills/
+
+  # shfmt — lint.yml: -d -i 2 on install.sh and .github/scripts only
   - repo: https://github.com/scop/pre-commit-shfmt
     rev: v3.8.0-1
     hooks:
       - id: shfmt
         args: ["-d", "-i", "2"]
         files: ^(install\.sh|\.github/scripts/)
-  # Official rhysd/actionlint golang hook needs Go 1.25+; this wraps the same binary.
+
+  # actionlint — Python wrap of v1.7.12 (official Go hook needs Go 1.25+)
   - repo: https://github.com/Mateusz-Grzelinski/actionlint-py
     rev: v1.7.12.24
     hooks:
       - id: actionlint
-
