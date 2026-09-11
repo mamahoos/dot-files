@@ -1,8 +1,29 @@
-# Local secret gate — same engine as .github/workflows/gitleaks.yml (CI).
+# Local gates. Gitleaks matches .github/workflows/gitleaks.yml.
+# ShellCheck matches lint.yml: -S error; skip vendored Cursor skills.
+# shfmt matches lint.yml: -d -i 2 on install.sh and .github/scripts only.
+# actionlint checks .github/workflows YAML locally.
 # Install once after clone:  make pre-commit-install
-# Skip one commit:           SKIP=gitleaks git commit ...
+# Skip one hook:             SKIP=gitleaks git commit ...
 repos:
   - repo: https://github.com/gitleaks/gitleaks
     rev: v8.30.1
     hooks:
       - id: gitleaks
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.11.0.1
+    hooks:
+      - id: shellcheck
+        args: ["-S", "error"]
+        exclude: ^home/\.cursor/skills/
+  - repo: https://github.com/scop/pre-commit-shfmt
+    rev: v3.8.0-1
+    hooks:
+      - id: shfmt
+        args: ["-d", "-i", "2"]
+        files: ^(install\.sh|\.github/scripts/)
+  # Official rhysd/actionlint golang hook needs Go 1.25+; this wraps the same binary.
+  - repo: https://github.com/Mateusz-Grzelinski/actionlint-py
+    rev: v1.7.12.24
+    hooks:
+      - id: actionlint
+
