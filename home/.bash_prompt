@@ -28,8 +28,13 @@ _prompt_path() {
     local -a components
     local max_length="${1:-30}"
     local home_relative=false
+    local personal_root="$HOME/dev/personal"
 
-    if [[ "$path" == "$HOME" ]]; then
+    if [[ "$path" == "$personal_root" ]]; then
+        display_path='./'
+    elif [[ "$path" == "$personal_root/"* ]]; then
+        display_path="./${path#"$personal_root"/}"
+    elif [[ "$path" == "$HOME" ]]; then
         display_path='~'
     elif [[ "$path" == "$HOME/"* ]]; then
         display_path="~/${path#"$HOME"/}"
