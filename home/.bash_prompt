@@ -31,7 +31,7 @@ _prompt_path() {
     local personal_root="$HOME/dev/personal"
 
     if [[ "$path" == "$personal_root" ]]; then
-        display_path='./'
+        display_path='~/dev/personal'
     elif [[ "$path" == "$personal_root/"* ]]; then
         display_path="./${path#"$personal_root"/}"
     elif [[ "$path" == "$HOME" ]]; then
