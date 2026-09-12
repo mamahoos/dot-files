@@ -86,6 +86,21 @@ _prompt_git_dirty() {
     fi
 }
 
+_prompt_git_operation() {
+    local git_dir
+
+    git_dir=$(git rev-parse --git-dir 2>/dev/null) || return 0
+    if [[ -f "$git_dir/MERGE_HEAD" ]]; then
+        printf '⇄'
+    elif [[ -d "$git_dir/rebase-merge" || -d "$git_dir/rebase-apply" ]]; then
+        printf '↻'
+    elif [[ -f "$git_dir/CHERRY_PICK_HEAD" ]]; then
+        printf '✚'
+    elif [[ -f "$git_dir/REVERT_HEAD" ]]; then
+        printf '↩'
+    fi
+}
+
 # Snapshot $? first, then restore it so later PROMPT_COMMAND hooks
 # (Ghostty __ghostty_hook) still see the command status.
 _prompt_build() {
@@ -93,6 +108,7 @@ _prompt_build() {
     local chevron_color="${_BRIGHT_GREEN}"
     local git_branch
     local git_dirty
+    local git_operation
     local git_segment=''
     local prompt_path
 
@@ -102,9 +118,13 @@ _prompt_build() {
 
     prompt_path="$(_prompt_path)"
     git_branch="$(_prompt_git_branch)"
+    git_operation="$(_prompt_git_operation)"
     if [[ -n "$git_branch" ]]; then
         git_dirty="$(_prompt_git_dirty)"
         git_segment=" ${_GOLD}${git_branch}${_RED}${git_dirty}${_RESET}"
+    fi
+    if [[ -n "$git_operation" ]]; then
+        git_segment+=" ${_RED}${git_operation}${_RESET}"
     fi
 
     # \u expands when bash draws the prompt. No \h on this profile.
