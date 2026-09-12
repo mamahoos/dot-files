@@ -3,7 +3,8 @@
 # ============================================================
 # Sourced from ~/.bashrc. Rebuilds PS1 each prompt via PROMPT_COMMAND.
 # Readline owns vim-mode (`N` in ~/.inputrc). Later slices: SSH host.
-# This slice: adaptive paths, red ❯ on failure, and * for dirty Git worktrees.
+# This slice: adaptive paths, red ❯ on failure, * for dirty worktrees,
+# operation markers, and ↑/↓ commit counts vs upstream.
 # ============================================================
 
 # Reset
@@ -106,6 +107,27 @@ _prompt_git_operation() {
     fi
 }
 
+_prompt_git_ahead_behind() {
+    local counts
+    local ahead
+    local behind
+    local segment=''
+
+    counts=$(git rev-list --left-right --count 'HEAD...@{upstream}' 2>/dev/null) || return 0
+    ahead="${counts%%	*}"
+    behind="${counts##*	}"
+
+    if ((ahead > 0)); then
+        segment+="↑${ahead}"
+    fi
+    if ((behind > 0)); then
+        [[ -n "$segment" ]] && segment+=' '
+        segment+="↓${behind}"
+    fi
+
+    printf '%s' "$segment"
+}
+
 _prompt_command_start() {
     case "${FUNCNAME[1]:-}" in
         _prompt_*|__ghostty_hook*)
@@ -133,6 +155,7 @@ _prompt_build() {
     local git_branch
     local git_dirty
     local git_operation
+    local git_ahead_behind
     local git_segment=''
     local prompt_path
     local path_limit=30
@@ -158,7 +181,11 @@ _prompt_build() {
     fi
     if [[ -n "$git_branch" ]]; then
         git_dirty="$(_prompt_git_dirty)"
+        git_ahead_behind="$(_prompt_git_ahead_behind)"
         git_segment=" ${_GOLD}${git_branch}${_RED}${git_dirty}${_RESET}"
+        if [[ -n "$git_ahead_behind" ]]; then
+            git_segment+=" ${_DIM}${git_ahead_behind}${_RESET}"
+        fi
     fi
     if [[ -n "$git_operation" ]]; then
         git_segment+=" ${_RED}${git_operation}${_RESET}"
