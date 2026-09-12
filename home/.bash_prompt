@@ -3,7 +3,7 @@
 # ============================================================
 # Sourced from ~/.bashrc. Rebuilds PS1 each prompt via PROMPT_COMMAND.
 # Readline owns vim-mode (`N` in ~/.inputrc). Later slices: SSH host.
-# This slice: red ❯ on failure and * for dirty Git worktrees.
+# This slice: adaptive paths, red ❯ on failure, and * for dirty Git worktrees.
 # ============================================================
 
 # Reset
@@ -17,6 +17,63 @@ _GOLD='\[\e[38;5;179m\]'
 _RED='\[\e[38;5;203m\]'
 _WHITE='\[\e[38;5;252m\]'
 _DIM='\[\e[38;5;245m\]'
+
+_prompt_path() {
+    local path="$PWD"
+    local display_path
+    local prefix
+    local basename
+    local shortened
+    local component
+    local -a components
+    local max_length="${1:-30}"
+    local home_relative=false
+    local personal_root="$HOME/dev/personal"
+
+    if [[ "$path" == "$personal_root" ]]; then
+        display_path='./'
+    elif [[ "$path" == "$personal_root/"* ]]; then
+        display_path="./${path#"$personal_root"/}"
+    elif [[ "$path" == "$HOME" ]]; then
+        display_path='~'
+    elif [[ "$path" == "$HOME/"* ]]; then
+        display_path="~/${path#"$HOME"/}"
+        home_relative=true
+    else
+        display_path="$path"
+    fi
+
+    if ((${#display_path} <= max_length)); then
+        printf '%s' "$display_path"
+        return
+    fi
+
+    basename="${display_path##*/}"
+    prefix="${display_path%/*}"
+    if [[ "$home_relative" != true ]]; then
+        printf '…/%s/%s' "${prefix##*/}" "$basename"
+        return
+    fi
+
+    shortened=''
+    shortened='~'
+    prefix="${prefix#'~/'}"
+    IFS='/' read -r -a components <<< "$prefix"
+
+    for component in "${components[@]}"; do
+        [[ -n "$component" ]] || continue
+        shortened+="/${component:0:1}"
+    done
+    shortened+="/${basename}"
+
+    if ((${#shortened} <= max_length)); then
+        printf '%s' "$shortened"
+        return
+    fi
+
+    prefix="${display_path%/*}"
+    printf '…/%s/%s' "${prefix##*/}" "$basename"
+}
 
 _prompt_git_branch() {
     local branch
@@ -34,6 +91,40 @@ _prompt_git_dirty() {
     fi
 }
 
+_prompt_git_operation() {
+    local git_dir
+
+    git_dir=$(git rev-parse --git-dir 2>/dev/null) || return 0
+    if [[ -f "$git_dir/MERGE_HEAD" ]]; then
+        printf '⇄'
+    elif [[ -d "$git_dir/rebase-merge" || -d "$git_dir/rebase-apply" ]]; then
+        printf '↻'
+    elif [[ -f "$git_dir/CHERRY_PICK_HEAD" ]]; then
+        printf '✚'
+    elif [[ -f "$git_dir/REVERT_HEAD" ]]; then
+        printf '↩'
+    fi
+}
+
+_prompt_command_start() {
+    case "${FUNCNAME[1]:-}" in
+        _prompt_*|__ghostty_hook*)
+            return
+            ;;
+    esac
+
+    case "$BASH_COMMAND" in
+        _prompt_build*|_prompt_command_start*|__ghostty_hook*|_PROMPT_COMMAND_START=*)
+            return
+            ;;
+    esac
+
+    _PROMPT_COMMAND_START=$SECONDS
+}
+
+_PROMPT_COMMAND_START=-1
+trap '_prompt_command_start' DEBUG
+
 # Snapshot $? first, then restore it so later PROMPT_COMMAND hooks
 # (Ghostty __ghostty_hook) still see the command status.
 _prompt_build() {
@@ -41,20 +132,40 @@ _prompt_build() {
     local chevron_color="${_BRIGHT_GREEN}"
     local git_branch
     local git_dirty
+    local git_operation
     local git_segment=''
+    local prompt_path
+    local path_limit=30
+    local command_duration=0
+    local duration_segment=''
 
     if ((last_status != 0)); then
         chevron_color="${_RED}"
     fi
 
     git_branch="$(_prompt_git_branch)"
+    git_operation="$(_prompt_git_operation)"
+    if ((${#git_branch} > 20)); then
+        path_limit=20
+    fi
+    prompt_path="$(_prompt_path "$path_limit")"
+    if ((_PROMPT_COMMAND_START >= 0)); then
+        command_duration=$((SECONDS - _PROMPT_COMMAND_START))
+        _PROMPT_COMMAND_START=-1
+    fi
+    if ((command_duration >= 1)); then
+        duration_segment=" ${_DIM}${command_duration}s${_RESET}"
+    fi
     if [[ -n "$git_branch" ]]; then
         git_dirty="$(_prompt_git_dirty)"
         git_segment=" ${_GOLD}${git_branch}${_RED}${git_dirty}${_RESET}"
     fi
+    if [[ -n "$git_operation" ]]; then
+        git_segment+=" ${_RED}${git_operation}${_RESET}"
+    fi
 
-    # \u \w expand when bash draws the prompt. No \h on this profile.
-    PS1="${_GREEN}\u ${_DIM_GREEN}\w${_RESET}${git_segment} ${chevron_color}❯${_RESET} "
+    # \u expands when bash draws the prompt. No \h on this profile.
+    PS1="${_GREEN}\u ${_DIM_GREEN}${prompt_path}${_RESET}${git_segment}${duration_segment} ${chevron_color}❯${_RESET} "
 
     return "${last_status}"
 }
