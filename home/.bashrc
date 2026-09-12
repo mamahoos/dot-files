@@ -103,7 +103,7 @@ if [ -f ~/.bash_functions ]; then
 fi
 
 # ======================================================================
-# 7. Prompt (static PS1; later: git, status, vim mode)
+# 7. Prompt (PROMPT_COMMAND rebuilds PS1; see ~/.bash_prompt)
 # ======================================================================
 
 if [ -f "$HOME/.bash_prompt" ]; then
