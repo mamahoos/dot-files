@@ -2,7 +2,7 @@
 # Bash Prompt
 # ============================================================
 # Sourced from ~/.bashrc. Rebuilds PS1 each prompt via PROMPT_COMMAND.
-# Readline owns vim-mode (`N` in ~/.inputrc). Later slices: git, SSH host.
+# Readline owns vim-mode (`N` in ~/.inputrc). Later slices: SSH host.
 # This slice: red ❯ when the previous command failed (no extra digits).
 # ============================================================
 
@@ -13,22 +13,37 @@ _RESET='\[\e[0m\]'
 _GREEN='\[\e[38;5;114m\]'
 _BRIGHT_GREEN='\[\e[38;5;120m\]'
 _DIM_GREEN='\[\e[38;5;71m\]'
+_GOLD='\[\e[38;5;179m\]'
 _RED='\[\e[38;5;203m\]'
 _WHITE='\[\e[38;5;252m\]'
 _DIM='\[\e[38;5;245m\]'
+
+_prompt_git_branch() {
+    local branch
+
+    branch=$(git symbolic-ref --quiet --short HEAD 2>/dev/null) || return 0
+    printf '%s' "$branch"
+}
 
 # Snapshot $? first, then restore it so later PROMPT_COMMAND hooks
 # (Ghostty __ghostty_hook) still see the command status.
 _prompt_build() {
     local last_status=$?
     local chevron_color="${_BRIGHT_GREEN}"
+    local git_branch
+    local git_segment=''
 
     if ((last_status != 0)); then
         chevron_color="${_RED}"
     fi
 
+    git_branch="$(_prompt_git_branch)"
+    if [[ -n "$git_branch" ]]; then
+        git_segment=" ${_GOLD}${git_branch}${_RESET}"
+    fi
+
     # \u \w expand when bash draws the prompt. No \h on this profile.
-    PS1="${_GREEN}\u ${_DIM_GREEN}\w${_RESET} ${chevron_color}❯${_RESET} "
+    PS1="${_GREEN}\u ${_DIM_GREEN}\w${_RESET}${git_segment} ${chevron_color}❯${_RESET} "
 
     return "${last_status}"
 }
