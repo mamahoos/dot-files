@@ -3,7 +3,7 @@
 # ============================================================
 # Sourced from ~/.bashrc. Rebuilds PS1 each prompt via PROMPT_COMMAND.
 # Readline owns vim-mode (`N` in ~/.inputrc). Later slices: SSH host.
-# This slice: red ❯ when the previous command failed (no extra digits).
+# This slice: red ❯ on failure and * for dirty Git worktrees.
 # ============================================================
 
 # Reset
@@ -25,12 +25,22 @@ _prompt_git_branch() {
     printf '%s' "$branch"
 }
 
+_prompt_git_dirty() {
+    local changes
+
+    changes=$(git status --porcelain=v1 --untracked-files=normal 2>/dev/null) || return 0
+    if [[ -n "$changes" ]]; then
+        printf '*'
+    fi
+}
+
 # Snapshot $? first, then restore it so later PROMPT_COMMAND hooks
 # (Ghostty __ghostty_hook) still see the command status.
 _prompt_build() {
     local last_status=$?
     local chevron_color="${_BRIGHT_GREEN}"
     local git_branch
+    local git_dirty
     local git_segment=''
 
     if ((last_status != 0)); then
@@ -39,7 +49,8 @@ _prompt_build() {
 
     git_branch="$(_prompt_git_branch)"
     if [[ -n "$git_branch" ]]; then
-        git_segment=" ${_GOLD}${git_branch}${_RESET}"
+        git_dirty="$(_prompt_git_dirty)"
+        git_segment=" ${_GOLD}${git_branch}${_RED}${git_dirty}${_RESET}"
     fi
 
     # \u \w expand when bash draws the prompt. No \h on this profile.
