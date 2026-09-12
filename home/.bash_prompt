@@ -3,8 +3,8 @@
 # ============================================================
 # Sourced from ~/.bashrc. Rebuilds PS1 each prompt via PROMPT_COMMAND.
 # Readline owns vim-mode (`N` in ~/.inputrc). Later slices: SSH host.
-# This slice: adaptive paths, red ❯ on failure, * for dirty worktrees,
-# operation markers, and ↑/↓ commit counts vs upstream.
+# This slice: adaptive paths (pluggable strategies), red ❯ on failure,
+# * for dirty worktrees, operation markers, and ↑/↓ vs upstream.
 # ============================================================
 
 # Reset
@@ -19,29 +19,110 @@ _RED='\[\e[38;5;203m\]'
 _WHITE='\[\e[38;5;252m\]'
 _DIM='\[\e[38;5;245m\]'
 
-_prompt_path() {
-    local path="$PWD"
-    local display_path
-    local prefix
-    local basename
-    local shortened
+# Workspace root rendered as ./project[/…]. Override to retarget.
+_PROMPT_PATH_PERSONAL_ROOT="${HOME}/dev/personal"
+
+# --- Path strategies (first match wins) --------------------------------------
+# Each strategy prints a display path and returns 0 on match, else 1.
+# Return via stdout only — callers capture with $(…) and test $?.
+
+# ~/dev/personal → ~/dev/personal ; children → ./project[/subpath]
+_prompt_path_strategy_personal() {
+    local path="$1"
+    local root="${_PROMPT_PATH_PERSONAL_ROOT}"
+
+    if [[ "$path" == "$root" ]]; then
+        if [[ "$root" == "$HOME" ]]; then
+            printf '~'
+        elif [[ "$root" == "$HOME/"* ]]; then
+            printf '~/%s' "${root#"$HOME"/}"
+        else
+            printf '%s' "$root"
+        fi
+        return 0
+    fi
+    if [[ "$path" == "$root/"* ]]; then
+        printf './%s' "${path#"$root"/}"
+        return 0
+    fi
+    return 1
+}
+
+# $HOME → ~ ; $HOME/… → ~/…
+_prompt_path_strategy_home() {
+    local path="$1"
+
+    if [[ "$path" == "$HOME" ]]; then
+        printf '~'
+        return 0
+    fi
+    if [[ "$path" == "$HOME/"* ]]; then
+        printf '~/%s' "${path#"$HOME"/}"
+        return 0
+    fi
+    return 1
+}
+
+# --- Path shrinkers ----------------------------------------------------------
+
+# ~/a/b/leaf → ~/a/b/leaf with parent segments collapsed to one char.
+_prompt_path_shrink_initials() {
+    local display_path="$1"
+    local basename="${display_path##*/}"
+    local prefix="${display_path%/*}"
+    local shortened='~'
     local component
     local -a components
-    local max_length="${1:-30}"
-    local home_relative=false
-    local personal_root="$HOME/dev/personal"
 
-    if [[ "$path" == "$personal_root" ]]; then
-        display_path='~/dev/personal'
-    elif [[ "$path" == "$personal_root/"* ]]; then
-        display_path="./${path#"$personal_root"/}"
-    elif [[ "$path" == "$HOME" ]]; then
-        display_path='~'
-    elif [[ "$path" == "$HOME/"* ]]; then
-        display_path="~/${path#"$HOME"/}"
-        home_relative=true
-    else
+    prefix="${prefix#'~/'}"
+    IFS='/' read -r -a components <<< "$prefix"
+    for component in "${components[@]}"; do
+        [[ -n "$component" ]] || continue
+        shortened+="/${component:0:1}"
+    done
+    shortened+="/${basename}"
+    printf '%s' "$shortened"
+}
+
+# any/long/path → …/parent/basename
+_prompt_path_shrink_tail() {
+    local display_path="$1"
+    local basename="${display_path##*/}"
+    local prefix="${display_path%/*}"
+
+    printf '…/%s/%s' "${prefix##*/}" "$basename"
+}
+
+# Ordered registry: "strategy_fn:shrink_policy".
+# shrink_policy: initials (then tail) | tail.
+# Append another root/alias by adding a strategy fn + one entry here.
+_PROMPT_PATH_STRATEGIES=(
+    '_prompt_path_strategy_personal:tail'
+    '_prompt_path_strategy_home:initials'
+)
+
+# Resolve via strategies, then shrink to max_length.
+_prompt_path() {
+    local path="$PWD"
+    local max_length="${1:-30}"
+    local display_path=''
+    local shrink='tail'
+    local shortened
+    local entry
+    local strategy
+    local matched=false
+
+    for entry in "${_PROMPT_PATH_STRATEGIES[@]}"; do
+        strategy="${entry%%:*}"
+        if display_path=$("$strategy" "$path"); then
+            shrink="${entry##*:}"
+            matched=true
+            break
+        fi
+    done
+    if [[ "$matched" != true ]]; then
         display_path="$path"
+        shrink='tail'
     fi
 
     if ((${#display_path} <= max_length)); then
@@ -49,31 +130,15 @@ _prompt_path() {
         return
     fi
 
-    basename="${display_path##*/}"
-    prefix="${display_path%/*}"
-    if [[ "$home_relative" != true ]]; then
-        printf '…/%s/%s' "${prefix##*/}" "$basename"
-        return
+    if [[ "$shrink" == 'initials' ]]; then
+        shortened=$(_prompt_path_shrink_initials "$display_path")
+        if ((${#shortened} <= max_length)); then
+            printf '%s' "$shortened"
+            return
+        fi
     fi
 
-    shortened=''
-    shortened='~'
-    prefix="${prefix#'~/'}"
-    IFS='/' read -r -a components <<< "$prefix"
-
-    for component in "${components[@]}"; do
-        [[ -n "$component" ]] || continue
-        shortened+="/${component:0:1}"
-    done
-    shortened+="/${basename}"
-
-    if ((${#shortened} <= max_length)); then
-        printf '%s' "$shortened"
-        return
-    fi
-
-    prefix="${display_path%/*}"
-    printf '…/%s/%s' "${prefix##*/}" "$basename"
+    _prompt_path_shrink_tail "$display_path"
 }
 
 _prompt_git_branch() {
