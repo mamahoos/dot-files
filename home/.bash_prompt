@@ -26,7 +26,7 @@ _prompt_path() {
     local shortened
     local component
     local -a components
-    local max_length=30
+    local max_length="${1:-30}"
     local home_relative=false
 
     if [[ "$path" == "$HOME" ]]; then
@@ -101,6 +101,25 @@ _prompt_git_operation() {
     fi
 }
 
+_prompt_command_start() {
+    case "${FUNCNAME[1]:-}" in
+        _prompt_*|__ghostty_hook*)
+            return
+            ;;
+    esac
+
+    case "$BASH_COMMAND" in
+        _prompt_build*|_prompt_command_start*|__ghostty_hook*|_PROMPT_COMMAND_START=*)
+            return
+            ;;
+    esac
+
+    _PROMPT_COMMAND_START=$SECONDS
+}
+
+_PROMPT_COMMAND_START=-1
+trap '_prompt_command_start' DEBUG
+
 # Snapshot $? first, then restore it so later PROMPT_COMMAND hooks
 # (Ghostty __ghostty_hook) still see the command status.
 _prompt_build() {
@@ -111,14 +130,27 @@ _prompt_build() {
     local git_operation
     local git_segment=''
     local prompt_path
+    local path_limit=30
+    local command_duration=0
+    local duration_segment=''
 
     if ((last_status != 0)); then
         chevron_color="${_RED}"
     fi
 
-    prompt_path="$(_prompt_path)"
     git_branch="$(_prompt_git_branch)"
     git_operation="$(_prompt_git_operation)"
+    if ((${#git_branch} > 20)); then
+        path_limit=20
+    fi
+    prompt_path="$(_prompt_path "$path_limit")"
+    if ((_PROMPT_COMMAND_START >= 0)); then
+        command_duration=$((SECONDS - _PROMPT_COMMAND_START))
+        _PROMPT_COMMAND_START=-1
+    fi
+    if ((command_duration >= 1)); then
+        duration_segment=" ${_DIM}${command_duration}s${_RESET}"
+    fi
     if [[ -n "$git_branch" ]]; then
         git_dirty="$(_prompt_git_dirty)"
         git_segment=" ${_GOLD}${git_branch}${_RED}${git_dirty}${_RESET}"
@@ -128,7 +160,7 @@ _prompt_build() {
     fi
 
     # \u expands when bash draws the prompt. No \h on this profile.
-    PS1="${_GREEN}\u ${_DIM_GREEN}${prompt_path}${_RESET}${git_segment} ${chevron_color}❯${_RESET} "
+    PS1="${_GREEN}\u ${_DIM_GREEN}${prompt_path}${_RESET}${git_segment}${duration_segment} ${chevron_color}❯${_RESET} "
 
     return "${last_status}"
 }
