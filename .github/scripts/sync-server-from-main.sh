@@ -91,6 +91,7 @@ _sync_validate_conflicts() {
 # ==============================================================================
 
 main() {
+  local merge_conflicts=''
   local merge_status=0
 
   cd "$REPO_ROOT"
@@ -106,12 +107,12 @@ main() {
   fi
 
   git merge --no-commit --no-ff "$MAIN_REF" || merge_status=$?
+  merge_conflicts="$(git diff --name-only --diff-filter=U)"
   _sync_restore_server_files
   _sync_validate_conflicts
   _sync_validate_server_profile
 
-  if ((merge_status != 0)); then
-    git diff --name-only --diff-filter=U >&2
+  if ((merge_status != 0)) && [[ -z "$merge_conflicts" ]]; then
     _sync_die "merge failed with exit ${merge_status}"
   fi
 
