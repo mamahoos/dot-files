@@ -32,7 +32,7 @@ jobs:
         run: git fetch origin server
 
       - name: Create server worktree
-        run: git worktree add --detach "$RUNNER_TEMP/server" origin/server
+        run: git worktree add "$RUNNER_TEMP/server" -b server origin/server
 
       - name: Configure bot identity
         run: |
