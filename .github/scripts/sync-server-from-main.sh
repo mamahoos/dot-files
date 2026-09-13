@@ -6,12 +6,12 @@ set -euo pipefail
 # ==============================================================================
 
 readonly SCRIPT_NAME="${0##*/}"
-readonly REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+readonly REPO_ROOT="${REPO_ROOT:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
 readonly SERVER_BRANCH='server'
 readonly MAIN_REF='origin/main'
 readonly SERVER_GITCONFIG='home/.gitconfig'
 readonly SERVER_BASHRC_OVERLAY='home/.bashrc.server'
-readonly SERVER_BASHRC_TEMPLATE='.github/server-overlays/home/.bashrc.server'
+readonly SERVER_BASHRC_TEMPLATE="${SERVER_BASHRC_TEMPLATE:-$REPO_ROOT/.github/server-overlays/home/.bashrc.server}"
 
 # ==============================================================================
 # LOGGING
