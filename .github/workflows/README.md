@@ -22,6 +22,7 @@ Helpers live in [`../scripts/`](../scripts/):
 | `test-install-idempotent.sh` | Install → `idempotent` |
 | `sync-upstreams.sh` | Agent skills, Agent skills sync |
 | `open-skills-sync-prs.sh` | Agent skills sync |
+| `sync-server-from-main.sh` | Server profile sync |
 
 ## Local
 
