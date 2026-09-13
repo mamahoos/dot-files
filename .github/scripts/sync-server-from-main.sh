@@ -12,6 +12,10 @@ readonly MAIN_REF='origin/main'
 readonly SERVER_GITCONFIG='home/.gitconfig'
 readonly SERVER_BASHRC_OVERLAY='home/.bashrc.server'
 readonly SERVER_BASHRC_TEMPLATE="${SERVER_BASHRC_TEMPLATE:-$REPO_ROOT/.github/server-overlays/home/.bashrc.server}"
+readonly SHARED_FILES=(
+  home/.bash_prompt
+  home/.bashrc
+)
 
 # ==============================================================================
 # LOGGING
@@ -60,16 +64,27 @@ _sync_validate_server_profile() {
 
 _sync_restore_server_files() {
   git -C "$REPO_ROOT" restore \
+    --source="$MAIN_REF" \
+    --staged \
+    --worktree \
+    -- "${SHARED_FILES[@]}" ||
+    _sync_die "could not restore shared files from main"
+
+  git -C "$REPO_ROOT" restore \
     --source=HEAD \
     --staged \
     --worktree \
     -- "$SERVER_GITCONFIG" ||
     _sync_die "could not restore server Git config"
 
-  [[ -f "$REPO_ROOT/$SERVER_BASHRC_TEMPLATE" ]] ||
+  local template="$SERVER_BASHRC_TEMPLATE"
+  if [[ "$template" != /* ]]; then
+    template="$REPO_ROOT/$template"
+  fi
+  [[ -f "$template" ]] ||
     _sync_die "server bashrc overlay template is missing"
   install -D -m 0644 \
-    "$REPO_ROOT/$SERVER_BASHRC_TEMPLATE" \
+    "$template" \
     "$REPO_ROOT/$SERVER_BASHRC_OVERLAY" ||
     _sync_die "could not install server bashrc overlay"
   git -C "$REPO_ROOT" add -- "$SERVER_GITCONFIG" "$SERVER_BASHRC_OVERLAY" ||
