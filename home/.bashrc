@@ -17,6 +17,18 @@ case $- in
       *) return ;;
 esac
 
+# ==============================================================================
+# 1a. Optional profile overlay
+# ------------------------------------------------------------------------------
+# The server branch adds ~/.bashrc.server for host-specific shell policy.
+# Main remains profile-neutral when the overlay is absent.
+# ==============================================================================
+
+if [[ -f "$HOME/.bashrc.server" ]]; then
+    # shellcheck source=/dev/null
+    source "$HOME/.bashrc.server"
+fi
+
 # ======================================================================
 # 2. Bash history behavior
 # ======================================================================
