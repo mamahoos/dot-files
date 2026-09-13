@@ -1,0 +1,49 @@
+name: Sync server profile
+
+# Keep server current with shared main changes while preserving its
+# server-specific Git configuration and shell overlay.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: sync-server
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    if: github.repository == 'mamahoos/dot-files'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Fetch server branch
+        run: git fetch origin server
+
+      - name: Create server worktree
+        run: git worktree add "$RUNNER_TEMP/server" -b server origin/server
+
+      - name: Configure bot identity
+        run: |
+          git -C "$RUNNER_TEMP/server" config user.name "github-actions[bot]"
+          git -C "$RUNNER_TEMP/server" config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Sync main into server
+        env:
+          REPO_ROOT: ${{ runner.temp }}/server
+          SERVER_BASHRC_TEMPLATE: ${{ github.workspace }}/.github/server-overlays/home/.bashrc.server
+        run: ./.github/scripts/sync-server-from-main.sh
+
+      - name: Push server
+        run: git -C "$RUNNER_TEMP/server" push origin HEAD:server

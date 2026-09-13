@@ -17,10 +17,16 @@ case $- in
       *) return ;;
 esac
 
-# Ghostty sets TERM=xterm-ghostty over SSH. If this host has no terminfo
-# for it, nano/vim fail with "Error opening terminal". Fall back early.
-if [[ "${TERM}" == *ghostty* ]] && ! infocmp "${TERM}" &>/dev/null; then
-    export TERM=xterm-256color
+# ==============================================================================
+# 1a. Optional profile overlay
+# ------------------------------------------------------------------------------
+# The server branch adds ~/.bashrc.server for host-specific shell policy.
+# Main remains profile-neutral when the overlay is absent.
+# ==============================================================================
+
+if [[ -f "$HOME/.bashrc.server" ]]; then
+    # shellcheck source=/dev/null
+    source "$HOME/.bashrc.server"
 fi
 
 # ======================================================================
