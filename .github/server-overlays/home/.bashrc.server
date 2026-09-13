@@ -1,0 +1,14 @@
+# ==============================================================================
+# Server profile overlay
+# ------------------------------------------------------------------------------
+# This file is copied into home/.bashrc.server on the server branch.
+# It is intentionally outside home/ here so the main profile does not install it.
+# ==============================================================================
+
+export PROMPT_SHOW_HOST=1
+
+# Ghostty may send a terminfo name unavailable on a remote host.
+if [[ "${TERM:-}" == *ghostty* ]] &&
+    (! command -v infocmp >/dev/null 2>&1 || ! infocmp "${TERM}" &>/dev/null); then
+    export TERM=xterm-256color
+fi
