@@ -22,6 +22,9 @@ _DIM='\[\e[38;5;245m\]'
 # Keep virtualenv from prepending its own `(.venv)` segment to PS1.
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
+# Server overlays can enable the host segment without replacing this prompt.
+PROMPT_SHOW_HOST="${PROMPT_SHOW_HOST:-0}"
+
 # Workspace root rendered as ./project[/…]. Override to retarget.
 _PROMPT_PATH_PERSONAL_ROOT="${HOME}/dev/personal"
 
@@ -258,6 +261,7 @@ _prompt_build() {
     local git_operation
     local git_ahead_behind
     local git_segment=''
+    local prompt_identity="${_GREEN}\u "
     local virtualenv
     local virtualenv_segment=''
     local prompt_path
@@ -301,8 +305,12 @@ _prompt_build() {
         git_segment+=" ${_RED}${git_operation}${_RESET}"
     fi
 
-    # \u expands when bash draws the prompt. No \h on this profile.
-    PS1="${_GREEN}\u ${_DIM_GREEN}${prompt_path}${_RESET}${virtualenv_segment}${git_segment}${duration_segment} ${chevron_color}❯${_RESET} "
+    if [[ "$PROMPT_SHOW_HOST" == 1 ]]; then
+        prompt_identity="${_GREEN}\u${_GOLD}@\h "
+    fi
+
+    # \u and \h expand when bash draws the prompt.
+    PS1="${prompt_identity}${_DIM_GREEN}${prompt_path}${_RESET}${virtualenv_segment}${git_segment}${duration_segment} ${chevron_color}❯${_RESET} "
 
     return "${last_status}"
 }
