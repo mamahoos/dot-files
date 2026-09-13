@@ -10,6 +10,7 @@ CI for this repo. Path-filtered where it matters; no deploy.
 | **Agent skills** | [`agent-skills.yml`](agent-skills.yml) | Required drift check vs upstreams (PR + path-filtered push) |
 | **Agent skills sync** | [`agent-skills-sync.yml`](agent-skills-sync.yml) | Opens per-source sync PRs on schedule / `workflow_dispatch` |
 | **Delete merged sync branch** | [`delete-merged-sync-branch.yml`](delete-merged-sync-branch.yml) | Deletes merged `chore/sync-*` `automated` head branches |
+| **Server profile sync** | [`sync-server.yml`](sync-server.yml) | Syncs shared `main` changes into `server` while preserving server Git policy |
 
 ## Scripts
 
@@ -40,3 +41,5 @@ pre-commit run gitleaks --all-files
 - **Agent skills** is check-only. Sync jobs must not share that workflow: a skipped job still counts in the commit X/Y total (5/7 instead of 5/5).
 - **Agent skills sync** needs secret `SKILLS_SYNC_TOKEN` (Contents + Pull requests) for automated sync PRs. After you merge a `chore/sync-*` PR labeled `automated`, [`delete-merged-sync-branch.yml`](delete-merged-sync-branch.yml) deletes the head branch (`pull_request_target`, not the disappearing `refs/pull/N/merge` ref).
 - Dependabot config is in [`../dependabot.yml`](../dependabot.yml) (Actions + pre-commit hook `rev` pins).
+- **Server profile sync** runs on every `main` push and on `workflow_dispatch`. Shared files, including the prompt, flow from `main`; `home/.gitconfig` stays server-specific, while [`../server-overlays/home/.bashrc.server`](../server-overlays/home/.bashrc.server) enables `user@host` and the Ghostty TERM fallback only on `server`.
+- Sync is fail-closed: conflicts outside the server overlay, invariant failures, permission errors, or validation failures leave remote `server` unchanged. Fix the cause, then retry with `workflow_dispatch`.
