@@ -13,6 +13,25 @@ mkcd() {
 }
 
 # ==============================================================================
+# GIT
+# ==============================================================================
+
+# clone a repo and cd into it (optionally into a custom directory name)
+gclone() {
+    if [[ -z "$1" ]]; then
+        echo "usage: gclone <repo-url> [target-dir]" >&2
+        return 1
+    fi
+
+    _require_cmd "[gclone]" git || return 1
+
+    local repo_url="$1"
+    local target_dir="${2:-$(basename "${repo_url%/}" .git)}"
+
+    git clone "$repo_url" "$target_dir" && cd "$target_dir" || return 1
+}
+
+# ==============================================================================
 # COMMON HELPERS
 # ==============================================================================
 
