@@ -7,7 +7,9 @@
 # test     — adding or updating tests
 # docs     — documentation only
 # chore    — tooling, dependencies, config
+# hotfix   _ urgent fix for a critical production
 #
+# issue
 # Scopes:
 #   - home
 #   - cursor
