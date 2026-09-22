@@ -54,3 +54,10 @@ export PATH="$PATH:/usr/sbin"
 if [[ "${TERM_PROGRAM:-}" == "kiro" ]] && command -v kiro >/dev/null 2>&1; then
     source "$(kiro --locate-shell-integration-path bash)"
 fi
+
+# ======================================================================
+# Bun env
+# ======================================================================
+
+export PATH="$HOME/.bun/bin:$PATH"
+
