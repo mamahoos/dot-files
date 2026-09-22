@@ -9,9 +9,12 @@ $include /etc/inputrc
 # UTF-8
 # ======================================================================
 # Persian aliases in ~/.bash_aliases need 8-bit characters intact.
-set input-meta   on
-set output-meta  on
-set convert-meta off
+# enable-meta-key keeps Alt as a Meta prefix (not 8th-bit); convert-meta
+# stays off so UTF-8 is not rewritten as ESC sequences.
+set enable-meta-key on
+set input-meta      on
+set output-meta     on
+set convert-meta    off
 
 # ======================================================================
 # Editing
