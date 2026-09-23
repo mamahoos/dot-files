@@ -61,3 +61,9 @@ fi
 
 export PATH="$HOME/.bun/bin:$PATH"
 
+# ======================================================================
+# OpenCode
+# ======================================================================
+
+# opencode
+export PATH=/home/mamahoos/.opencode/bin:$PATH
