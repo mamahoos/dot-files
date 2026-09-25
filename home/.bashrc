@@ -81,7 +81,7 @@ shopt -s complete_fullquote
 set -o vi
 
 # Readline Esc-v and CLI tools use $VISUAL, then $EDITOR.
-export EDITOR=nano
+export EDITOR=nvim
 export VISUAL=nvim
 
 # ======================================================================
