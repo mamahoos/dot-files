@@ -65,7 +65,8 @@ _require_any_cmd() {
 
 # repeat previous command with sudo
 please() {
-    sudo "$(history -p !!)"
+    # shellcheck disable=SC2046
+    sudo $(history -p !!)
 }
 
 # extract an archive
