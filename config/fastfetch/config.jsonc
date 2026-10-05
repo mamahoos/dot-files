@@ -70,7 +70,7 @@
 
         {
             "type": "custom",
-            "format": "\u001b[38;2;107;74;40m│\u001b[0m  \u001b[38;2;212;137;58m// SYSTEM\u001b[0m"
+            "format": "\u001b[38;2;107;74;40m│\u001b[0m \u001b[38;2;212;137;58m// SYSTEM\u001b[0m"
         },
         {
             "type": "os",
@@ -103,7 +103,7 @@
 
         {
             "type": "custom",
-            "format": "\u001b[38;2;107;74;40m│\u001b[0m  \u001b[38;2;212;137;58m// HARDWARE\u001b[0m"
+            "format": "\u001b[38;2;107;74;40m│\u001b[0m \u001b[38;2;212;137;58m// HARDWARE\u001b[0m"
         },
         {
             "type": "cpu",
@@ -141,7 +141,7 @@
 
         {
             "type": "custom",
-            "format": "\u001b[38;2;107;74;40m│\u001b[0m  \u001b[38;2;212;137;58m// SESSION\u001b[0m"
+            "format": "\u001b[38;2;107;74;40m│\u001b[0m \u001b[38;2;212;137;58m// SESSION\u001b[0m"
         },
         {
             "type": "wm",
