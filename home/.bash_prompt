@@ -161,13 +161,17 @@ _prompt_git_operation() {
     fi
 }
 
-_prompt_git_ahead_behind() {
+# ↑/↓ vs upstream; ∅ when the branch tracks nothing yet.
+_prompt_git_upstream() {
     local counts
     local ahead
     local behind
     local segment=''
 
-    counts=$(git rev-list --left-right --count 'HEAD...@{upstream}' 2>/dev/null) || return 0
+    counts=$(git rev-list --left-right --count 'HEAD...@{upstream}' 2>/dev/null) || {
+        printf '∅'
+        return 0
+    }
     ahead="${counts%%	*}"
     behind="${counts##*	}"
 
@@ -217,7 +221,7 @@ _prompt_build() {
     local git_branch
     local git_status
     local git_operation
-    local git_ahead_behind
+    local git_upstream
     local git_segment=''
     local prompt_identity="${_GREEN}\u "
     local virtualenv
@@ -246,13 +250,17 @@ _prompt_build() {
     fi
     if [[ -n "$git_branch" ]]; then
         git_status="$(_prompt_git_status)"
-        git_ahead_behind="$(_prompt_git_ahead_behind)"
+        git_upstream="$(_prompt_git_upstream)"
         git_segment=" ${_GOLD}${git_branch}${_RESET}"
         if [[ -n "$git_status" ]]; then
             git_segment+=" ${_RED}${git_status}${_RESET}"
         fi
-        if [[ -n "$git_ahead_behind" ]]; then
-            git_segment+=" ${_DIM}${git_ahead_behind}${_RESET}"
+        if [[ -n "$git_upstream" ]]; then
+            if [[ "$git_upstream" == '∅' ]]; then
+                git_segment+=" ${_RED}${git_upstream}${_RESET}"
+            else
+                git_segment+=" ${_DIM}${git_upstream}${_RESET}"
+            fi
         fi
     fi
     if [[ -n "$git_operation" ]]; then
