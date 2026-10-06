@@ -25,30 +25,44 @@ export VIRTUAL_ENV_DISABLE_PROMPT=1
 # Server overlays can enable the host segment without replacing this prompt.
 PROMPT_SHOW_HOST="${PROMPT_SHOW_HOST:-0}"
 
-# Workspace root rendered as ./project[/…]. Override to retarget.
-_PROMPT_PATH_PERSONAL_ROOT="${HOME}/dev/personal"
+# Workspace root: root and its first level render as ~/dev[/leaf];
+# deeper children render as ./relative/to/root. Override to retarget.
+_PROMPT_PATH_DEV_ROOT="${HOME}/dev"
 
 # --- Path strategies (first match wins) --------------------------------------
 # Each strategy prints a display path and returns 0 on match, else 1.
 # Return via stdout only — callers capture with $(…) and test $?.
 
-# ~/dev/personal → ~/dev/personal ; children → ./project[/subpath]
-_prompt_path_strategy_personal() {
+# $HOME → ~ ; $HOME/… → ~/… ; anything else prints unchanged.
+_prompt_path_tilde() {
     local path="$1"
-    local root="${_PROMPT_PATH_PERSONAL_ROOT}"
+
+    if [[ "$path" == "$HOME" ]]; then
+        printf '~'
+    elif [[ "$path" == "$HOME/"* ]]; then
+        printf '~/%s' "${path#"$HOME"/}"
+    else
+        printf '%s' "$path"
+    fi
+}
+
+# ~/dev → ~/dev ; ~/dev/leaf → ~/dev/leaf ; deeper → ./relative/to/root
+_prompt_path_strategy_dev() {
+    local path="$1"
+    local root="${_PROMPT_PATH_DEV_ROOT}"
+    local relative
 
     if [[ "$path" == "$root" ]]; then
-        if [[ "$root" == "$HOME" ]]; then
-            printf '~'
-        elif [[ "$root" == "$HOME/"* ]]; then
-            printf '~/%s' "${root#"$HOME"/}"
-        else
-            printf '%s' "$root"
-        fi
+        _prompt_path_tilde "$root"
         return 0
     fi
     if [[ "$path" == "$root/"* ]]; then
-        printf './%s' "${path#"$root"/}"
+        relative="${path#"$root"/}"
+        if [[ "$relative" == */* ]]; then
+            printf './%s' "$relative"
+        else
+            _prompt_path_tilde "$path"
+        fi
         return 0
     fi
     return 1
@@ -59,11 +73,11 @@ _prompt_path_strategy_home() {
     local path="$1"
 
     if [[ "$path" == "$HOME" ]]; then
-        printf '~'
+        _prompt_path_tilde "$path"
         return 0
     fi
     if [[ "$path" == "$HOME/"* ]]; then
-        printf '~/%s' "${path#"$HOME"/}"
+        _prompt_path_tilde "$path"
         return 0
     fi
     return 1
@@ -72,7 +86,7 @@ _prompt_path_strategy_home() {
 # Ordered registry: strategy fn names, first match wins.
 # Append another root/alias by adding a strategy fn + one entry here.
 _PROMPT_PATH_STRATEGIES=(
-    '_prompt_path_strategy_personal'
+    '_prompt_path_strategy_dev'
     '_prompt_path_strategy_home'
 )
 
