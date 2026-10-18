@@ -96,7 +96,7 @@ cheat() {
         # -f: fail on HTTP errors, --max-time: don't hang offline
         if curl -fsS --max-time 8 "$url" -o "$cache_file.tmp" 2>/dev/null \
             && [[ -s "$cache_file.tmp" ]]; then
-            mv -- "$cache_file.tmp" "$cache_file"
+            mv -f -- "$cache_file.tmp" "$cache_file"   # -f: bypass `mv -i` alias
             cat -- "$cache_file"
             return 0
         fi
