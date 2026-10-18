@@ -69,6 +69,51 @@ please() {
     sudo $(history -p !!)
 }
 
+# quick reference from cheat.sh (cached for offline use)
+cheat() {
+    local topic="${1:-}"
+    local cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}/cheat"
+    local cache_file
+    local url
+
+    if [[ -z "$topic" ]]; then
+        echo "usage: cheat <topic>" >&2
+        return 1
+    fi
+
+    # sanitize topic -> safe cache filename (allow / for multi-word queries)
+    cache_file="$cache_dir/${topic//[^a-zA-Z0-9._\/-]/_}.txt"
+
+    mkdir -p -- "$cache_dir" || {
+        echo "[cheat] failed to create cache dir: $cache_dir" >&2
+        return 1
+    }
+
+    # ---- online path: try to refresh cache --------------------------------
+    if command -v curl >/dev/null 2>&1; then
+        url="https://cheat.sh/$(printf '%s' "$topic" | sed 's/ /+/g')"
+
+        # -f: fail on HTTP errors, --max-time: don't hang offline
+        if curl -fsS --max-time 8 "$url" -o "$cache_file.tmp" 2>/dev/null \
+            && [[ -s "$cache_file.tmp" ]]; then
+            mv -- "$cache_file.tmp" "$cache_file"
+            cat -- "$cache_file"
+            return 0
+        fi
+        rm -f -- "$cache_file.tmp"
+    fi
+
+    # ---- offline fallback: serve cached copy ------------------------------
+    if [[ -f "$cache_file" ]]; then
+        echo "[cheat] offline — showing cached result for: $topic" >&2
+        cat -- "$cache_file"
+        return 0
+    fi
+
+    echo "[cheat] no network and no cached result for: $topic" >&2
+    return 1
+}
+
 # extract an archive
 extract() {
     local archive_path="${1:-}"
