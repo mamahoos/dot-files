@@ -67,3 +67,9 @@ export PATH="$HOME/.bun/bin:$PATH"
 
 # opencode
 export PATH=/home/mamahoos/.opencode/bin:$PATH
+
+# ======================================================================
+# Golang
+# ======================================================================
+
+export PATH=$PATH:$(go env GOPATH)/bin
