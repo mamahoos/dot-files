@@ -73,3 +73,12 @@ export PATH=/home/mamahoos/.opencode/bin:$PATH
 # ======================================================================
 
 export PATH=$PATH:$(go env GOPATH)/bin
+
+# ==============================================================================
+# DIRENV
+# ==============================================================================
+
+# Load `.envrc` on cd (this repo sets PRE_COMMIT_COLOR=never)
+if command -v direnv >/dev/null 2>&1; then
+    eval "$(direnv hook bash)"
+fi
