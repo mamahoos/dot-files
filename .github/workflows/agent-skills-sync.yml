@@ -56,7 +56,7 @@ jobs:
         id: trigger
         run: |
           case "${{ github.event_name }}" in
-            schedule) echo "label=every-3h schedule (IRST :00)" >> "$GITHUB_OUTPUT" ;;
+            schedule) echo "label=every-week schedule (IRST :00)" >> "$GITHUB_OUTPUT" ;;
             *) echo "label=manual dispatch (run ${{ github.run_id }})" >> "$GITHUB_OUTPUT" ;;
           esac
 
