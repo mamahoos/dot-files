@@ -106,6 +106,7 @@
 [alias]
     aliases  = config --get-regexp '^alias.'
     lg       = log --graph --decorate --oneline --all
+    sb       = status -sb
     last     = log -1 HEAD
 
     root     = rev-parse --show-toplevel
