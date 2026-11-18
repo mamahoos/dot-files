@@ -9,14 +9,20 @@
       "supplemental": 29,
       "deprecated": 9
     },
-    "products": 192,
-    "palettes": 192,
-    "reasoningProfiles": 192,
+    "products": 194,
+    "palettes": 194,
+    "reasoningProfiles": 194,
     "fontPairings": 74,
     "googleFonts": 1934,
     "curatedIcons": 105,
     "upstreamPhosphorIcons": 1512,
+<<<<<<< HEAD
     "uxGuidelines": 120,
+||||||| parent of d12ab2f (chore(cursor): sync agent skills with upstreams manualy)
+    "uxGuidelines": 119,
+=======
+    "uxGuidelines": 130,
+>>>>>>> d12ab2f (chore(cursor): sync agent skills with upstreams manualy)
     "motionPresets": 17,
     "chartTypes": 25,
     "stacks": 22,
