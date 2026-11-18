@@ -107,6 +107,10 @@ OFFICIAL_SOURCE_HOSTS = {
     "greensock.com", "gsap.com", "m3.material.io", "opensource.adobe.com",
     "react.dev", "s2.spectrum.adobe.com", "shopify.dev",
     "design-system.service.gov.uk", "tailwindcss.com", "www.w3.org",
+    # Map and GIS publishers cited by the Maps guidelines.
+    "cheatsheetseries.owasp.org", "docs.mapbox.com",
+    "earthobservatory.nasa.gov", "leafletjs.com", "maplibre.org",
+    "osmfoundation.org", "pro.arcgis.com",
 }
 STACK_OFFICIAL_HOSTS = {
     "react": {"react.dev"},
@@ -340,8 +344,8 @@ def _check_reasoning_contract(products, colors, reasoning, style_ids, patterns, 
             value = row.get(key, "")
             counts[value] = counts.get(value, 0) + 1
         duplicates = sorted(value for value, count in counts.items() if count > 1)
-        if len(rows) != 192:
-            problems.append(f"[reasoning] {label} must contain exactly 192 rows; got {len(rows)}")
+        if len(rows) != 194:
+            problems.append(f"[reasoning] {label} must contain exactly 194 rows; got {len(rows)}")
         if duplicates:
             problems.append(
                 f"[reasoning] duplicate {label} labels: {', '.join(duplicates)}"

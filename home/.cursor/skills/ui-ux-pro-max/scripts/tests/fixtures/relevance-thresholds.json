@@ -2,7 +2,13 @@
   "schemaVersion": 1,
   "status": "provisional-baseline-regression-gate",
   "baselineRevision": "97eb2a2",
+<<<<<<< HEAD
   "runtimeFingerprint": "4f0d12f19a6be7fe7e3faf289244349f80497bac0ddb5563b0511e667953a225",
+||||||| parent of d12ab2f (chore(cursor): sync agent skills with upstreams manualy)
+  "runtimeFingerprint": "48b4cb2aeafb795c76f34bf7faa65e07287811e229b86c152bac3d2cab751385",
+=======
+  "runtimeFingerprint": "83b21bffd0822e261ae931b4453ec62a8ce7d4c0fea6335f0d9235f862732773",
+>>>>>>> d12ab2f (chore(cursor): sync agent skills with upstreams manualy)
   "oracleFingerprint": "02e7226428c64a995ec24ae104ce4d186f5f91bf0f062556e90ef9b0fcb6d67a",
   "approvingMaintainer": "repository maintainer approved Phase 1 testing checkpoint; second judgment review remains required before final-target promotion",
   "units": "All metrics are ratios in [0,1]. Precision treats missing ranks as non-relevant. Negative abstention is measured across the hard-negative by domain/stack cross-product.",
