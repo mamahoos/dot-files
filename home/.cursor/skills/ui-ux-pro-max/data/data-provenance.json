@@ -8,9 +8,6 @@
   "records": [
     {
       "entityKind": "dataset-contract",
-<<<<<<< HEAD
-||||||| parent of d12ab2f (chore(cursor): sync agent skills with upstreams manualy)
-=======
       "entityId": "map-ux-guidelines",
       "sourceFile": "ux-guidelines.csv",
       "sourceKey": {
@@ -131,7 +128,6 @@
     },
     {
       "entityKind": "dataset-contract",
->>>>>>> d12ab2f (chore(cursor): sync agent skills with upstreams manualy)
       "entityId": "ime-composition-enter",
       "sourceFile": "ux-guidelines.csv",
       "sourceKey": {
