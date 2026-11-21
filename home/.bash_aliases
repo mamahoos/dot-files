@@ -66,6 +66,7 @@ alias wget='wget --content-disposition'
 alias myip='curl -s ifconfig.me'
 alias ports='ss -tulpen'
 alias pingg='ping google.com'
+alias sniff='sudo tcpdump -i any -n'
 
 # ==============================================================================
 # NAVIGATION & FILE MANAGEMENT
