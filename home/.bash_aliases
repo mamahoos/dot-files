@@ -33,6 +33,9 @@ alias reinput='bind -f ~/.inputrc'
 alias clipcopy='xclip -selection clipboard'
 alias clippaste='xclip -selection clipboard -o'
 
+# current date/time (YYYY-MM-DD HH:MM:SS)
+alias now='date "+%Y-%m-%d %H:%M:%S"'
+
 # Funny aliases
 alias cmatrix='cmatrix -C black'
 alias sl='sl -lae'
@@ -106,6 +109,7 @@ alias f='find . -name'
 
 alias mem='free -h'
 alias disk='df -h'
+alias filesize='du -sh'
 
 # ==============================================================================
 # END
