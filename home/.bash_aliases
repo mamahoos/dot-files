@@ -106,6 +106,7 @@ alias f='find . -name'
 
 alias mem='free -h'
 alias disk='df -h'
+alias filesize='du -sh'
 
 # ==============================================================================
 # END
