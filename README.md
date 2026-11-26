@@ -9,7 +9,7 @@ Versioned Linux configs I use day to day.
 | Path | Contents |
 | --- | --- |
 | `home/` | Bash, git, Cursor (rules, agents, skills) |
-| `config/` | bat, btop, htop, tmux, ghostty |
+| `config/` | bat, btop, htop, tmux, ghostty, bash-completion |
 | `install.sh` | Symlink `home/` and `config/` into place |
 
 ## Structure
@@ -24,6 +24,8 @@ Versioned Linux configs I use day to day.
 │       ├── rules/
 │       └── skills/
 ├── config/
+│   ├── bash-completion/
+│   │   └── completions/
 │   ├── bat/
 │   ├── btop/
 │   ├── htop/
@@ -50,6 +52,18 @@ make install
 | `make install-shell-with-git` | Shell-only **plus** your git identity (machine that should commit as you) |
 
 `.cursor` children link individually into `~/.cursor/` so Cursor-managed paths are not replaced wholesale.
+
+## Shell completions
+
+`.bashrc` points `BASH_COMPLETION_USER_DIR` at `~/.config/bash-completion`, so bash-completion loads each script lazily on the first TAB instead of parsing all of them at startup. Scripts live in `config/bash-completion/completions/`, one file per command named after that command, and are symlinked with the rest of `config/`.
+
+`opencode`, `poetry`, and `glow` are generated snapshots and go stale after an upgrade. Regenerate them with:
+
+```bash
+make completions
+```
+
+`poe` is vendored as-is because it has no stable generator.
 
 ## Local checks
 
