@@ -124,19 +124,19 @@ fi
 
 # ======================================================================
 # 8. Bash completion
+# ----------------------------------------------------------------------
+# bash-completion loads per-command scripts lazily on the first TAB. The
+# user directory is the repo-managed config/bash-completion/completions,
+# symlinked to ~/.config/bash-completion. An already exported value wins.
 # ======================================================================
 
 if ! shopt -oq posix; then
+    export BASH_COMPLETION_USER_DIR="${BASH_COMPLETION_USER_DIR:-${XDG_CONFIG_HOME:-$HOME/.config}/bash-completion}"
+
     if [ -f /usr/share/bash-completion/bash_completion ]; then
         source /usr/share/bash-completion/bash_completion
     elif [ -f /etc/bash_completion ]; then
         source /etc/bash_completion
-    fi
-
-    # Python argcomplete can replace bash-completion's default lazy loader.
-    # Load Docker explicitly so `docker compose` completion remains available.
-    if [ -r /usr/share/bash-completion/completions/docker ]; then
-        source /usr/share/bash-completion/completions/docker
     fi
 fi
 
