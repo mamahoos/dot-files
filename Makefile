@@ -3,13 +3,14 @@
 
 .DEFAULT_GOAL := help
 
-.PHONY: help install install-shell-only install-shell-with-git lint shellcheck shfmt smoke idempotent skills-drift check pre-commit-install gitleaks
+.PHONY: help install install-shell-only install-shell-with-git completions lint shellcheck shfmt smoke idempotent skills-drift check pre-commit-install gitleaks
 
 help:
 	@printf '%s\n' \
 	  'install                 ./install.sh' \
 	  'install-shell-only      ./install.sh --shell-only (no git identity)' \
 	  'install-shell-with-git  ./install.sh --shell-only --with-git' \
+	  'completions             Regenerate vendored bash completions' \
 	  'lint                    ShellCheck + shfmt' \
 	  'shellcheck              shellcheck -S error install.sh .github/scripts/*.sh' \
 	  'shfmt                   shfmt -d -i 2 install.sh .github/scripts' \
@@ -28,6 +29,9 @@ install-shell-only:
 
 install-shell-with-git:
 	./install.sh --shell-only --with-git
+
+completions:
+	./scripts/generate-completions.sh
 
 lint: shellcheck shfmt
 
