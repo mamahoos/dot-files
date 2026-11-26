@@ -1,55 +1,23 @@
 # ==============================================================================
-# DIRECTORY HELPERS
-# ==============================================================================
-
-# make and cd to a directory
-mkcd() {
-    local dir="$1"
-    if [ -z "$dir" ]; then
-        echo "Usage: mkcd <directory>"
-        return 1
-    fi
-    mkdir -p "$dir" && cd "$dir"
-}
-
-# ==============================================================================
-# GIT
-# ==============================================================================
-
-# clone a repo and cd into it (optionally into a custom directory name)
-gclone() {
-    if [[ -z "$1" ]]; then
-        echo "usage: gclone <repo-url> [target-dir]" >&2
-        return 1
-    fi
-
-    _require_cmd "[gclone]" git || return 1
-
-    local repo_url="$1"
-    local target_dir="${2:-$(basename "${repo_url%/}" .git)}"
-
-    git clone "$repo_url" "$target_dir" && cd "$target_dir" || return 1
-}
-
-# ==============================================================================
 # COMMON HELPERS
 # ==============================================================================
 
-# require a command to be available in PATH
+# Require a command to be available in PATH.
 _require_cmd() {
     local error_prefix="$1"
     local command_name="$2"
 
-    command -v "$command_name" >/dev/null 2>&1 || {
+    if ! command -v "$command_name" >/dev/null 2>&1; then
         printf '%s missing dependency: %s\n' "$error_prefix" "$command_name" >&2
         return 1
-    }
+    fi
 }
 
-# return first available command from list
+# Print the first available command from a list.
 _require_any_cmd() {
     local error_prefix="$1"
     local command_name
+
     shift
 
     for command_name in "$@"; do
@@ -63,13 +31,68 @@ _require_any_cmd() {
     return 1
 }
 
-# repeat previous command with sudo
-please() {
-    # shellcheck disable=SC2046
-    sudo $(history -p !!)
+# Print a consistently prefixed error message.
+_log_error() {
+    printf '[%s] %s\n' "$1" "$2" >&2
 }
 
-# quick reference from cheat.sh (cached for offline use)
+
+# ==============================================================================
+# DIRECTORY HELPERS
+# ==============================================================================
+
+# Create a directory and change into it.
+mkcd() {
+    local dir="${1:-}"
+
+    if [[ -z "$dir" ]]; then
+        printf 'Usage: mkcd <directory>\n' >&2
+        return 1
+    fi
+
+    mkdir -p -- "$dir" && cd -- "$dir"
+}
+
+
+# ==============================================================================
+# GIT
+# ==============================================================================
+
+# Clone a repository and change into it.
+# Usage: gclone <repo-url> [target-dir]
+gclone() {
+    local repo_url="${1:-}"
+    local target_dir
+
+    if [[ -z "$repo_url" ]]; then
+        printf 'Usage: gclone <repo-url> [target-dir]\n' >&2
+        return 1
+    fi
+
+    _require_cmd '[gclone]' git || return 1
+
+    target_dir="${2:-$(basename -- "${repo_url%/}" .git)}"
+
+    git clone -- "$repo_url" "$target_dir" &&
+        cd -- "$target_dir"
+}
+
+
+# ==============================================================================
+# GENERAL UTILITIES
+# ==============================================================================
+
+# Repeat the previous command with sudo.
+please() {
+    local previous_command
+
+    previous_command="$(history -p '!!')" || return 1
+    [[ -n "$previous_command" ]] || return 1
+
+    sudo bash -c "$previous_command"
+}
+
+# Quick reference from cheat.sh, with a local cache for offline use.
 cheat() {
     local topic="${1:-}"
     local cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}/cheat"
@@ -77,373 +100,344 @@ cheat() {
     local url
 
     if [[ -z "$topic" ]]; then
-        echo "usage: cheat <topic>" >&2
+        printf 'Usage: cheat <topic>\n' >&2
         return 1
     fi
 
-    # sanitize topic -> safe cache filename (allow / for multi-word queries)
-    cache_file="$cache_dir/${topic//[^a-zA-Z0-9._\/-]/_}.txt"
-
     mkdir -p -- "$cache_dir" || {
-        echo "[cheat] failed to create cache dir: $cache_dir" >&2
+        _log_error cheat "failed to create cache directory: $cache_dir"
         return 1
     }
 
-    # ---- online path: try to refresh cache --------------------------------
+    # Keep cache filenames predictable and safe.
+    cache_file="$cache_dir/${topic//[^a-zA-Z0-9._\/-]/_}.txt"
+
     if command -v curl >/dev/null 2>&1; then
         url="https://cheat.sh/$(printf '%s' "$topic" | sed 's/ /+/g')"
 
-        # -f: fail on HTTP errors, --max-time: don't hang offline
-        if curl -fsS --max-time 8 "$url" -o "$cache_file.tmp" 2>/dev/null \
-            && [[ -s "$cache_file.tmp" ]]; then
-            mv -f -- "$cache_file.tmp" "$cache_file"   # -f: bypass `mv -i` alias
+        if curl -fsS --max-time 8 "$url" -o "$cache_file.tmp" 2>/dev/null &&
+            [[ -s "$cache_file.tmp" ]]; then
+            mv -f -- "$cache_file.tmp" "$cache_file" || return 1
             cat -- "$cache_file"
-            return 0
+            return
         fi
+
         rm -f -- "$cache_file.tmp"
     fi
 
-    # ---- offline fallback: serve cached copy ------------------------------
     if [[ -f "$cache_file" ]]; then
-        echo "[cheat] offline — showing cached result for: $topic" >&2
+        _log_error cheat "offline; showing cached result for: $topic"
         cat -- "$cache_file"
-        return 0
+        return
     fi
 
-    echo "[cheat] no network and no cached result for: $topic" >&2
+    _log_error cheat "no network connection and no cached result for: $topic"
     return 1
 }
 
-# extract an archive
+# Extract common archive formats.
+# Usage: extract <archive> [output-dir]
 extract() {
     local archive_path="${1:-}"
     local output_dir="${2:-}"
     local archive_name
-    local mime_type
-    local status
+    local archive_dir
+    local mime_type=''
+    local extractor=''
+    local status=0
+    local output_dir_created=false
+    local -a extract_args=()
 
-    # --------------------------------------------------------------------------
-    # Error logger
-    # --------------------------------------------------------------------------
-    _extract_error() {
-        printf '[extract] %s\n' "$*" >&2
-    }
-
-    # --------------------------------------------------------------------------
-    # Validation
-    # --------------------------------------------------------------------------
     if [[ -z "$archive_path" ]]; then
-        _extract_error "usage: extract <archive> [output_dir]"
+        _log_error extract 'Usage: extract <archive> [output-dir]'
         return 1
     fi
 
     if [[ ! -e "$archive_path" ]]; then
-        _extract_error "file does not exist: $archive_path"
+        _log_error extract "file does not exist: $archive_path"
         return 1
     fi
 
     if [[ ! -f "$archive_path" ]]; then
-        _extract_error "not a regular file: $archive_path"
+        _log_error extract "not a regular file: $archive_path"
         return 1
     fi
 
     if [[ ! -r "$archive_path" ]]; then
-        _extract_error "file is not readable: $archive_path"
+        _log_error extract "file is not readable: $archive_path"
         return 1
     fi
 
+    # Resolve the archive path before changing directories. This avoids
+    # fragile ../ path handling when output-dir is nested or absolute.
+    archive_dir="$(cd -- "$(dirname -- "$archive_path")" && pwd -P)" || {
+        _log_error extract "cannot resolve archive directory: $archive_path"
+        return 1
+    }
+    archive_path="$archive_dir/$(basename -- "$archive_path")"
     archive_name="$(basename -- "$archive_path")"
 
-    # --------------------------------------------------------------------------
-    # Auto output directory
-    # --------------------------------------------------------------------------
     if [[ -z "$output_dir" ]]; then
         output_dir="${archive_name%.*}"
         output_dir="${output_dir%.tar}"
+        [[ -n "$output_dir" ]] || output_dir='.'
     fi
 
-    mkdir -p -- "$output_dir" || {
-        _extract_error "failed to create output directory: $output_dir"
-        return 1
-    }
+    if [[ ! -d "$output_dir" ]]; then
+        mkdir -p -- "$output_dir" || {
+            _log_error extract "failed to create output directory: $output_dir"
+            return 1
+        }
+        output_dir_created=true
+    fi
 
-    # --------------------------------------------------------------------------
-    # MIME fallback
-    # --------------------------------------------------------------------------
-    mime_type="$(file --brief --mime-type -- "$archive_path" 2>/dev/null)"
-
-    # --------------------------------------------------------------------------
-    # Extract inside target dir
-    # --------------------------------------------------------------------------
-    pushd "$output_dir" >/dev/null || {
-        _extract_error "failed to enter directory: $output_dir"
-        return 1
-    }
-
-    # Supported archive formats:
-    # - .tar.gz, .tgz
-    # - .tar.bz2, .tbz2
-    # - .tar.xz
-    # - .tar.zst, .tzst
-    # - .tar
-    # - .zip
-    # - .rar
-    # - .7z
-    # - .gz
-    # - .bz2
-    # - .xz
-    # - .zst
-
-    case "$archive_path" in
+    # Select the extractor and its arguments once, then execute it below.
+    case "$archive_name" in
         *.tar.gz|*.tgz)
-            _require_cmd "[extract]" tar || return 1
-            tar -xzf "../$archive_path"
-            status=$?
+            extractor=tar
+            extract_args=(-xzf "$archive_path")
             ;;
-
         *.tar.bz2|*.tbz2)
-            _require_cmd "[extract]" tar || return 1
-            tar -xjf "../$archive_path"
-            status=$?
+            extractor=tar
+            extract_args=(-xjf "$archive_path")
             ;;
-
         *.tar.xz)
-            _require_cmd "[extract]" tar || return 1
-            tar -xJf "../$archive_path"
-            status=$?
+            extractor=tar
+            extract_args=(-xJf "$archive_path")
             ;;
-
         *.tar.zst|*.tzst)
-            _require_cmd "[extract]" tar || return 1
-            tar --zstd -xf "../$archive_path"
-            status=$?
+            extractor=tar
+            extract_args=(--zstd -xf "$archive_path")
             ;;
-
         *.tar)
-            _require_cmd "[extract]" tar || return 1
-            tar -xf "../$archive_path"
-            status=$?
+            extractor=tar
+            extract_args=(-xf "$archive_path")
             ;;
-
         *.zip)
-            _require_cmd "[extract]" unzip || return 1
-            unzip -qq -o "../$archive_path"
-            status=$?
+            extractor=unzip
+            extract_args=(-qq -o "$archive_path")
             ;;
-
         *.rar)
-            if command -v unrar >/dev/null 2>&1; then
-                unrar x -idq -o+ "../$archive_path"
-                status=$?
-            elif command -v rar >/dev/null 2>&1; then
-                rar x -idq -o+ "../$archive_path"
-                status=$?
-            else
-                _extract_error "missing dependency: unrar or rar"
-                popd >/dev/null || true
+            extractor="$(_require_any_cmd '[extract]' unrar rar)" || {
+                [[ "$output_dir_created" == true ]] && rmdir -- "$output_dir" 2>/dev/null
                 return 1
-            fi
+            }
+            extract_args=(x -idq -o+ "$archive_path")
             ;;
-
         *.7z)
-            _require_cmd "[extract]" 7z || return 1
-            7z x -bd -y "../$archive_path" >/dev/null
-            status=$?
+            extractor=7z
+            extract_args=(x -bd -y "$archive_path")
             ;;
-
         *.gz)
-            _require_cmd "[extract]" gunzip || return 1
-            gunzip -k "../$archive_path"
-            status=$?
+            extractor=gunzip
+            extract_args=(-k "$archive_path")
             ;;
-
         *.bz2)
-            _require_cmd "[extract]" bunzip2 || return 1
-            bunzip2 -k "../$archive_path"
-            status=$?
+            extractor=bunzip2
+            extract_args=(-k "$archive_path")
             ;;
-
         *.xz)
-            _require_cmd "[extract]" unxz || return 1
-            unxz -k "../$archive_path"
-            status=$?
+            extractor=unxz
+            extract_args=(-k "$archive_path")
             ;;
-
         *.zst)
-            _require_cmd "[extract]" unzstd || return 1
-            unzstd -k "../$archive_path"
-            status=$?
+            extractor=unzstd
+            extract_args=(-k "$archive_path")
             ;;
-
         *)
+            if command -v file >/dev/null 2>&1; then
+                mime_type="$(file --brief --mime-type -- "$archive_path" 2>/dev/null)"
+            fi
+
             case "$mime_type" in
                 application/zip)
-                    _require_cmd "[extract]" unzip || return 1
-                    unzip -qq -o "../$archive_path"
-                    status=$?
+                    extractor=unzip
+                    extract_args=(-qq -o "$archive_path")
                     ;;
-
                 application/x-tar)
-                    _require_cmd "[extract]" tar || return 1
-                    tar -xf "../$archive_path"
-                    status=$?
+                    extractor=tar
+                    extract_args=(-xf "$archive_path")
                     ;;
-
                 *)
-                    _extract_error "unsupported archive format: $archive_path"
-                    popd >/dev/null || true
+                    _log_error extract "unsupported archive format: $archive_path"
+                    [[ "$output_dir_created" == true ]] && rmdir -- "$output_dir" 2>/dev/null
                     return 1
                     ;;
             esac
             ;;
     esac
 
-    popd >/dev/null || true
+    _require_cmd '[extract]' "$extractor" || {
+        [[ "$output_dir_created" == true ]] && rmdir -- "$output_dir" 2>/dev/null
+        return 1
+    }
 
-    # --------------------------------------------------------------------------
-    # Cleanup on failure
-    # --------------------------------------------------------------------------
-    if [[ $status -ne 0 ]]; then
-        if [[ -d "$output_dir" && -z "$(ls -A "$output_dir" 2>/dev/null)" ]]; then
-            rmdir "$output_dir" 2>/dev/null
-        fi
-
-        _extract_error "extraction failed: $archive_path"
-        return "$status"
+    if ! pushd "$output_dir" >/dev/null; then
+        _log_error extract "failed to enter output directory: $output_dir"
+        [[ "$output_dir_created" == true ]] && rmdir -- "$output_dir" 2>/dev/null
+        return 1
     fi
 
-    return 0
+    "${extractor}" "${extract_args[@]}"
+    status=$?
+
+    popd >/dev/null || return 1
+
+    if ((status != 0)); then
+        _log_error extract "extraction failed: $archive_path (exit status: $status)"
+        if [[ "$output_dir_created" == true ]]; then
+            rmdir -- "$output_dir" 2>/dev/null || true
+        fi
+        return "$status"
+    fi
 }
 
-# Usage: ffcut input.mp4 00:01:20 00:02:45 output.mp4
+# Cut a video without re-encoding.
+# Usage: ffcut <input> <start> <end> <output>
 ffcut() {
+    if (($# != 4)); then
+        printf 'Usage: ffcut <input> <start> <end> <output>\n' >&2
+        return 1
+    fi
+
+    _require_cmd '[ffcut]' ffmpeg || return 1
     ffmpeg -ss "$2" -to "$3" -i "$1" -c copy "$4"
 }
+
 
 # ==============================================================================
 # DOCKER HELPERS
 # ==============================================================================
 
-# stream a local image to a remote host over ssh (gzip-compressed)
+# Stream a local Docker image to a remote host over SSH.
+# Usage: docker-push-host <image> <user@host>
 docker-push-host() {
     local image="${1:-}"
     local host="${2:-}"
     local compress_cmd
     local status
 
-    # --------------------------------------------------------------------------
-    # Optional progress stream (uses pv when available)
-    # --------------------------------------------------------------------------
-    _progress_pipe() {
-        local tar_size
-    
-        if ! command -v pv >/dev/null 2>&1; then
-            cat
-            return 0
-        fi
-    
-        # docker save produces a tar archive that is larger than the raw image
-        # size reported by inspect; measure the actual stream size up front so
-        # that the progress bar never exceeds 100 %.
-        tar_size="$(docker save -- "$image" 2>/dev/null | wc -c)"
-        if [[ "$tar_size" =~ ^[0-9]+$ && "$tar_size" -gt 0 ]]; then
-            pv -p -f -s "$tar_size" -N "push $image"
-        else
-            pv -p -f -N "push $image"
-        fi
-    }
-
-    # --------------------------------------------------------------------------
-    # Validation
-    # --------------------------------------------------------------------------
     if [[ -z "$image" || -z "$host" ]]; then
-        echo "[docker-push-host] usage: docker-push-host <image> <host>" >&2
+        printf 'Usage: docker-push-host <image> <host>\n' >&2
         return 1
     fi
 
-    _require_cmd "[docker-push-host]" docker || return 1
-    _require_cmd "[docker-push-host]" ssh || return 1
-    compress_cmd="$(_require_any_cmd "[docker-push-host]" gzip gz)" || return 1
+    _require_cmd '[docker-push-host]' docker || return 1
+    _require_cmd '[docker-push-host]' ssh || return 1
+    compress_cmd="$(_require_any_cmd '[docker-push-host]' gzip gz)" || return 1
 
     if ! docker image inspect -- "$image" >/dev/null 2>&1; then
-        echo "[docker-push-host] image not found locally: $image" >&2
+        _log_error docker-push-host "image not found locally: $image"
         return 1
     fi
 
-    # --------------------------------------------------------------------------
-    # Push pipeline: save | [pv] | compress | ssh | decompress | load
-    # --------------------------------------------------------------------------
-    if ! (
+    # pipefail ensures failures from docker save/compression are not hidden
+    # by a successful final command in the pipeline.
+    if (
         set -o pipefail
-        docker save -- "$image" \
-            | _progress_pipe \
-            | "$compress_cmd" -c \
-            | ssh -C "$host" 'gzip -dc | docker load'
+
+        if command -v pv >/dev/null 2>&1; then
+            docker save -- "$image" |
+                pv -p -f -N "push $image" |
+                "$compress_cmd" -c |
+                ssh -C "$host" 'gzip -dc | docker load'
+        else
+            docker save -- "$image" |
+                "$compress_cmd" -c |
+                ssh -C "$host" 'gzip -dc | docker load'
+        fi
     ); then
+        return 0
+    else
         status=$?
-        echo "[docker-push-host] failed to push image: $image -> $host" >&2
-        return "$status"
     fi
 
-    return 0
+    _log_error docker-push-host "failed to push image: $image -> $host"
+    return "$status"
 }
 
-# kill all running containers ⚠️
+# Kill all running containers.
 dockill() {
     local -a containers=()
 
-    _require_cmd "[dockill]" docker || return 1
+    _require_cmd '[dockill]' docker || return 1
 
     mapfile -t containers < <(docker ps -q)
     if ((${#containers[@]} == 0)); then
-        echo "[dockill] no running containers"
+        printf '[dockill] no running containers\n'
         return 0
     fi
 
     docker kill "${containers[@]}"
 }
 
-# remove common Docker orphaned resources
+# Remove common unused Docker resources.
 docker-clean() {
-    echo "Removing stopped containers..."
-    docker container prune -f
-    echo "Removing dangling images..."
-    docker image prune -f
-    echo "Removing unused networks..."
-    docker network prune -f
-    echo "Docker cleanup complete."
+    local status=0
+
+    _require_cmd '[docker-clean]' docker || return 1
+
+    printf 'Removing stopped containers...\n'
+    docker container prune -f || status=$?
+
+    printf 'Removing dangling images...\n'
+    docker image prune -f || status=$?
+
+    printf 'Removing unused networks...\n'
+    docker network prune -f || status=$?
+
+    if ((status == 0)); then
+        printf 'Docker cleanup complete.\n'
+    else
+        _log_error docker-clean 'one or more cleanup operations failed'
+    fi
+
+    return "$status"
 }
+
 
 # ==============================================================================
 # NETWORK HELPERS
 # ==============================================================================
 
-# print resolved hostname from ssh config for a host alias
+# Print the resolved hostname for an SSH config alias.
 ssh-hostname() {
     local host="${1:-}"
 
     if [[ -z "$host" ]]; then
-        echo "Usage: ssh-hostname <host>"
+        printf 'Usage: ssh-hostname <host>\n' >&2
         return 1
     fi
 
-    ssh -G "$host" | awk '/^hostname / {print $2}'
+    _require_cmd '[ssh-hostname]' ssh || return 1
+    ssh -G "$host" | awk '$1 == "hostname" { print $2; exit }'
 }
+
 
 # ==============================================================================
 # SHELL HELPERS
 # ==============================================================================
 
-# validate bashrc syntax, then reload it
+# Validate .bashrc syntax before reloading it.
 rebash() {
-    if bash -n "$HOME/.bashrc"; then
-        source "$HOME/.bashrc"
+    local bashrc="$HOME/.bashrc"
+
+    if [[ ! -r "$bashrc" ]]; then
+        _log_error rebash "cannot read $bashrc"
+        return 1
+    fi
+
+    if bash -n "$bashrc"; then
+        # shellcheck disable=SC1090
+        source "$bashrc"
     else
-        echo "bashrc has syntax errors; reload aborted."
+        _log_error rebash '.bashrc has syntax errors; reload aborted'
         return 1
     fi
 }
 
+
 # ==============================================================================
 # END
 # ==============================================================================
+
