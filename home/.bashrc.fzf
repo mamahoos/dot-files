@@ -16,9 +16,10 @@ fi
 # Global options
 # ------------------------------------------------------------------------------
 
+
 export FZF_DEFAULT_OPTS='
 --no-mouse
---height=50%
+--height=75%
 --select-1
 --reverse
 --multi
@@ -34,9 +35,9 @@ export FZF_DEFAULT_OPTS='
 --bind="f2:toggle-preview"
 --bind="f3:change-preview-window(right,50%,border-left|right,70%,border-left|down,70%,border-top)"
 --bind="f4:change-preview-window(down,90%,border-top|right,50%,border-left)"
+--bind="f5:change-preview-window(hidden|right,99%,border-left)"
 
---bind="ctrl-right:change-preview-window(right,60%,border-left|right,70%,border-left|right,80%,border-left|down,80%,border-top)"
-
+--bind="ctrl-right:change-preview-window(right,60%,border-left|right,70%,border-left|right,80%,border-left)"
 --bind="ctrl-s:toggle-sort"
 --bind="ctrl-o:execute(nvim {})"
 
@@ -45,15 +46,6 @@ export FZF_DEFAULT_OPTS='
 --bind="ctrl-a:select-all+accept"
 --bind="ctrl-y:execute-silent(echo {+} | xclip -selection clipboard)"
 '
-
-# ------------------------------------------------------------------------------
-# Remove old Readline widgets
-# ------------------------------------------------------------------------------
-
-if [[ $- == *i* ]]; then
-    bind -r '\C-t' 2>/dev/null
-    bind -r '\C-x\C-t' 2>/dev/null
-fi
 
 # ==============================================================================
 # END
