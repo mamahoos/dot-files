@@ -127,11 +127,15 @@ fi
 # ----------------------------------------------------------------------
 # bash-completion loads per-command scripts lazily on the first TAB. The
 # user directory is the repo-managed config/bash-completion/completions,
-# symlinked to ~/.config/bash-completion. An already exported value wins.
+# symlinked to ~/.config/bash-completion, with the XDG default kept as a
+# fallback. An already exported value wins.
 # ======================================================================
 
 if ! shopt -oq posix; then
-    export BASH_COMPLETION_USER_DIR="${BASH_COMPLETION_USER_DIR:-${XDG_CONFIG_HOME:-$HOME/.config}/bash-completion}"
+    _completion_dirs="${XDG_CONFIG_HOME:-$HOME/.config}/bash-completion"
+    _completion_dirs+=":${XDG_DATA_HOME:-$HOME/.local/share}/bash-completion"
+    export BASH_COMPLETION_USER_DIR="${BASH_COMPLETION_USER_DIR:-$_completion_dirs}"
+    unset -v _completion_dirs
 
     if [ -f /usr/share/bash-completion/bash_completion ]; then
         source /usr/share/bash-completion/bash_completion

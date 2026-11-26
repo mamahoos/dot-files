@@ -55,7 +55,7 @@ make install
 
 ## Shell completions
 
-`.bashrc` points `BASH_COMPLETION_USER_DIR` at `~/.config/bash-completion`, so bash-completion loads each script lazily on the first TAB instead of parsing all of them at startup. Scripts live in `config/bash-completion/completions/`, one file per command named after that command, and are symlinked with the rest of `config/`.
+`.bashrc` points `BASH_COMPLETION_USER_DIR` at `~/.config/bash-completion` (keeping `~/.local/share/bash-completion` as a fallback), so bash-completion loads each script lazily on the first TAB instead of parsing all of them at startup. Scripts live in `config/bash-completion/completions/`, one file per command named after that command, and are symlinked with the rest of `config/`.
 
 `opencode`, `poetry`, and `glow` are generated snapshots and go stale after an upgrade. Regenerate them with:
 
