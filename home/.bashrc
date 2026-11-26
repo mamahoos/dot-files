@@ -176,5 +176,11 @@ if [ -f "$HOME/.bashrc.local" ]; then
 fi
 
 # ======================================================================
+# 12. fzf configurations
+# ======================================================================
+
+export FZF_DEFAULT_OPTS="--no-mouse --height 50% -1 --reverse --multi --inline-info --preview='[[ \$(file --mime {}) =~ binary ]] && echo {} is a binary file || (batcat --style=numbers --color=always {} || cat {}) 2> /dev/null | head -300' --preview-window='right:hidden:wrap' --bind='f3:execute(bat --style=numbers {} || less -f {}),f2:toggle-preview,ctrl-d:half-page-down,ctrl-u:half-page-up,ctrl-a:select-all+accept,ctrl-y:execute-silent(echo {+} | pbcopy)'"
+
+# ======================================================================
 # End of ~/.bashrc
 # ======================================================================
