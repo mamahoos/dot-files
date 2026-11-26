@@ -8,6 +8,9 @@ alias ll='ls -lh'          # long + human-readable sizes
 alias la='ls -A'           # include hidden (except . ..)
 alias l='ls -CF'           # column view + type indicators
 
+# find alternative
+alias fd='fdfind'
+
 # color support
 alias dir='dir --color=auto'
 alias vdir='vdir --color=auto'
