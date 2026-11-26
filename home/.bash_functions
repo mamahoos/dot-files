@@ -371,6 +371,36 @@ dockill() {
     docker kill "${containers[@]}"
 }
 
+# Interactively select a running container and follow its logs.
+# Usage: docker-logs
+docker-logs() {
+    local output
+    local selection
+
+    _require_cmd '[docker-logs]' docker || return 1
+    _require_cmd '[docker-logs]' fzf || return 1
+
+    if ! output="$(docker ps --format '{{.ID}} {{.Names}} {{.Image}}')"; then
+        _log_error docker-logs 'failed to list containers'
+        return 1
+    fi
+
+    if [[ -z "$output" ]]; then
+        printf '[docker-logs] no running containers\n'
+        return 0
+    fi
+
+    selection="$(printf '%s\n' "$output" |
+        fzf --delimiter=' ' \
+            --with-nth=2.. \
+            --header='Select a container' \
+            --preview 'docker logs --tail=50 {1}')" || return 0
+
+    [[ -n "$selection" ]] || return 0
+
+    docker logs --tail=50 --follow "${selection%% *}"
+}
+
 # Remove common unused Docker resources.
 docker-clean() {
     local status=0
