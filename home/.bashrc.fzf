@@ -4,6 +4,15 @@
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
+# Terminal
+# ------------------------------------------------------------------------------
+
+if [[ $- == *i* ]]; then
+    # Allow Ctrl+S to reach fzf instead of triggering terminal XOFF.
+    stty -ixon 2>/dev/null
+fi
+
+# ------------------------------------------------------------------------------
 # Global options
 # ------------------------------------------------------------------------------
 
@@ -26,6 +35,11 @@ export FZF_DEFAULT_OPTS='
 --bind="f3:change-preview-window(right,50%,border-left|right,70%,border-left|down,70%,border-top)"
 --bind="f4:change-preview-window(down,90%,border-top|right,50%,border-left)"
 
+--bind="ctrl-right:change-preview-window(right,60%,border-left|right,70%,border-left|right,80%,border-left|down,80%,border-top)"
+
+--bind="ctrl-s:toggle-sort"
+--bind="ctrl-o:execute(nvim {})"
+
 --bind="ctrl-d:half-page-down"
 --bind="ctrl-u:half-page-up"
 --bind="ctrl-a:select-all+accept"
@@ -33,7 +47,7 @@ export FZF_DEFAULT_OPTS='
 '
 
 # ------------------------------------------------------------------------------
-# Remove old Ctrl+T / Ctrl+X widgets from Readline
+# Remove old Readline widgets
 # ------------------------------------------------------------------------------
 
 if [[ $- == *i* ]]; then
@@ -42,6 +56,6 @@ if [[ $- == *i* ]]; then
 fi
 
 # ==============================================================================
-# END OF FZF CONFIGURATION
+# END
 # ==============================================================================
 
