@@ -1,10 +1,10 @@
+
 # ==============================================================================
 # FZF CONFIGURATION — Ghostty Green Theme
 # ==============================================================================
 
 # ------------------------------------------------------------------------------
-# Global options — applies to every fzf invocation.
-# Defined once here; never redefined elsewhere to avoid conflicts.
+# Global options
 # ------------------------------------------------------------------------------
 
 export FZF_DEFAULT_OPTS='
@@ -16,70 +16,32 @@ export FZF_DEFAULT_OPTS='
 --info=inline
 --border=rounded
 --padding=0,1
+
 --color=fg:#B8E8BC,bg:-1,fg+:#E8FFE9,bg+:#145C25,hl:#4ED66D,hl+:#7CFF88,border:#28402C,info:#4ED66D,prompt:#7CFF88,pointer:#63FF82,marker:#C9D66A,spinner:#63FF82,header:#5CCFCF
---bind="f2:toggle-preview,ctrl-d:half-page-down,ctrl-u:half-page-up,ctrl-a:select-all+accept,ctrl-y:execute-silent(echo {+} | xclip -selection clipboard)"
-'
 
-# ------------------------------------------------------------------------------
-# File-specific options — Ctrl+T only. Not applied to other fzf invocations.
-# ------------------------------------------------------------------------------
-
-export FZF_CTRL_T_OPTS='
---preview="if file --mime-encoding -b -- "{}" | grep -qx binary; then file -- "{}"; else batcat --style=numbers --color=always -- "{}"; fi 2>/dev/null | head -300"
+--preview="if file --mime-encoding -b -- {} | grep -qx binary; then file -- {}; else batcat --style=numbers --color=always -- {}; fi 2>/dev/null | head -300"
 --preview-window=right:50%:wrap
+
+--bind="f2:toggle-preview"
+--bind="f3:change-preview-window(right,50%,border-left|right,70%,border-left|down,70%,border-top)"
+--bind="f4:change-preview-window(down,90%,border-top|right,50%,border-left)"
+
+--bind="ctrl-d:half-page-down"
+--bind="ctrl-u:half-page-up"
+--bind="ctrl-a:select-all+accept"
+--bind="ctrl-y:execute-silent(echo {+} | xclip -selection clipboard)"
 '
 
 # ------------------------------------------------------------------------------
-# Bash keybindings (interactive shells only).
-# fzf ships no Debian key-bindings.bash, so register the widgets here.
-# Ctrl+R is intentionally left to readline reverse-search-history.
+# Remove old Ctrl+T / Ctrl+X widgets from Readline
 # ------------------------------------------------------------------------------
 
 if [[ $- == *i* ]]; then
-
-    # File-finding command for Ctrl+T (overridable via FZF_CTRL_T_COMMAND).
-    FZF_CTRL_T_COMMAND="${FZF_CTRL_T_COMMAND:-find -L "$HOME" -mindepth 1 \( -path '*/.git/*' -o -path '*/node_modules/*' -o -path '*/.cache/*' \) -prune -o -type f -print 2>/dev/null}"
-
-    # fzf-file-widget — normal file picker with preview (Ctrl+T).
-    fzf-file-widget() {
-        local selected
-        selected="$(
-            eval "$FZF_CTRL_T_COMMAND" \
-                | env FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS:-} ${FZF_CTRL_T_OPTS:-}" \
-                      FZF_CTRL_T_OPTS="" \
-                      command fzf
-        )" || return
-        if [[ -n "$selected" ]]; then
-            READLINE_LINE="${READLINE_LINE:0:$READLINE_POINT}$selected${READLINE_LINE:$READLINE_POINT}"
-            READLINE_POINT=$((READLINE_POINT + ${#selected}))
-        fi
-    }
-
-    # fzf-fullscreen-file-widget — fullscreen file picker (Ctrl+X, then Ctrl+T).
-    fzf-fullscreen-file-widget() {
-        local selected
-        selected="$(
-            eval "$FZF_CTRL_T_COMMAND" \
-                | env FZF_DEFAULT_OPTS="--height=100% ${FZF_DEFAULT_OPTS:-} ${FZF_CTRL_T_OPTS:-}" \
-                      FZF_CTRL_T_OPTS="" \
-                      command fzf
-        )" || return
-        if [[ -n "$selected" ]]; then
-            READLINE_LINE="${READLINE_LINE:0:$READLINE_POINT}$selected${READLINE_LINE:$READLINE_POINT}"
-            READLINE_POINT=$((READLINE_POINT + ${#selected}))
-        fi
-    }
-
-    # Bind keys only when no external fzf integration has already done so.
-    if ! bind -p 2>/dev/null | grep -q 'fzf-file-widget'; then
-        bind -x '"\C-t": fzf-file-widget' 2>/dev/null || true
-    fi
-    if ! bind -p 2>/dev/null | grep -q 'fzf-fullscreen-file-widget'; then
-        bind -x '"\C-x\C-t": fzf-fullscreen-file-widget' 2>/dev/null || true
-    fi
-
+    bind -r '\C-t' 2>/dev/null
+    bind -r '\C-x\C-t' 2>/dev/null
 fi
 
 # ==============================================================================
 # END OF FZF CONFIGURATION
 # ==============================================================================
+
