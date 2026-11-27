@@ -471,10 +471,11 @@ rebash() {
 # COMPLETIONS
 # ==============================================================================
 
-# Install a bash completion for a tool from stdin.
+# Install a bash completion for a tool from stdin or arguments.
 # Usage: gen-completion <tool> < completion.txt
 #   or:  yq shell-completion bash | gen-completion yq
 #   or:  gen-completion yq <<< "$(yq shell-completion bash)"
+#   or:  gen-completion yq $(yq shell-completion bash)
 gen-completion() {
     local tool="${1:-}"
     local target="$HOME/.config/bash-completion/completions/$tool"
@@ -484,10 +485,16 @@ gen-completion() {
         printf 'Usage: gen-completion <tool> < completion\n' >&2
         return 1
     }
+    shift
 
     mkdir -p -- "$(dirname -- "$target")" || return 1
     tmp="$(mktemp)" || return 1
-    cat >"$tmp"
+
+    if (($# > 0)); then
+        printf '%s\n' "$*" >"$tmp"
+    else
+        cat >"$tmp"
+    fi
 
     if [[ -f "$target" ]] && cmp -s "$tmp" "$target"; then
         rm -f -- "$tmp"
