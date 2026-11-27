@@ -1,0 +1,43 @@
+# docker completion - user override with compose plugin fix
+# Sources system completion and ensures docker compose (v2 plugin) works
+
+# Source system docker completion
+if [[ -f /usr/share/bash-completion/completions/docker ]]; then
+    source /usr/share/bash-completion/completions/docker
+fi
+
+# Fix for docker compose (v2 plugin) subcommand completion
+# The system completion's plugin detection creates _docker_compose dynamically
+# but it may not work correctly in all cases. This ensures a working fallback.
+
+_docker_compose() {
+    local plugin_path
+    plugin_path=$(docker info --format '{{range .ClientInfo.Plugins}}{{.Path}}:{{end}}' 2>/dev/null | tr ':' '\n' | grep 'docker-compose$' | head -1)
+    if [[ -n "$plugin_path" && -x "$plugin_path" ]]; then
+        __docker_complete_plugin "$plugin_path"
+    else
+        # Fallback: use docker compose's built-in completion
+        local resultArray=("docker" "compose" "__completeNoDesc")
+        local current="$cur"
+        for value in "${words[@]:2}"; do
+            if [[ -z "$value" ]]; then
+                resultArray+=("''")
+            else
+                resultArray+=("$value")
+            fi
+        done
+        local rawResult
+        rawResult=$(eval "${resultArray[*]}" 2>/dev/null)
+        local result
+        result=$(grep -v '^:[0-9]*$' <<< "$rawResult")
+        if [[ -n "$result" ]]; then
+            COMPREPLY=($(compgen -W "$result" -- "$cur"))
+        else
+            _filedir
+        fi
+    fi
+}
+
+# Ensure _docker_compose is available for the plugin system
+# The system _docker function will override this with its own plugin detection,
+# but this serves as a fallback if plugin detection fails.
