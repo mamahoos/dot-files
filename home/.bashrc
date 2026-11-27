@@ -184,3 +184,7 @@ fi
 # ======================================================================
 # End of ~/.bashrc
 # ======================================================================
+
+
+# Added by Antigravity CLI installer
+export PATH="/home/mamahoos/.local/bin:$PATH"
