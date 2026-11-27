@@ -471,29 +471,23 @@ rebash() {
 # COMPLETIONS
 # ==============================================================================
 
-# Generate a bash completion for a tool and install it to the user completion dir.
-# Usage: gen-completion <tool> <generator> [args...]
+# Install a bash completion for a tool from stdin.
+# Usage: gen-completion <tool> < completion.txt
+#   or:  yq shell-completion bash | gen-completion yq
+#   or:  gen-completion yq <<< "$(yq shell-completion bash)"
 gen-completion() {
     local tool="${1:-}"
     local target="$HOME/.config/bash-completion/completions/$tool"
     local tmp
 
     [[ -n "$tool" ]] || {
-        printf 'Usage: gen-completion <tool> <generator> [args...]\n' >&2
+        printf 'Usage: gen-completion <tool> < completion\n' >&2
         return 1
     }
-    shift
-
-    _require_cmd '[gen-completion]' "$1" || return 1
 
     mkdir -p -- "$(dirname -- "$target")" || return 1
     tmp="$(mktemp)" || return 1
-
-    if ! "$@" >"$tmp" 2>/dev/null; then
-        rm -f -- "$tmp"
-        _log_error gen-completion "failed to generate completion for: $tool"
-        return 1
-    fi
+    cat >"$tmp"
 
     if [[ -f "$target" ]] && cmp -s "$tmp" "$target"; then
         rm -f -- "$tmp"
