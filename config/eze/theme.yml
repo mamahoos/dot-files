@@ -1,0 +1,414 @@
+# ==============================================================================
+# EZA THEME — Ghostty Green
+# ------------------------------------------------------------------------------
+# Single source palette: config/ghostty/config.ghostty
+# Coordinated with:
+#   - fzf: home/.bashrc.fzf
+#   - btop: config/btop/themes/ghostty-green.theme
+#
+# Background is intentionally omitted so eza inherits Ghostty's background.
+# ==============================================================================
+
+colourful: true
+
+# ------------------------------------------------------------------------------
+# File kinds
+# ------------------------------------------------------------------------------
+
+filekinds:
+  normal:
+    foreground: "#B8E8BC"
+  directory:
+    foreground: "#63FF82"
+    is_bold: true
+  symlink:
+    foreground: "#5CCFCF"
+  pipe:
+    foreground: "#C9D66A"
+  block_device:
+    foreground: "#70A5FF"
+    is_bold: true
+  char_device:
+    foreground: "#6FFFE9"
+    is_bold: true
+  socket:
+    foreground: "#A66AD6"
+    is_bold: true
+  special:
+    foreground: "#C17CFF"
+  executable:
+    foreground: "#4ED66D"
+    is_bold: true
+  mount_point:
+    foreground: "#63FF82"
+    is_bold: true
+    is_underline: true
+
+# ------------------------------------------------------------------------------
+# Permissions
+# ------------------------------------------------------------------------------
+
+perms:
+  user_read:
+    foreground: "#B8E8BC"
+  user_write:
+    foreground: "#E5F56B"
+    is_bold: true
+  user_execute_file:
+    foreground: "#4ED66D"
+    is_bold: true
+  user_execute_other:
+    foreground: "#4ED66D"
+  group_read:
+    foreground: "#B8E8BC"
+  group_write:
+    foreground: "#C9D66A"
+  group_execute:
+    foreground: "#4ED66D"
+  other_read:
+    foreground: "#B8E8BC"
+    is_dimmed: true
+  other_write:
+    foreground: "#C9D66A"
+  other_execute:
+    foreground: "#4ED66D"
+  special_user_file:
+    foreground: "#C17CFF"
+    is_bold: true
+  special_other:
+    foreground: "#A66AD6"
+  attribute:
+    foreground: "#5CCFCF"
+
+# ------------------------------------------------------------------------------
+# File sizes
+# ------------------------------------------------------------------------------
+
+size:
+  major:
+    foreground: "#E8FFE9"
+    is_bold: true
+  minor:
+    foreground: "#B8E8BC"
+  number_byte:
+    foreground: "#B8E8BC"
+  number_kilo:
+    foreground: "#4ED66D"
+    is_bold: true
+  number_mega:
+    foreground: "#C9D66A"
+    is_bold: true
+  number_giga:
+    foreground: "#FF6B6B"
+    is_bold: true
+  number_huge:
+    foreground: "#FF6B6B"
+    is_bold: true
+  unit_byte:
+    foreground: "#B8E8BC"
+    is_dimmed: true
+  unit_kilo:
+    foreground: "#4ED66D"
+  unit_mega:
+    foreground: "#C9D66A"
+  unit_giga:
+    foreground: "#FF6B6B"
+  unit_huge:
+    foreground: "#FF6B6B"
+
+# ------------------------------------------------------------------------------
+# Users and groups
+# ------------------------------------------------------------------------------
+
+users:
+  user_you:
+    foreground: "#7CFF88"
+    is_bold: true
+  user_root:
+    foreground: "#FF6B6B"
+    is_bold: true
+  user_other:
+    foreground: "#B8E8BC"
+  group_yours:
+    foreground: "#7CFF88"
+    is_bold: true
+  group_other:
+    foreground: "#B8E8BC"
+  group_root:
+    foreground: "#FF6B6B"
+
+# ------------------------------------------------------------------------------
+# Links
+# ------------------------------------------------------------------------------
+
+links:
+  normal:
+    foreground: "#5CCFCF"
+  multi_link_file:
+    foreground: "#70A5FF"
+    is_bold: true
+
+# ------------------------------------------------------------------------------
+# Git status
+# ------------------------------------------------------------------------------
+
+git:
+  new:
+    foreground: "#63FF82"
+    is_bold: true
+  modified:
+    foreground: "#E5F56B"
+    is_bold: true
+  deleted:
+    foreground: "#FF6B6B"
+    is_bold: true
+  renamed:
+    foreground: "#5CCFCF"
+  typechange:
+    foreground: "#C17CFF"
+  ignored:
+    foreground: "#28402C"
+    is_dimmed: true
+  conflicted:
+    foreground: "#FF6B6B"
+    is_bold: true
+    is_underline: true
+
+git_repo:
+  branch_main:
+    foreground: "#63FF82"
+    is_bold: true
+  branch_other:
+    foreground: "#5CCFCF"
+  git_clean:
+    foreground: "#4ED66D"
+  git_dirty:
+    foreground: "#E5F56B"
+    is_bold: true
+
+# ------------------------------------------------------------------------------
+# Security context
+# ------------------------------------------------------------------------------
+
+security_context:
+  colon:
+    foreground: "#28402C"
+  user:
+    foreground: "#5CCFCF"
+  role:
+    foreground: "#4ED66D"
+  typ:
+    foreground: "#C9D66A"
+  range:
+    foreground: "#6FFFE9"
+
+# ------------------------------------------------------------------------------
+# File categories
+# ------------------------------------------------------------------------------
+
+file_type:
+  image:
+    foreground: "#A66AD6"
+  video:
+    foreground: "#C17CFF"
+    is_bold: true
+  music:
+    foreground: "#5CCFCF"
+  lossless:
+    foreground: "#6FFFE9"
+    is_bold: true
+  crypto:
+    foreground: "#E5F56B"
+    is_bold: true
+  document:
+    foreground: "#B8E8BC"
+  compressed:
+    foreground: "#FF6B6B"
+  temp:
+    foreground: "#28402C"
+    is_dimmed: true
+  compiled:
+    foreground: "#C9D66A"
+  build:
+    foreground: "#70A5FF"
+    is_bold: true
+  source:
+    foreground: "#4ED66D"
+    is_bold: true
+
+# ------------------------------------------------------------------------------
+# Metadata and UI
+# ------------------------------------------------------------------------------
+
+punctuation:
+  foreground: "#B8E8BC"
+  is_dimmed: true
+
+date:
+  foreground: "#5CCFCF"
+
+inode:
+  foreground: "#A66AD6"
+
+blocks:
+  foreground: "#6FFFE9"
+
+header:
+  foreground: "#E8FFE9"
+  is_bold: true
+  is_underline: true
+
+octal:
+  foreground: "#C9D66A"
+
+flags:
+  foreground: "#70A5FF"
+
+symlink_path:
+  foreground: "#5CCFCF"
+
+control_char:
+  foreground: "#FF6B6B"
+  is_bold: true
+
+broken_symlink:
+  foreground: "#FF6B6B"
+  is_bold: true
+
+broken_path_overlay:
+  foreground: "#FF6B6B"
+  is_underline: true
+
+# ------------------------------------------------------------------------------
+# Filename overrides
+# ------------------------------------------------------------------------------
+
+filenames:
+  Dockerfile:
+    filename:
+      foreground: "#6FFFE9"
+      is_bold: true
+  Makefile:
+    filename:
+      foreground: "#E5F56B"
+      is_bold: true
+  Justfile:
+    filename:
+      foreground: "#E5F56B"
+      is_bold: true
+  .env:
+    filename:
+      foreground: "#E5F56B"
+      is_bold: true
+  .gitignore:
+    filename:
+      foreground: "#A66AD6"
+  .gitmodules:
+    filename:
+      foreground: "#A66AD6"
+  Cargo.toml:
+    filename:
+      foreground: "#FF6B6B"
+      is_bold: true
+  Cargo.lock:
+    filename:
+      foreground: "#FF6B6B"
+
+# ------------------------------------------------------------------------------
+# Extension overrides
+# ------------------------------------------------------------------------------
+
+extensions:
+  # Source code
+  py:
+    filename: {foreground: "#63FF82"}
+  sh:
+    filename: {foreground: "#63FF82"}
+  bash:
+    filename: {foreground: "#63FF82"}
+  go:
+    filename: {foreground: "#6FFFE9"}
+  rs:
+    filename: {foreground: "#FF6B6B"}
+  c:
+    filename: {foreground: "#70A5FF"}
+  h:
+    filename: {foreground: "#70A5FF"}
+  cpp:
+    filename: {foreground: "#70A5FF"}
+  js:
+    filename: {foreground: "#E5F56B"}
+  ts:
+    filename: {foreground: "#70A5FF"}
+  jsx:
+    filename: {foreground: "#5CCFCF"}
+  tsx:
+    filename: {foreground: "#5CCFCF"}
+
+  # Configuration and structured data
+  yaml:
+    filename: {foreground: "#C9D66A"}
+  yml:
+    filename: {foreground: "#C9D66A"}
+  toml:
+    filename: {foreground: "#C17CFF"}
+  json:
+    filename: {foreground: "#E5F56B"}
+  xml:
+    filename: {foreground: "#5CCFCF"}
+  conf:
+    filename: {foreground: "#B8E8BC"}
+  ini:
+    filename: {foreground: "#B8E8BC"}
+  env:
+    filename: {foreground: "#E5F56B"}
+
+  # Documentation
+  md:
+    filename: {foreground: "#6FFFE9"}
+  rst:
+    filename: {foreground: "#6FFFE9"}
+  txt:
+    filename: {foreground: "#B8E8BC"}
+
+  # Logs and data
+  log:
+    filename: {foreground: "#C9D66A"}
+  csv:
+    filename: {foreground: "#4ED66D"}
+  sql:
+    filename: {foreground: "#70A5FF"}
+
+  # Archives and packages
+  zip:
+    filename: {foreground: "#FF6B6B"}
+  tar:
+    filename: {foreground: "#FF6B6B"}
+  gz:
+    filename: {foreground: "#FF6B6B"}
+  xz:
+    filename: {foreground: "#FF6B6B"}
+  7z:
+    filename: {foreground: "#FF6B6B"}
+  deb:
+    filename: {foreground: "#FF6B6B"}
+
+  # Media
+  png:
+    filename: {foreground: "#A66AD6"}
+  jpg:
+    filename: {foreground: "#A66AD6"}
+  jpeg:
+    filename: {foreground: "#A66AD6"}
+  webp:
+    filename: {foreground: "#A66AD6"}
+  svg:
+    filename: {foreground: "#A66AD6"}
+  mp4:
+    filename: {foreground: "#C17CFF"}
+  mkv:
+    filename: {foreground: "#C17CFF"}
+  mp3:
+    filename: {foreground: "#5CCFCF"}
+  flac:
+    filename: {foreground: "#6FFFE9"}
