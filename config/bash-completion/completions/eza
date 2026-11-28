@@ -67,7 +67,7 @@ _eza_complete_files() {
 _eza() {
     local cur prev words cword
     local opt_prefix='' enum=''
-    local -a long_options short_options
+    local -a long_options short_options short_clusters
 
     COMPREPLY=()
 
@@ -190,6 +190,13 @@ _eza() {
             -b -B -g -h -H -i -m -M -n -S -t -u -U -o -@ -Z -v
         )
 
+        # Useful, valid boolean clusters. Keep these curated rather than
+        # generating every permutation: completion should be predictable.
+        # eza accepts combined short flags, e.g. -Ahl.
+        short_clusters=(
+            -la -lah -lAh -Ahl -lA -Al -lh -lha -al -aA
+        )
+
         # --flags/-O is documented for macOS, BSDs and Windows, not Linux.
         case ${OSTYPE:-} in
             darwin*|freebsd*|openbsd*|netbsd*|dragonfly*|cygwin*|msys*)
@@ -214,7 +221,12 @@ _eza() {
             done
         else
             if [[ $cur =~ ^-[[:alnum:]@]?$ ]]; then
-                mapfile -t COMPREPLY < <(compgen -W "${short_options[*]}" -- "$cur")
+                # Show individual short options and common combinations from
+                # the first dash, and keep useful continuations available
+                # after a single flag (e.g. -A -> -Ahl, -l -> -lah).
+                mapfile -t COMPREPLY < <(
+                    compgen -W "${short_options[*]} ${short_clusters[*]}" -- "$cur"
+                )
             fi
         fi
         return
