@@ -6,15 +6,16 @@
 alias eza='command eza --icons=auto --color=auto --group-directories-first'
 
 
+# ls compatibility
+alias ls='eza'
+alias ll='eza --long --header'
+alias la='eza --all'
+alias l='eza --oneline'
+
+
 # ==============================================================================
 # CORE SYSTEM ALIASES
 # ==============================================================================
-
-# ls family (readable defaults)
-alias ls='ls --color=auto'
-alias ll='ls -lh'          # long + human-readable sizes
-alias la='ls -A'           # include hidden (except . ..)
-alias l='ls -CF'           # column view + type indicators
 
 # find alternative
 alias fd='fdfind'
