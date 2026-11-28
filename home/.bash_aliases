@@ -16,6 +16,10 @@ alias l='eza --oneline'
 alias lla='eza --long --header --all'
 alias llt='eza --long --header --tree --level=2'
 
+# Tree
+alias lt='eza --tree --level=2'
+alias lT='eza --tree'
+
 
 # ==============================================================================
 # CORE SYSTEM ALIASES
