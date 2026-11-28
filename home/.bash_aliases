@@ -20,6 +20,9 @@ alias llt='eza --long --header --tree --level=2'
 alias lt='eza --tree --level=2'
 alias lT='eza --tree'
 
+# Git-aware listing
+alias lg='eza --long --header --git'
+
 
 # ==============================================================================
 # CORE SYSTEM ALIASES
