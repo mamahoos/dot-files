@@ -1,0 +1,227 @@
+# bash completion for eza
+#
+# Install as:
+#   ~/.config/bash-completion/completions/eza
+# or:
+#   /etc/bash_completion.d/eza
+#
+# Designed for Bash + bash-completion.  It intentionally does not execute
+# `eza --help` on every TAB: option names and enum values are maintained here
+# from the upstream eza(1) documentation.
+#
+# shellcheck shell=bash
+
+# Return completions for a comma-separated enum while preserving any prefix
+# already typed (e.g. --color-scale=all,age).
+_eza_complete_csv_enum() {
+    local cur=$1 prefix=$2 choices=$3 raw before token candidate item
+    local -a used=()
+
+    raw=${cur#"$prefix"}
+    if [[ $raw == *,* ]]; then
+        before=${raw%,*}
+        token=${raw##*,}
+        IFS=, read -r -a used <<< "$before"
+    else
+        before=''
+        token=$raw
+    fi
+
+    while IFS= read -r candidate; do
+        [[ -n $candidate ]] || continue
+        local duplicate=0
+        for item in "${used[@]}"; do
+            [[ $item == "$candidate" ]] && duplicate=1 && break
+        done
+        (( duplicate )) && continue
+        if [[ -n $before ]]; then
+            COMPREPLY+=("${prefix}${before},${candidate}")
+        else
+            COMPREPLY+=("${prefix}${candidate}")
+        fi
+    done < <(compgen -W "$choices" -- "$token")
+}
+
+# Complete a fixed set of enum values.  PREFIX is either empty (separate
+# argument) or the complete --option= prefix.
+_eza_complete_enum() {
+    local cur=$1 prefix=$2 values=$3
+    local value
+    while IFS= read -r value; do
+        [[ -n $value ]] || continue
+        COMPREPLY+=("${prefix}${value}")
+    done < <(compgen -W "$values" -- "${cur#"$prefix"}")
+}
+
+_eza_complete_files() {
+    # Prefer bash-completion's _filedir, which handles directories, quoting,
+    # spaces and COMP_WORDBREAKS correctly.  Keep a dependency-free fallback.
+    if declare -F _filedir >/dev/null; then
+        _filedir
+    else
+        compopt -o filenames 2>/dev/null || :
+        mapfile -t COMPREPLY < <(compgen -f -- "$cur")
+    fi
+}
+
+_eza() {
+    local cur prev words cword
+    local opt_prefix='' enum=''
+    local -a long_options short_options
+
+    COMPREPLY=()
+
+    # Keep '=' inside the current word so --option=value can be completed as
+    # one token.  _init_completion also handles quoting and command context.
+    if declare -F _init_completion >/dev/null; then
+        _init_completion -n = || return
+    else
+        cur=${COMP_WORDS[COMP_CWORD]}
+        prev=${COMP_WORDS[COMP_CWORD-1]}
+        words=()
+        local i
+        for ((i=0; i<COMP_CWORD; i++)); do words+=("${COMP_WORDS[i]}"); done
+        cword=$COMP_CWORD
+    fi
+
+    # Once `--` has appeared, every subsequent token is a path, even if it
+    # begins with a dash.
+    local i
+    for ((i=1; i<cword; i++)); do
+        if [[ ${words[i]} == -- ]]; then
+            _eza_complete_files
+            return
+        fi
+    done
+
+    # Handle --option=value forms first.
+    if [[ $cur == --*=* ]]; then
+        opt_prefix=${cur%%=*}=
+        case ${opt_prefix%=} in
+            --absolute)       enum='on follow off' ;;
+            --classify)       enum='always automatic auto never' ;;
+            --color|--colour) enum='always automatic auto never' ;;
+            --icons)          enum='always automatic auto never' ;;
+            --hyperlink)      enum='always automatic auto never' ;;
+            --color-scale|--colour-scale)
+                COMPREPLY=()
+                _eza_complete_csv_enum "$cur" "$opt_prefix" 'all age size'
+                return
+                ;;
+            --color-scale-mode|--colour-scale-mode) enum='fixed gradient' ;;
+            --sort)           enum='name Name extension Extension size modified changed accessed created inode type none date time newest age oldest' ;;
+            --time)           enum='modified changed accessed created' ;;
+            --time-style)     enum='default iso long-iso full-iso relative +%Y-%m-%d +%H:%M:%S +%Y-%m-%dT%H:%M:%S' ;;
+            --code|--loc)     enum='lines percent both' ;;
+            --level|--width)  enum='' ;;
+            *)
+                # Unknown --foo=value may be a path-like value; do not guess.
+                return
+                ;;
+        esac
+        if [[ -n $enum ]]; then
+            _eza_complete_enum "$cur" "$opt_prefix" "$enum"
+        fi
+        return
+    fi
+
+    # Attached short-option values (e.g. -smodified, -tcreated).  This is
+    # distinct from a short-option cluster: -s/-t consume the rest as a value.
+    if [[ $cur =~ ^-([stF])(.+)$ ]]; then
+        local short_name=${BASH_REMATCH[1]}
+        local short_prefix="-${BASH_REMATCH[1]}" attached="${BASH_REMATCH[2]}"
+        [[ $attached == =* ]] && short_prefix+="="
+        case $short_name in
+            s) _eza_complete_enum "$cur" "$short_prefix" 'name Name extension Extension size modified changed accessed created inode type none date time newest age oldest' ;;
+            t) _eza_complete_enum "$cur" "$short_prefix" 'modified changed accessed created' ;;
+            F) _eza_complete_enum "$cur" "$short_prefix" 'always automatic auto never' ;;
+        esac
+        return
+    fi
+
+    # Values accepted as a separate word.  eza accepts the enum values for
+    # these options in the conventional --option VALUE form as well.
+    case $prev in
+        --absolute)       _eza_complete_enum "$cur" '' 'on follow off'; return ;;
+        --classify|-F)    _eza_complete_enum "$cur" '' 'always automatic auto never'; return ;;
+        --color|--colour) _eza_complete_enum "$cur" '' 'always automatic auto never'; return ;;
+        --icons)          _eza_complete_enum "$cur" '' 'always automatic auto never'; return ;;
+        --hyperlink)      _eza_complete_enum "$cur" '' 'always automatic auto never'; return ;;
+        --color-scale|--colour-scale)
+            _eza_complete_csv_enum "$cur" '' 'all age size'; return ;;
+        --color-scale-mode|--colour-scale-mode)
+            _eza_complete_enum "$cur" '' 'fixed gradient'; return ;;
+        --sort|-s)
+            _eza_complete_enum "$cur" '' 'name Name extension Extension size modified changed accessed created inode type none date time newest age oldest'; return ;;
+        --time|-t)
+            _eza_complete_enum "$cur" '' 'modified changed accessed created'; return ;;
+        --time-style)
+            _eza_complete_enum "$cur" '' 'default iso long-iso full-iso relative +%Y-%m-%d +%H:%M:%S +%Y-%m-%dT%H:%M:%S'; return ;;
+        --level|-L|--width|-w)
+            # Numeric values are intentionally not enumerated: arbitrary
+            # positive integers are valid and compgen cannot validate them.
+            return ;;
+        --ignore-glob|-I)
+            # Glob syntax is user-defined, not a closed enum or filesystem path.
+            return ;;
+    esac
+
+    # Short options with arguments: -s/-t accept enums; -L/-w accept numbers;
+    # -I accepts a user-defined glob.  The remaining short flags can be stacked.
+    if [[ $cur == -* ]]; then
+        long_options=(
+            --help --version
+            --oneline --absolute --classify --grid --long --recurse --tree
+            --code --follow-symlinks --dereference --across --color --colour
+            --color-scale --colour-scale --color-scale-mode --colour-scale-mode
+            --icons --no-quotes --short-nix --hyperlink --width
+            --all --almost-all --treat-dirs-as-files --level --reverse --sort
+            --ignore-glob --git-ignore --group-directories-first
+            --group-directories-last --only-dirs --only-files --show-symlinks
+            --no-symlinks --binary --bytes --changed --group --smart-group
+            --header --links --inode --loc --modified --mounts --numeric
+            --blocksize --time --time-style --total-size --accessed
+            --created --no-permissions --octal-permissions --no-filesize
+            --no-user --no-time --stdin --extended --context --git
+            --git-repos --git-repos-no-status --no-git
+        )
+        short_options=(
+            -1 -F -G -l -R -T -X -x -w -a -A -d -L -r -s -I -D -f
+            -b -B -g -h -H -i -m -M -n -S -t -u -U -o -@ -Z -v
+        )
+
+        # --flags/-O is documented for macOS, BSDs and Windows, not Linux.
+        case ${OSTYPE:-} in
+            darwin*|freebsd*|openbsd*|netbsd*|dragonfly*|cygwin*|msys*)
+                long_options+=(--flags)
+                short_options+=(-O)
+                ;;
+        esac
+
+        if [[ $cur == --* ]]; then
+            mapfile -t COMPREPLY < <(compgen -W "${long_options[*]}" -- "$cur")
+        elif [[ $cur =~ ^-[[:alnum:]@]{2,}$ ]]; then
+            # Complete a compact cluster by appending unused boolean flags.
+            # Stop if a value-taking short option is already in the cluster:
+            # from that point onward, characters belong to its argument.
+            local cluster=${cur:1} short token
+            [[ $cluster == *[sLwIt]* ]] && return
+            for short in "${short_options[@]}"; do
+                token=${short#-}
+                case $token in s|L|w|I|t) continue ;; esac
+                [[ $cluster == *"$token"* ]] && continue
+                COMPREPLY+=("${cur}${token}")
+            done
+        else
+            if [[ $cur =~ ^-[[:alnum:]@]?$ ]]; then
+                mapfile -t COMPREPLY < <(compgen -W "${short_options[*]}" -- "$cur")
+            fi
+        fi
+        return
+    fi
+
+    # Positional arguments are paths.  Unlike ls, eza does not have subcommands.
+    _eza_complete_files
+}
+
+complete -o filenames -F _eza eza
