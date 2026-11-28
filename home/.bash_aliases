@@ -12,6 +12,10 @@ alias ll='eza --long --header'
 alias la='eza --all'
 alias l='eza --oneline'
 
+# Combined views
+alias lla='eza --long --header --all'
+alias llt='eza --long --header --tree --level=2'
+
 
 # ==============================================================================
 # CORE SYSTEM ALIASES
